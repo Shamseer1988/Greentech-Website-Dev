@@ -4,13 +4,13 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 **Wait for Shamseer's OK before starting the next phase.**
 
 ## Phase 1 – Project setup (local)
-- [ ] `git init`, connect remote `origin` → https://github.com/Shamseer1988/Greentech-Website-Dev.git
-- [ ] `.gitignore` (node_modules, .next, .venv, __pycache__, .env, minio data)
-- [ ] `docker-compose.yml` with `db` (Postgres 16, host port 5433) and `minio` (9000/9001) + named volumes
-- [ ] `.env.example` and local `.env`
-- [ ] `backend/` FastAPI skeleton: `/api/health`, settings via pydantic-settings, DB connection
-- [ ] `frontend/` Next.js 15 + TypeScript + Tailwind + shadcn/ui, fonts, brand colours in Tailwind config
-- [ ] README with "how to run locally"
+- [x] `git init`, connect remote `origin` → https://github.com/Shamseer1988/Greentech-Website-Dev.git
+- [x] `.gitignore` (node_modules, .next, .venv, __pycache__, .env, minio data)
+- [x] `docker-compose.yml` with `db` (Postgres 16, host port 5433) and `minio` (9000/9001) + named volumes
+- [x] `.env.example` and local `.env`
+- [x] `backend/` FastAPI skeleton: `/api/health`, settings via pydantic-settings, DB connection
+- [x] `frontend/` Next.js 15 + TypeScript + Tailwind + shadcn/ui, fonts, brand colours in Tailwind config
+- [x] README with "how to run locally"
 - Test: `docker compose up -d db minio`, backend at http://localhost:8000/docs, frontend at http://localhost:3000
 
 ## Phase 2 – Database & API
