@@ -22,12 +22,12 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 - Test: Swagger UI at /docs
 
 ## Phase 3 – Public pages (from mockups)
-- [ ] Layout: glass nav, footer, floating WhatsApp button, EN/AR switch
-- [ ] Home v2 with all animations
-- [ ] Listings page (filters, sort, pagination, map panel)
-- [ ] Property detail (gallery, facts, amenities, map, enquiry form, WhatsApp/call, share)
-- [ ] Locations page + Contact page
-- [ ] Mobile layout check (bottom WhatsApp/Call bar)
+- [x] Layout: glass nav, footer, floating WhatsApp button, EN/AR switch
+- [x] Home v2 with all animations
+- [x] Listings page (filters, sort, pagination, map panel)
+- [x] Property detail (gallery, facts, amenities, map, enquiry form, WhatsApp/call, share)
+- [x] Locations page + Contact page
+- [x] Mobile layout check (bottom WhatsApp/Call bar)
 
 ## Phase 4 – Admin panel (/admin)
 - [ ] Login (JWT), roles

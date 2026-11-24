@@ -42,6 +42,10 @@ npm.cmd run dev
 | API health | http://localhost:8000/api/health |
 | MinIO console | http://localhost:9001 (login is in `.env`) |
 
+## Company details
+Phone, WhatsApp, office and social links: copy `frontend/.env.example` to `frontend/.env.local`, fill it in, then restart the website.
+Texts are in `frontend/messages/en.json` and `ar.json`.
+
 ## Backend tests
 ```powershell
 cd backend
