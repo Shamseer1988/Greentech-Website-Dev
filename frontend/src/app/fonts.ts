@@ -1,7 +1,7 @@
-import { IBM_Plex_Sans_Arabic, Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Noto_Kufi_Arabic, Space_Grotesk } from "next/font/google";
 
 // adjustFontFallback is off for the Latin fonts: the automatic Arial fallback
-// contains Arabic letters and would be used before IBM Plex Sans Arabic.
+// contains Arabic letters and would be used before Noto Kufi Arabic.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -14,11 +14,10 @@ const spaceGrotesk = Space_Grotesk({
   adjustFontFallback: false,
 });
 
-const plexArabic = IBM_Plex_Sans_Arabic({
+const notoKufi = Noto_Kufi_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-plex-arabic",
+  variable: "--font-noto-kufi",
   preload: false,
 });
 
-export const fontVariables = `${inter.variable} ${spaceGrotesk.variable} ${plexArabic.variable}`;
+export const fontVariables = `${inter.variable} ${spaceGrotesk.variable} ${notoKufi.variable}`;
