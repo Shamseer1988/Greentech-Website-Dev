@@ -54,14 +54,22 @@ These files are mockups for a design canvas (they load a `support.js` runtime), 
 standalone in a browser – read the HTML/inline styles and the `renderVals()` data for layout, copy, colours and sections.
 `Main.dc.html` was the first home version – NOT selected; use only its footer/top-bar ideas if useful.
 
-### Brand tokens (from the mockups)
-- Dark green (hero bg): `#062A1F`, deepest: `#041D15`
-- Primary green: `#0E5A43`, hover `#093E2E`
-- Mint highlight: `#3DDC97`
-- Accent gold: `#F2C14E` (buttons on dark, ticker strip)
-- WhatsApp green: `#1F9D55`
-- Ink text `#13201B`, muted `#4B5B55`, light bg `#F6F7F4`, borders `#E2E7E3`
-- Fonts: **Space Grotesk** (headings), **Inter** (body); Arabic: **IBM Plex Sans Arabic** or **Cairo**
+### Brand (APPROVED by management: the CURRENT Green Tech logo)
+Source of truth: **`design/brand/`** → `BRAND.md` (which file where), `brand-theme.css` (Tailwind v4 `@theme` + CSS vars), `tokens.json`.
+- Header (EN): `svg/greentech-logo-compact-en.svg` · on the dark hero: `svg/greentech-logo-compact-en-on-dark.svg`
+- Header (AR): `svg/greentech-logo-compact-ar.svg` / `-on-dark.svg`
+- Footer: `svg/greentech-logo-stacked-on-dark.svg` · full bilingual: `svg/greentech-logo-horizontal.svg`
+- Favicon set: `favicon/` · social share: `png/og-image-1200x630.png`
+- `design/brand-alternative-twin-crescent/` = NOT approved, reference only – never use on the site.
+
+Website colours MUST match the approved logo:
+- Logo Green `#2A9D6A` (icons, highlights, large text) · Green 700 `#1F7A52` = primary buttons (white text) · Green 800 `#17603F` hover
+- Logo Rose `#A3486F` = accent (secondary buttons with white text, section labels, underline rules, ticker strip) · Rose 700 `#86385A` hover
+- Logo Slate `#4A5468` = headings on light · Ink `#1E2430` body · Muted `#5B6474`
+- Deep `#062A1F` (dark hero/sections), Deepest `#041D15` (footer) · on dark: Mint `#3DDC97` (CTA with deep text), Pink `#E9A8C3`, Sage `#D3E4DC`
+- Ivory bg `#F4F5F2`, Line `#E2E7E3`, Field `#CFD8D2`, Tint `#E3F2EA`, Rose tint `#F6E6EE` · WhatsApp `#18884A`
+- Do NOT use: `#F2C14E`, `#C9A45C` (gold), `#0E5A43`, `#0B4D3A`, `#7A1F3D` (Twin Crescent palette), `#1F9D55`, `#F6F7F4`, `#4B5B55`, `#093E2E`
+- Fonts: **Space Grotesk** (headings), **Inter** (body), **Noto Kufi Arabic** (Arabic). Logo fonts are already outlined in the SVGs.
 - Radius: cards 16–28px, buttons 10–14px, chips 999px
 
 ### Home v2 sections (in order)

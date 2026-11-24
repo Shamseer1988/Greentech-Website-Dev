@@ -1,0 +1,63 @@
+/* =========================================================
+   Green Tech Real Estate Broker – brand colours (from logo)
+   Use in Next.js with Tailwind CSS v4: import in app/globals.css
+     @import "tailwindcss";
+     @import "../design/brand/brand-theme.css";   (or copy this block)
+   Gives classes like bg-emerald, text-gold, border-line, bg-deep …
+   ========================================================= */
+
+@theme {
+  /* --- Logo colours --- */
+  --color-emerald: #0E5A43;        /* logo crescent · primary buttons, links */
+  --color-emerald-dark: #0B4D3A;   /* logo wordmark · hover, headings on light */
+  --color-deep: #062A1F;           /* dark sections, hero, header on dark */
+  --color-deepest: #041D15;        /* footer, page bg behind dark hero */
+  --color-burgundy: #7A1F3D;       /* logo inner crescent · secondary accent, Arabic sub-lines */
+  --color-gold: #C9A45C;           /* logo dot & lines · CTA buttons (dark text), lines, icons */
+  --color-gold-text: #8A6D2F;      /* gold TEXT on white/ivory (accessible) */
+  --color-ivory: #F4F5F2;          /* page background (light) */
+
+  /* --- On-dark versions used by the logo on dark green --- */
+  --color-mint: #3DDC97;           /* logo crescent on dark · highlights on dark */
+  --color-rose: #E9B8C8;           /* logo inner crescent on dark */
+  --color-sage: #D3E4DC;           /* secondary text on dark */
+  --color-sage-muted: #A9CFC0;     /* labels on dark */
+
+  /* --- Neutrals --- */
+  --color-ink: #13201B;            /* body text */
+  --color-muted: #5B6B64;          /* secondary text (logo tagline grey) */
+  --color-line: #E2E7E3;           /* borders, dividers */
+  --color-field: #CFD8D2;          /* input borders */
+  --color-tint: #E4F0EA;           /* light green chips / icon backgrounds */
+
+  /* --- Functional --- */
+  --color-whatsapp: #18884A;       /* WhatsApp buttons (white text passes AA) */
+  --color-success: #0E5A43;
+  --color-warning: #8A6D2F;
+  --color-danger: #B42318;
+
+  /* --- Type --- */
+  --font-logo: "Montserrat", sans-serif;        /* wordmark only */
+  --font-display: "Space Grotesk", sans-serif;   /* website headings */
+  --font-sans: "Inter", system-ui, sans-serif;   /* body */
+  --font-arabic: "Noto Kufi Arabic", sans-serif; /* all Arabic text */
+}
+
+/* Plain CSS variables (for non-Tailwind code, emails, etc.) */
+:root {
+  --gt-emerald: #0E5A43;
+  --gt-emerald-dark: #0B4D3A;
+  --gt-deep: #062A1F;
+  --gt-deepest: #041D15;
+  --gt-burgundy: #7A1F3D;
+  --gt-gold: #C9A45C;
+  --gt-gold-text: #8A6D2F;
+  --gt-ivory: #F4F5F2;
+  --gt-mint: #3DDC97;
+  --gt-rose: #E9B8C8;
+  --gt-sage: #D3E4DC;
+  --gt-ink: #13201B;
+  --gt-muted: #5B6B64;
+  --gt-line: #E2E7E3;
+  --gt-whatsapp: #18884A;
+}

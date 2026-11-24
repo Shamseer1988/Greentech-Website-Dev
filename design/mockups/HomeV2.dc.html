@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Greentech – Home v2 (motion)</title>
+<title>Green Tech – Home v2 (motion)</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -15,7 +15,7 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
 .ph{background-color:#DCE3DE;background-image:repeating-linear-gradient(135deg,rgba(14,90,67,.08) 0 12px,transparent 12px 24px)}
 .gridbg{background-image:linear-gradient(rgba(61,220,151,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(61,220,151,.07) 1px,transparent 1px);background-size:64px 64px;animation:gridmove 8s linear infinite}
 @keyframes gridmove{from{background-position:0 0}to{background-position:0 64px}}
-@keyframes lit{0%,100%{fill:#14503E}45%,60%{fill:#F2C14E}}
+@keyframes lit{0%,100%{fill:#14503E}45%,60%{fill:#3DDC97}}
 .lit{animation:lit 5s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .float{animation:float 5s ease-in-out infinite}
@@ -46,19 +46,16 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </helmet>
-<div class="{{rootClass}}" style="width:100%;font-family:Inter,system-ui,sans-serif;color:#13201B;background:#F6F7F4;overflow:hidden">
+<div class="{{rootClass}}" style="width:100%;font-family:Inter,system-ui,sans-serif;color:#1E2430;background:#F4F5F2;overflow:hidden">
 
   <!-- ================= HERO (dark) ================= -->
   <section class="gridbg" style="background-color:#062A1F;color:#FFFFFF;position:relative">
-    <div aria-hidden="true" style="position:absolute;right:-120px;top:80px;width:620px;height:620px;border-radius:999px;background:#0E5A43;filter:blur(120px);opacity:.55"></div>
+    <div aria-hidden="true" style="position:absolute;right:-120px;top:80px;width:620px;height:620px;border-radius:999px;background:#1F7A52;filter:blur(120px);opacity:.55"></div>
 
     <!-- Glass nav -->
     <header style="position:relative;z-index:3">
       <nav style="max-width:1280px;margin:0 auto;padding:20px 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
-        <a href="Main.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#FFFFFF">
-          <span style="width:42px;height:42px;border-radius:12px;background:#3DDC97;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#062A1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"></path><path d="M5 21V8l7-5 7 5v13"></path><path d="M9 21v-6h6v6"></path></svg></span>
-          <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-family:'Space Grotesk';font-weight:700;font-size:20px">Greentech</span><span style="font-size:11px;letter-spacing:.14em;color:#A9CFC0">REAL ESTATE BROKER</span></span>
-        </a>
+        <a href="HomeV2.dc.html" aria-label="Green Tech Real Estate Broker – home" style="display:flex;align-items:center"><img src="/_blob/cd534d1ec767470d9979b55d9167058f" alt="Green Tech Real Estate Broker" style="height:60px;width:auto;display:block"></a>
         <div style="display:flex;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);border-radius:999px;padding:6px">
           <a href="Listings.dc.html" style="color:#FFFFFF;text-decoration:none;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.1);font-size:14px;font-weight:500">Properties</a>
           <a href="Locations.dc.html" style="color:#D3E4DC;text-decoration:none;padding:10px 16px;border-radius:999px;font-size:14px">Locations</a>
@@ -68,7 +65,7 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
         </div>
         <div style="display:flex;gap:10px;align-items:center">
           <button type="button" style="height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#FFFFFF;font:inherit;font-size:14px">عربي</button>
-          <a href="Contact.dc.html" style="height:44px;display:flex;align-items:center;padding:0 20px;border-radius:999px;background:{{accent}};color:#13201B;text-decoration:none;font-weight:600;font-size:14px">Send enquiry</a>
+          <a href="Contact.dc.html" style="height:44px;display:flex;align-items:center;padding:0 20px;border-radius:999px;background:{{accent}};color:#1E2430;text-decoration:none;font-weight:600;font-size:14px">Send enquiry</a>
         </div>
       </nav>
     </header>
@@ -88,20 +85,20 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
         <!-- Glass search -->
         <form class="rise" style="animation-delay:.3s;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(18px);border-radius:20px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;max-width:640px">
           <label style="flex:1 1 170px;display:flex;flex-direction:column;gap:2px;padding:8px 14px;font-size:12px;color:#A9CFC0;font-weight:600">Property type
-            <select style="height:32px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;font-weight:500;padding:0"><option style="color:#13201B">Labour accommodation</option><option style="color:#13201B">Warehouse</option><option style="color:#13201B">Cafeteria</option><option style="color:#13201B">Supermarket / Shop</option></select>
+            <select style="height:32px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;font-weight:500;padding:0"><option style="color:#1E2430">Labour accommodation</option><option style="color:#1E2430">Warehouse</option><option style="color:#1E2430">Cafeteria</option><option style="color:#1E2430">Supermarket / Shop</option></select>
           </label>
           <span aria-hidden="true" style="width:1px;background:rgba(255,255,255,.16)"></span>
           <label style="flex:1 1 150px;display:flex;flex-direction:column;gap:2px;padding:8px 14px;font-size:12px;color:#A9CFC0;font-weight:600">Location
-            <select style="height:32px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;font-weight:500;padding:0"><option style="color:#13201B">Industrial Area</option><option style="color:#13201B">Umm Silal</option><option style="color:#13201B">Al Khor</option><option style="color:#13201B">Abu Nakhla</option></select>
+            <select style="height:32px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;font-weight:500;padding:0"><option style="color:#1E2430">Industrial Area</option><option style="color:#1E2430">Umm Silal</option><option style="color:#1E2430">Al Khor</option><option style="color:#1E2430">Abu Nakhla</option></select>
           </label>
-          <a href="Listings.dc.html" style="flex:0 0 auto;min-height:56px;display:flex;align-items:center;gap:8px;padding:0 24px;border-radius:14px;background:{{accent}};color:#13201B;text-decoration:none;font-weight:700">
+          <a href="Listings.dc.html" style="flex:0 0 auto;min-height:56px;display:flex;align-items:center;gap:8px;padding:0 24px;border-radius:14px;background:{{accent}};color:#1E2430;text-decoration:none;font-weight:700">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>Search
           </a>
         </form>
 
         <div class="rise" style="animation-delay:.4s;display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-size:14px;color:#A9CFC0">
           <a href="#" style="display:flex;align-items:center;gap:8px;color:#FFFFFF;text-decoration:none;font-weight:600">
-            <span style="width:40px;height:40px;border-radius:999px;background:#1F9D55;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
+            <span style="width:40px;height:40px;border-radius:999px;background:#18884A;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
             WhatsApp +974 [NUMBER]
           </a>
           <span>Instagram · Facebook · YouTube</span>
@@ -117,7 +114,7 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
           <polygon points="40,380 280,500 540,370 300,250" fill="#0A3D2D" stroke="rgba(61,220,151,.25)"></polygon>
           <!-- Tower: labour accommodation -->
           <polygon points="200,120 280,80 360,120 280,160" fill="#3DDC97"></polygon>
-          <polygon points="200,120 280,160 280,400 200,360" fill="#0E5A43"></polygon>
+          <polygon points="200,120 280,160 280,400 200,360" fill="#1F7A52"></polygon>
           <polygon points="280,160 360,120 360,360 280,400" fill="#0A4434"></polygon>
           <g transform="translate(200,120) skewY(26.565)">
             <rect x="14" y="24" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:.2s"></rect>
@@ -156,7 +153,7 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
           <line x1="450" y1="396" x2="490" y2="376" stroke="#4A6457" stroke-width="2"></line>
           <line x1="450" y1="408" x2="490" y2="388" stroke="#4A6457" stroke-width="2"></line>
           <!-- Cafeteria kiosk -->
-          <polygon points="110,360 150,380 190,360 150,340" fill="#F2C14E"></polygon>
+          <polygon points="110,360 150,380 190,360 150,340" fill="#3DDC97"></polygon>
           <polygon points="110,360 150,380 150,420 110,400" fill="#E3E9E5"></polygon>
           <polygon points="150,380 190,360 190,400 150,420" fill="#C5D1CA"></polygon>
           <polygon points="150,380 190,360 190,370 150,390" fill="#D9A632"></polygon>
@@ -183,19 +180,19 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
           <span style="width:40px;height:40px;border-radius:12px;background:#3DDC97;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#062A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"></path><path d="M4 20v-8h16v8"></path><path d="M4 12l8-6 8 6"></path></svg></span>
           <span style="display:flex;flex-direction:column"><span style="font-size:12px;color:#A9CFC0">GT-LA-101 · Available</span><span style="font-weight:600">[N] rooms · Industrial Area</span></span>
         </div>
-        <div class="float" style="position:absolute;right:0;bottom:70px;background:#FFFFFF;border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;color:#13201B;box-shadow:0 20px 50px rgba(0,0,0,.3);animation-delay:1.8s">
-          <span style="width:40px;height:40px;border-radius:999px;background:#1F9D55;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
-          <span style="display:flex;flex-direction:column"><span style="font-size:12px;color:#4B5B55">WhatsApp · just now</span><span style="font-weight:600">“Viewing slot available today”</span></span>
+        <div class="float" style="position:absolute;right:0;bottom:70px;background:#FFFFFF;border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;color:#1E2430;box-shadow:0 20px 50px rgba(0,0,0,.3);animation-delay:1.8s">
+          <span style="width:40px;height:40px;border-radius:999px;background:#18884A;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
+          <span style="display:flex;flex-direction:column"><span style="font-size:12px;color:#5B6474">WhatsApp · just now</span><span style="font-weight:600">“Viewing slot available today”</span></span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ================= MARQUEE ================= -->
-  <div style="background:{{accent}};overflow:hidden;border-top:1px solid rgba(0,0,0,.08)">
-    <div class="marquee" style="display:flex;gap:48px;width:max-content;padding:18px 0;font-family:'Space Grotesk';font-weight:600;font-size:22px;color:#13201B;white-space:nowrap">
+  <div style="background:#A3486F;overflow:hidden">
+    <div class="marquee" style="display:flex;gap:48px;width:max-content;padding:18px 0;font-family:'Space Grotesk';font-weight:600;font-size:22px;color:#FFFFFF;white-space:nowrap">
       <sc-for list="{{ticker}}" as="t" hint-placeholder-count="12">
-        <span style="display:flex;align-items:center;gap:48px">{{t}}<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.5 7.5H22l-6 4.5 2.5 7.5-6.5-4.5L5.5 21.5 8 14 2 9.5h7.5z" fill="#13201B"></path></svg></span>
+        <span style="display:flex;align-items:center;gap:48px">{{t}}<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.5 7.5H22l-6 4.5 2.5 7.5-6.5-4.5L5.5 21.5 8 14 2 9.5h7.5z" fill="#FFFFFF"></path></svg></span>
       </sc-for>
     </div>
   </div>
@@ -204,14 +201,14 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
   <section style="max-width:1280px;margin:0 auto;padding:110px 24px 80px">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px">
       <div style="display:flex;flex-direction:column;gap:10px">
-        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#0E5A43">WHAT WE RENT</span>
+        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#A3486F">WHAT WE RENT</span>
         <h2 style="margin:0;font-family:'Space Grotesk';font-size:52px;line-height:1.05;letter-spacing:-.02em;max-width:620px">Space for every part of your business.</h2>
       </div>
-      <a href="Listings.dc.html" style="color:#0E5A43;font-weight:600">See all properties →</a>
+      <a href="Listings.dc.html" style="color:#1F7A52;font-weight:600">See all properties →</a>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));grid-auto-rows:220px;gap:18px">
-      <a href="Listings.dc.html" class="tilt" style="grid-row:span 2;background:#062A1F;color:#FFFFFF;border:1px solid #0E5A43;border-radius:24px;padding:28px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-        <span aria-hidden="true" style="position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:999px;background:#0E5A43;filter:blur(40px)"></span>
+      <a href="Listings.dc.html" class="tilt" style="grid-row:span 2;background:#062A1F;color:#FFFFFF;border:1px solid #1F7A52;border-radius:24px;padding:28px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
+        <span aria-hidden="true" style="position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:999px;background:#1F7A52;filter:blur(40px)"></span>
         <span style="width:56px;height:56px;border-radius:16px;background:#3DDC97;display:flex;align-items:center;justify-content:center;position:relative"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#062A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"></path><path d="M2 16h20"></path><path d="M6 10V6h5v4"></path></svg></span>
         <span style="display:flex;flex-direction:column;gap:10px;position:relative">
           <span style="font-family:'Space Grotesk';font-size:32px;font-weight:700">Labour Accommodation</span>
@@ -220,16 +217,16 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
         </span>
       </a>
       <sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
-        <a href="Listings.dc.html" class="tilt" style="background:#FFFFFF;border:1px solid #E2E7E3;border-radius:24px;padding:24px;text-decoration:none;color:#13201B;display:flex;flex-direction:column;justify-content:space-between">
+        <a href="Listings.dc.html" class="tilt" style="background:#FFFFFF;border:1px solid #E2E7E3;border-radius:24px;padding:24px;text-decoration:none;color:#1E2430;display:flex;flex-direction:column;justify-content:space-between">
           <span style="display:flex;justify-content:space-between;align-items:flex-start">
-            <span style="width:50px;height:50px;border-radius:14px;background:#E4F0EA;display:flex;align-items:center;justify-content:center;color:#0E5A43">
+            <span style="width:50px;height:50px;border-radius:14px;background:#E3F2EA;display:flex;align-items:center;justify-content:center;color:#1F7A52">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
             </span>
             <span style="font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px;{{c.tagStyle}}">{{c.tag}}</span>
           </span>
           <span style="display:flex;flex-direction:column;gap:4px">
             <span style="font-family:'Space Grotesk';font-size:24px;font-weight:600">{{c.name}}</span>
-            <span style="color:#4B5B55;font-size:14px">{{c.note}}</span>
+            <span style="color:#5B6474;font-size:14px">{{c.note}}</span>
           </span>
         </a>
       </sc-for>
@@ -240,35 +237,35 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
   <section style="max-width:1280px;margin:0 auto;padding:0 24px 110px">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:28px">
       <div style="display:flex;flex-direction:column;gap:10px">
-        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#0E5A43">FEATURED</span>
+        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#A3486F">FEATURED</span>
         <h2 style="margin:0;font-family:'Space Grotesk';font-size:44px;letter-spacing:-.02em">Hand-picked this week</h2>
       </div>
       <div style="display:flex;gap:10px">
-        <button type="button" aria-label="Previous property" onClick="{{prev}}" style="width:52px;height:52px;border-radius:999px;border:1px solid #CFD8D2;background:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#13201B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
-        <button type="button" aria-label="Next property" onClick="{{next}}" style="width:52px;height:52px;border-radius:999px;border:0;background:#0E5A43;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+        <button type="button" aria-label="Previous property" onClick="{{prev}}" style="width:52px;height:52px;border-radius:999px;border:1px solid #CFD8D2;background:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E2430" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+        <button type="button" aria-label="Next property" onClick="{{next}}" style="width:52px;height:52px;border-radius:999px;border:0;background:#1F7A52;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
       </div>
     </div>
     <div style="overflow:hidden;border-radius:28px">
       <div style="display:flex;transition:transform .9s cubic-bezier(.7,0,.2,1);transform:translateX(-{{offset}}%)">
         <sc-for list="{{slides}}" as="s" hint-placeholder-count="3">
           <div style="flex:0 0 100%;display:flex;flex-wrap:wrap;background:#FFFFFF;border:1px solid #E2E7E3;border-radius:28px;overflow:hidden;box-sizing:border-box">
-            <div class="ph" style="flex:1 1 560px;min-height:420px;position:relative;display:flex;align-items:center;justify-content:center;color:#2F4A3F">
+            <div class="ph" style="flex:1 1 560px;min-height:420px;position:relative;display:flex;align-items:center;justify-content:center;color:#3A4A44">
               [Photo / video – {{s.title}}]
               <span style="position:absolute;left:20px;top:20px;background:#062A1F;color:#FFFFFF;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600">{{s.code}}</span>
               <span style="position:absolute;left:20px;bottom:20px;background:rgba(255,255,255,.9);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600">360° tour · [N] photos</span>
             </div>
             <div style="flex:1 1 380px;padding:40px;display:flex;flex-direction:column;gap:16px;justify-content:center">
-              <span style="align-self:flex-start;background:#E4F0EA;color:#0E5A43;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600">{{s.type}}</span>
+              <span style="align-self:flex-start;background:#E3F2EA;color:#1F7A52;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600">{{s.type}}</span>
               <span style="font-family:'Space Grotesk';font-size:36px;font-weight:700;line-height:1.1">{{s.title}}</span>
-              <span style="color:#4B5B55">{{s.location}}</span>
+              <span style="color:#5B6474">{{s.location}}</span>
               <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
-                <span style="background:#F6F7F4;border-radius:12px;padding:12px"><span style="display:block;font-size:12px;color:#4B5B55">{{s.k1}}</span><span style="font-weight:700">{{s.v1}}</span></span>
-                <span style="background:#F6F7F4;border-radius:12px;padding:12px"><span style="display:block;font-size:12px;color:#4B5B55">{{s.k2}}</span><span style="font-weight:700">{{s.v2}}</span></span>
+                <span style="background:#F4F5F2;border-radius:12px;padding:12px"><span style="display:block;font-size:12px;color:#5B6474">{{s.k1}}</span><span style="font-weight:700">{{s.v1}}</span></span>
+                <span style="background:#F4F5F2;border-radius:12px;padding:12px"><span style="display:block;font-size:12px;color:#5B6474">{{s.k2}}</span><span style="font-weight:700">{{s.v2}}</span></span>
               </div>
-              <span style="font-family:'Space Grotesk';font-size:28px;font-weight:700;color:#0E5A43">QAR [PRICE]<span style="font-size:15px;font-weight:400;color:#4B5B55"> / month</span></span>
+              <span style="font-family:'Space Grotesk';font-size:28px;font-weight:700;color:#1F7A52">QAR [PRICE]<span style="font-size:15px;font-weight:400;color:#5B6474"> / month</span></span>
               <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <a href="PropertyDetail.dc.html" style="background:#0E5A43;color:#FFFFFF;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600">View details</a>
-                <a href="#" style="background:#1F9D55;color:#FFFFFF;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600">WhatsApp</a>
+                <a href="PropertyDetail.dc.html" style="background:#1F7A52;color:#FFFFFF;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600">View details</a>
+                <a href="#" style="background:#18884A;color:#FFFFFF;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600">WhatsApp</a>
               </div>
             </div>
           </div>
@@ -279,7 +276,7 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
       <sc-for list="{{dots}}" as="d" hint-placeholder-count="3">
         <button type="button" aria-label="{{d.label}}" onClick="{{d.go}}" style="flex:1;height:44px;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center">
           <span style="display:block;width:100%;height:4px;border-radius:4px;background:#D6DED7;overflow:hidden">
-            <sc-if value="{{d.active}}" hint-placeholder-val="{{ false }}"><span class="{{progClass}}" style="display:block;height:100%;background:#0E5A43"></span></sc-if>
+            <sc-if value="{{d.active}}" hint-placeholder-val="{{ false }}"><span class="{{progClass}}" style="display:block;height:100%;background:#1F7A52"></span></sc-if>
           </span>
         </button>
       </sc-for>
@@ -297,7 +294,7 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
           <span style="font-family:'Space Grotesk';font-size:34px;font-weight:700;color:{{accent}}">{{area.name}}</span>
           <span style="color:#C8DDD3;line-height:1.6">{{area.types}}</span>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-            <a href="Listings.dc.html" style="background:#FFFFFF;color:#13201B;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600">View [N] listings</a>
+            <a href="Listings.dc.html" style="background:#FFFFFF;color:#1E2430;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600">View [N] listings</a>
             <a href="#" style="border:1px solid rgba(255,255,255,.3);color:#FFFFFF;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600">Directions</a>
           </div>
         </div>
@@ -327,26 +324,26 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
   <!-- ================= HOW IT WORKS ================= -->
   <section style="max-width:1280px;margin:0 auto;padding:110px 24px">
     <div style="display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;margin-bottom:56px">
-      <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#0E5A43">HOW IT WORKS</span>
+      <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#A3486F">HOW IT WORKS</span>
       <h2 style="margin:0;font-family:'Space Grotesk';font-size:44px;letter-spacing:-.02em">From search to keys in three steps</h2>
     </div>
     <div style="position:relative">
-      <svg aria-hidden="true" viewBox="0 0 1000 20" preserveAspectRatio="none" style="position:absolute;left:12%;right:12%;top:34px;width:76%;height:20px"><line x1="0" y1="10" x2="1000" y2="10" stroke="#0E5A43" stroke-width="2" class="draw"></line></svg>
+      <svg aria-hidden="true" viewBox="0 0 1000 20" preserveAspectRatio="none" style="position:absolute;left:12%;right:12%;top:34px;width:76%;height:20px"><line x1="0" y1="10" x2="1000" y2="10" stroke="#1F7A52" stroke-width="2" class="draw"></line></svg>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;position:relative">
         <div class="lift" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px">
-          <span style="width:72px;height:72px;border-radius:22px;background:#0E5A43;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">1</span>
+          <span style="width:72px;height:72px;border-radius:22px;background:#1F7A52;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">1</span>
           <span style="font-family:'Space Grotesk';font-size:22px;font-weight:600">Browse &amp; shortlist</span>
-          <span style="color:#4B5B55;line-height:1.6;max-width:300px">Filter by type, area and capacity. See photos, prices and the exact map pin.</span>
+          <span style="color:#5B6474;line-height:1.6;max-width:300px">Filter by type, area and capacity. See photos, prices and the exact map pin.</span>
         </div>
         <div class="lift" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px">
-          <span style="width:72px;height:72px;border-radius:22px;background:#1F9D55;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">2</span>
+          <span style="width:72px;height:72px;border-radius:22px;background:#18884A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">2</span>
           <span style="font-family:'Space Grotesk';font-size:22px;font-weight:600">Enquire or WhatsApp</span>
-          <span style="color:#4B5B55;line-height:1.6;max-width:300px">Send the property code. Our team replies with availability and a viewing time.</span>
+          <span style="color:#5B6474;line-height:1.6;max-width:300px">Send the property code. Our team replies with availability and a viewing time.</span>
         </div>
         <div class="lift" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px">
-          <span style="width:72px;height:72px;border-radius:22px;background:{{accent}};color:#13201B;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">3</span>
+          <span style="width:72px;height:72px;border-radius:22px;background:{{accent}};color:#1E2430;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">3</span>
           <span style="font-family:'Space Grotesk';font-size:22px;font-weight:600">Visit &amp; move in</span>
-          <span style="color:#4B5B55;line-height:1.6;max-width:300px">Inspect the site, sign the contract and move your team in.</span>
+          <span style="color:#5B6474;line-height:1.6;max-width:300px">Inspect the site, sign the contract and move your team in.</span>
         </div>
       </div>
     </div>
@@ -354,37 +351,37 @@ a{color:#3DDC97}a:hover{color:#8BF0C4}
 
   <!-- ================= CTA + FOOTER ================= -->
   <section style="max-width:1280px;margin:0 auto;padding:0 24px 90px">
-    <div class="gridbg" style="background-color:#0E5A43;color:#FFFFFF;border-radius:32px;padding:64px 48px;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:center;position:relative;overflow:hidden">
+    <div class="gridbg" style="background-color:#1F7A52;color:#FFFFFF;border-radius:32px;padding:64px 48px;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:center;position:relative;overflow:hidden">
       <div style="flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:12px;position:relative">
         <span style="color:{{accent}};font-weight:600;letter-spacing:.14em;font-size:13px">COMING SOON · RESIDENTIAL</span>
         <h2 style="margin:0;font-family:'Space Grotesk';font-size:44px;line-height:1.05;letter-spacing:-.02em">Flats &amp; villas in Doha</h2>
         <p style="margin:0;color:#D3E4DC;font-size:18px">Register now and hear first when residential units go live.</p>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;position:relative">
-        <a href="Contact.dc.html" style="background:{{accent}};color:#13201B;text-decoration:none;padding:16px 24px;border-radius:14px;font-weight:700">Register interest</a>
-        <a href="#" style="background:#FFFFFF;color:#13201B;text-decoration:none;padding:16px 24px;border-radius:14px;font-weight:700">WhatsApp us</a>
+        <a href="Contact.dc.html" style="background:{{accent}};color:#1E2430;text-decoration:none;padding:16px 24px;border-radius:14px;font-weight:700">Register interest</a>
+        <a href="#" style="background:#FFFFFF;color:#1E2430;text-decoration:none;padding:16px 24px;border-radius:14px;font-weight:700">WhatsApp us</a>
       </div>
     </div>
   </section>
 
   <footer style="background:#041D15;color:#A9CFC0">
     <div style="max-width:1280px;margin:0 auto;padding:64px 24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;font-size:14px;line-height:1.9">
-      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Space Grotesk';font-weight:700;font-size:22px;color:#FFFFFF">Greentech</span><span>Real Estate Broker · Doha, Qatar</span><span>CR No. [CR NUMBER]</span></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><img src="/_blob/12f10e2de58bb5aaf889c78dd270521d" alt="Green Tech Real Estate Broker" style="width:220px;height:auto;display:block"><span>Doha, Qatar · CR No. [CR NUMBER]</span></div>
       <div style="display:flex;flex-direction:column"><span style="color:#FFFFFF;font-weight:600">Rent</span><a href="Listings.dc.html" style="color:#A9CFC0">Labour accommodation</a><a href="Listings.dc.html" style="color:#A9CFC0">Warehouses</a><a href="Listings.dc.html" style="color:#A9CFC0">Cafeterias</a><a href="Listings.dc.html" style="color:#A9CFC0">Supermarkets &amp; shops</a></div>
       <div style="display:flex;flex-direction:column"><span style="color:#FFFFFF;font-weight:600">Social</span><a href="#" style="color:#A9CFC0">Instagram</a><a href="#" style="color:#A9CFC0">Facebook</a><a href="#" style="color:#A9CFC0">YouTube</a><a href="#" style="color:#A9CFC0">TikTok</a></div>
       <div style="display:flex;flex-direction:column"><span style="color:#FFFFFF;font-weight:600">Also on</span><a href="#" style="color:#A9CFC0">Property Finder Qatar</a><a href="#" style="color:#A9CFC0">Qatar Living</a><a href="#" style="color:#A9CFC0">Mzad Qatar</a></div>
     </div>
-    <div style="max-width:1280px;margin:0 auto;padding:16px 24px 28px;border-top:1px solid #0E3A2C;font-size:13px">© 2026 Greentech Real Estate Broker</div>
+    <div style="max-width:1280px;margin:0 auto;padding:16px 24px 28px;border-top:1px solid #0E3A2C;font-size:13px">© 2026 Green Tech Real Estate Broker</div>
   </footer>
 
   <!-- Floating WhatsApp with pulse ring -->
   <a href="#" aria-label="Chat on WhatsApp" style="position:fixed;right:28px;bottom:28px;width:64px;height:64px;z-index:20;display:block">
-    <span class="pulse" style="position:absolute;inset:0;border-radius:999px;background:#1F9D55"></span>
-    <span style="position:absolute;inset:0;border-radius:999px;background:#1F9D55;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.3)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
+    <span class="pulse" style="position:absolute;inset:0;border-radius:999px;background:#18884A"></span>
+    <span style="position:absolute;inset:0;border-radius:999px;background:#18884A;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.3)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
   </a>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"motion":{"editor":"boolean","default":true,"section":"Motion"},"accent":{"editor":"color","default":"#F2C14E","options":["#F2C14E","#3DDC97","#FF8A5B","#7DD3FC"]},"$preview":{"width":1440,"height":4000}}'>
+<script type="text/x-dc" data-dc-script data-props='{"motion":{"editor":"boolean","default":true,"section":"Motion"},"accent":{"editor":"color","default":"#3DDC97","options":["#3DDC97","#A3486F","#E9A8C3","#FFFFFF"]},"$preview":{"width":1440,"height":4000}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -403,7 +400,7 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this.t1); clearInterval(this.t2); }
   go(i) { this.setState(s => ({ slide: (i + 3) % 3, pflip: !s.pflip })); }
   renderVals() {
-    const accent = this.props.accent ?? '#F2C14E';
+    const accent = this.props.accent ?? '#3DDC97';
     const motion = this.props.motion ?? true;
     const words = ['labour camps', 'warehouses', 'cafeterias', 'supermarkets'];
     const areas = [
@@ -427,9 +424,9 @@ class Component extends DCLogic {
       wordClass: this.state.wflip ? 'wordA' : 'wordB',
       ticker: ticker0.concat(ticker0),
       cats: [
-        { name: 'Warehouses', note: 'Storage, stores & open yards', tag: '[N] units', tagStyle: 'background:#E4F0EA;color:#0B3B2C', icon: 'M3 21V9l9-5 9 5v12M7 21v-7h10v7M7 17h10' },
-        { name: 'Cafeterias', note: 'Ready food-outlet units', tag: '[N] units', tagStyle: 'background:#E4F0EA;color:#0B3B2C', icon: 'M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2' },
-        { name: 'Supermarkets & Shops', note: 'Retail units near camps', tag: '[N] units', tagStyle: 'background:#E4F0EA;color:#0B3B2C', icon: 'M3 4h2l2.5 11h11L21 7H6.5M9 20h.01M18 20h.01' },
+        { name: 'Warehouses', note: 'Storage, stores & open yards', tag: '[N] units', tagStyle: 'background:#E3F2EA;color:#062A1F', icon: 'M3 21V9l9-5 9 5v12M7 21v-7h10v7M7 17h10' },
+        { name: 'Cafeterias', note: 'Ready food-outlet units', tag: '[N] units', tagStyle: 'background:#E3F2EA;color:#062A1F', icon: 'M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2' },
+        { name: 'Supermarkets & Shops', note: 'Retail units near camps', tag: '[N] units', tagStyle: 'background:#E3F2EA;color:#062A1F', icon: 'M3 4h2l2.5 11h11L21 7H6.5M9 20h.01M18 20h.01' },
         { name: 'Residential', note: 'Flats & villas in Doha', tag: 'Coming soon', tagStyle: 'background:#FBEAC2;color:#5C4210', icon: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' }
       ],
       slides,
@@ -443,7 +440,7 @@ class Component extends DCLogic {
         ...a,
         color: i === sel ? accent : '#3DDC97',
         chip: i === sel
-          ? 'height:44px;padding:0 16px;border-radius:999px;border:1px solid ' + accent + ';background:' + accent + ';color:#13201B;font:inherit;font-weight:600;cursor:pointer'
+          ? 'height:44px;padding:0 16px;border-radius:999px;border:1px solid ' + accent + ';background:' + accent + ';color:#1E2430;font:inherit;font-weight:600;cursor:pointer'
           : 'height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#FFFFFF;font:inherit;cursor:pointer',
         pick: () => this.setState({ area: i })
       }))

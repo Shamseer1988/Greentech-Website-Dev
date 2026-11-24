@@ -1,0 +1,63 @@
+/* =========================================================
+   Green Tech Real Estate Broker – APPROVED brand colours
+   (current logo: green crescent + rose outline emblem)
+   Tailwind CSS v4: in app/globals.css
+     @import "tailwindcss";
+     @import "../../../design/brand/brand-theme.css";   (or copy the @theme block)
+   ========================================================= */
+
+@theme {
+  /* --- Logo colours (exact) --- */
+  --color-logo-green: #2A9D6A;     /* crescent + "REAL ESTATE BROKER" */
+  --color-logo-rose: #A3486F;      /* emblem outline + underline */
+  --color-logo-slate: #4A5468;     /* "GREEN TECH" / "جرين تك" */
+
+  /* --- Website palette built from the logo --- */
+  --color-green: #2A9D6A;          /* icons, highlights, large text, borders (NOT white text on it) */
+  --color-green-700: #1F7A52;      /* primary buttons (white text 5.3:1), links on light */
+  --color-green-800: #17603F;      /* hover / pressed */
+  --color-rose: #A3486F;           /* accent: secondary CTA (white text 5.7:1), eyebrow labels, rules */
+  --color-rose-700: #86385A;       /* rose hover */
+  --color-slate: #4A5468;          /* headings on light */
+  --color-deep: #062A1F;           /* dark hero / dark sections */
+  --color-deepest: #041D15;        /* footer */
+  --color-mint: #3DDC97;           /* logo green on dark · CTA on dark (deep text 8.8:1) */
+  --color-pink: #E9A8C3;           /* logo rose on dark */
+  --color-sage: #D3E4DC;           /* secondary text on dark */
+
+  /* --- Neutrals --- */
+  --color-ink: #1E2430;            /* body text */
+  --color-muted: #5B6474;          /* secondary text */
+  --color-ivory: #F4F5F2;          /* light page background */
+  --color-line: #E2E7E3;           /* borders */
+  --color-field: #CFD8D2;          /* input borders */
+  --color-tint: #E3F2EA;           /* light green chips / icon backgrounds */
+  --color-rose-tint: #F6E6EE;      /* light rose badges */
+
+  /* --- Functional --- */
+  --color-whatsapp: #18884A;
+  --color-danger: #B42318;
+
+  /* --- Type --- */
+  --font-display: "Space Grotesk", sans-serif;   /* website headings */
+  --font-sans: "Inter", system-ui, sans-serif;   /* body */
+  --font-arabic: "Noto Kufi Arabic", sans-serif; /* Arabic website text (logo Arabic is outlined in the SVG) */
+}
+
+:root {
+  --gt-logo-green: #2A9D6A;
+  --gt-logo-rose: #A3486F;
+  --gt-logo-slate: #4A5468;
+  --gt-green-700: #1F7A52;
+  --gt-green-800: #17603F;
+  --gt-rose-700: #86385A;
+  --gt-deep: #062A1F;
+  --gt-deepest: #041D15;
+  --gt-mint: #3DDC97;
+  --gt-pink: #E9A8C3;
+  --gt-ink: #1E2430;
+  --gt-muted: #5B6474;
+  --gt-ivory: #F4F5F2;
+  --gt-line: #E2E7E3;
+  --gt-whatsapp: #18884A;
+}
