@@ -9,6 +9,8 @@ from app.models import (
     LookingFor,
     Property,
     PropertyStatus,
+    SocialNetwork,
+    SocialPost,
     User,
     UserRole,
 )
@@ -261,3 +263,35 @@ class Stats(BaseModel):
     available: int
     new_enquiries_7_days: int
     open_enquiries: int
+
+
+# --- Facebook and Instagram -----------------------------------------------
+
+
+class SocialIn(Input):
+    network: SocialNetwork
+    text: CleanStr = Field(min_length=1, max_length=2200)
+    again: bool = False
+
+
+class SocialPostOut(BaseModel):
+    id: int
+    network: SocialNetwork
+    created_at: datetime
+    user_name: str | None
+
+    @classmethod
+    def build(cls, row: SocialPost) -> Self:
+        return cls(
+            id=row.id,
+            network=row.network,
+            created_at=row.created_at,
+            user_name=row.user.full_name if row.user else None,
+        )
+
+
+class SocialState(BaseModel):
+    networks: list[SocialNetwork]
+    online: bool
+    site_url: str
+    posts: list[SocialPostOut]

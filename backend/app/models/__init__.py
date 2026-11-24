@@ -8,6 +8,7 @@ from app.models.property import (
     PropertyStatus,
     PropertyType,
 )
+from app.models.social import SocialNetwork, SocialPost
 from app.models.user import User, UserRole
 
 __all__ = [
@@ -21,6 +22,8 @@ __all__ = [
     "PropertyMedia",
     "PropertyStatus",
     "PropertyType",
+    "SocialNetwork",
+    "SocialPost",
     "User",
     "UserRole",
 ]

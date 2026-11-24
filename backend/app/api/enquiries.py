@@ -1,13 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.db import get_db
 from app.models import Enquiry
 from app.schemas.enquiry import EnquiryIn, EnquiryOut
-from app.services import properties
+from app.services import mailer, properties, turnstile
 from app.services.rate_limit import RateLimiter
 
 router = APIRouter(tags=["public"])
@@ -27,10 +27,15 @@ def rate_limit(request: Request) -> None:
 
 @router.post("/enquiries", status_code=status.HTTP_201_CREATED)
 def create_enquiry(
-    data: EnquiryIn, request: Request, db: Annotated[Session, Depends(get_db)]
+    data: EnquiryIn,
+    request: Request,
+    tasks: BackgroundTasks,
+    db: Annotated[Session, Depends(get_db)],
 ) -> EnquiryOut:
     # Called here, not as a dependency, so a typing mistake in the form is not counted.
     rate_limit(request)
+    if not turnstile.is_human(data.turnstile_token):
+        raise HTTPException(403, "Please complete the security check")
     property_id = None
     if data.property_code:
         prop = (
@@ -41,7 +46,14 @@ def create_enquiry(
         if prop is None:
             raise HTTPException(404, "Property not found")
         property_id = prop.id
-    enquiry = Enquiry(**data.model_dump(exclude={"property_code"}), property_id=property_id)
+    enquiry = Enquiry(
+        **data.model_dump(exclude={"property_code", "turnstile_token"}), property_id=property_id
+    )
     db.add(enquiry)
     db.commit()
+    if settings.mail_enabled:
+        # Load what the email needs while the database is still open.
+        db.refresh(enquiry)
+        _ = enquiry.property
+        tasks.add_task(mailer.notify, enquiry)
     return EnquiryOut(reference=enquiry.id)

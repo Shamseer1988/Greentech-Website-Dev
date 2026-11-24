@@ -1,7 +1,7 @@
 from math import ceil
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -17,6 +17,8 @@ from app.schemas.public import (
     PropertyTypeOut,
 )
 from app.services import properties as service
+from app.services.share_image import cover_key, share_jpeg
+from app.services.storage import Storage, get_storage
 
 router = APIRouter(tags=["public"])
 Db = Annotated[Session, Depends(get_db)]
@@ -93,6 +95,19 @@ def featured_properties(
         page_size=limit,
     )
     return [PropertyCard.build(p) for p in rows]
+
+
+@router.get("/properties/{code}/share.jpg")
+def share_image(code: str, db: Db, storage: Annotated[Storage, Depends(get_storage)]) -> Response:
+    prop = service.get_public(db, code) if "\x00" not in code else None
+    key = cover_key(prop) if prop else None
+    if key is None:
+        raise HTTPException(404, "No photo")
+    return Response(
+        share_jpeg(storage, key),
+        media_type="image/jpeg",
+        headers={"Cache-Control": "public, max-age=3600"},
+    )
 
 
 @router.get("/properties/{code}")

@@ -29,6 +29,9 @@ class FakeStorage:
     def save(self, key, file, content_type):
         self.files[key] = (file.read(), content_type)
 
+    def read(self, key):
+        return self.files[key][0]
+
     def delete(self, key):
         self.files.pop(key, None)
 

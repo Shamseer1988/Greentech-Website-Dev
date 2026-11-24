@@ -1,6 +1,7 @@
 from pathlib import Path
+from typing import Literal
 
-from pydantic import Field, SecretStr
+from pydantic import EmailStr, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -34,6 +35,29 @@ class Settings(BaseSettings):
 
     enquiry_limit: int = 5
     enquiry_window_seconds: int = 600
+
+    # The website's public address, for links in emails and posts.
+    site_url: str = "http://localhost:3000"
+
+    # Everything below is optional: an empty value switches that feature off.
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_security: Literal["starttls", "ssl", "none"] = "starttls"
+    smtp_username: str = ""
+    smtp_password: SecretStr = SecretStr("")
+    mail_from: str = ""
+    enquiry_email_to: list[EmailStr] = []
+
+    turnstile_secret: SecretStr = SecretStr("")
+
+    meta_access_token: SecretStr = SecretStr("")
+    meta_page_id: str = ""
+    meta_instagram_id: str = ""
+    meta_graph_version: str = "v26.0"
+
+    @property
+    def mail_enabled(self) -> bool:
+        return bool(self.smtp_host and self.mail_from and self.enquiry_email_to)
 
     @property
     def database_url(self) -> URL:

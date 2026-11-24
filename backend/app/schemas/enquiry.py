@@ -20,6 +20,7 @@ class EnquiryIn(Input):
     )
     message: CleanStr = Field(default="", max_length=3000)
     reply_on_whatsapp: bool = False
+    turnstile_token: str = Field(default="", max_length=2048)
 
     @field_validator("property_code", "email", "looking_for", mode="before")
     @classmethod

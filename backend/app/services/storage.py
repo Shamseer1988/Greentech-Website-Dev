@@ -65,6 +65,9 @@ class Storage:
             },
         )
 
+    def read(self, key: str) -> bytes:
+        return self.client.get_object(Bucket=self.bucket, Key=key)["Body"].read()
+
     def delete(self, key: str) -> None:
         self.client.delete_object(Bucket=self.bucket, Key=key)
 
