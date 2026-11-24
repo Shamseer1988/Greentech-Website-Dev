@@ -19,6 +19,7 @@ __pycache__/
 
 # Local data
 /data/
+/demo-media/
 minio-data/
 postgres-data/
 
