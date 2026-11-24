@@ -55,6 +55,8 @@ export async function allForMap(params: URLSearchParams): Promise<PropertyCard[]
   return items;
 }
 
+export const getAllProperties = () => optional(allForMap(new URLSearchParams()), []);
+
 export const getProperty = cache(async (code: string): Promise<PropertyDetail | null> => {
   try {
     return await get<PropertyDetail>(`/properties/${encodeURIComponent(code)}`);

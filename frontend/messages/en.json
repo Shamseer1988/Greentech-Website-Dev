@@ -182,6 +182,21 @@
     "ctaText": "Tell us the location and capacity – we source units across Qatar.",
     "ctaButton": "Request a property"
   },
+  "fullMap": {
+    "open": "View large map",
+    "title": "Property map of Qatar",
+    "close": "Close the map",
+    "area": "Area",
+    "allAreas": "All areas",
+    "type": "Property type",
+    "allTypes": "All types",
+    "empty": "No properties match. Try another type or area.",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "showAll": "Show all properties",
+    "closeCard": "Close property",
+    "details": "View details"
+  },
   "contact": {
     "title": "Talk to our rental team",
     "text": "Send an enquiry, or reach us on WhatsApp and social media.",

@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "cn";
 import { Arrow } from "@/components/home/sections";
+import { FullMap } from "@/components/maps/full-map";
 import { MapView } from "@/components/maps/map";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { getLocations } from "@/lib/api";
+import { getAllProperties, getLocations } from "@/lib/api";
 import { nameOf, num } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
 
@@ -29,7 +30,7 @@ export default async function LocationsPage() {
   const t = await getTranslations("locations");
   const common = await getTranslations("common");
   const locale = await getLocale();
-  const locations = await getLocations();
+  const [locations, properties] = await Promise.all([getLocations(), getAllProperties()]);
 
   const cards = [
     ...locations.map((location) => ({
@@ -91,6 +92,7 @@ export default async function LocationsPage() {
           <span className="absolute right-4 top-4 z-10 rounded-md bg-white px-3 py-2 text-[13px] font-semibold shadow">
             {t("mapTitle")}
           </span>
+          <FullMap properties={properties} />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {cards.map((card, i) => (

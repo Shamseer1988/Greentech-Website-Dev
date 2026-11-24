@@ -233,6 +233,106 @@ html.lenis body {
   font-weight: 700;
 }
 
+/* Full-screen property map */
+.premium-map .leaflet-tile-pane {
+  filter: saturate(0.5) brightness(1.04);
+}
+.price-pin,
+.group-pin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.price-pin {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transform: translate(-50%, calc(-100% - 9px));
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: var(--color-green-700);
+  padding: 4px 12px 4px 4px;
+  font: 700 13px/1 var(--font-heading);
+  white-space: nowrap;
+  direction: ltr;
+  color: #fff;
+  box-shadow: 0 8px 22px rgb(4 29 21 / 0.35);
+}
+.price-pin::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: calc(50% - 6px);
+  border: 6px solid transparent;
+  border-top: 8px solid #fff;
+  border-bottom: 0;
+}
+.price-pin svg {
+  box-sizing: border-box;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #fff;
+  padding: 5px;
+  fill: none;
+  stroke: var(--color-green-700);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.price-pin.is-reserved {
+  background: var(--color-rose);
+}
+.price-pin.is-reserved svg {
+  stroke: var(--color-rose);
+}
+.price-pin.is-active {
+  background: var(--color-deep);
+  border-color: var(--color-mint);
+  transform: translate(-50%, calc(-100% - 9px)) scale(1.12);
+  transform-origin: bottom;
+}
+.price-pin.is-active::after {
+  border-top-color: var(--color-mint);
+}
+.group-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -26px);
+}
+.group-pin strong {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: var(--color-deep);
+  font: 700 19px/1 var(--font-heading);
+  color: var(--color-mint);
+  box-shadow:
+    0 0 0 7px rgb(31 122 82 / 0.22),
+    0 10px 26px rgb(4 29 21 / 0.4);
+}
+.group-pin span:not(:empty) {
+  margin-top: 11px;
+  border-radius: 999px;
+  background: #fff;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--color-slate);
+  box-shadow: 0 4px 14px rgb(4 29 21 / 0.2);
+}
+.group-pin:hover {
+  transform: translate(-50%, -26px) scale(1.06);
+}
+
 @media print {
   .no-print {
     display: none !important;

@@ -1,13 +1,12 @@
 import type { MetadataRoute } from "next";
-import { allForMap, getLocations, getTypes } from "@/lib/api";
+import { getAllProperties, getLocations, getTypes } from "@/lib/api";
 import { absoluteUrl, languages } from "@/lib/seo";
-import type { PropertyCard } from "@/lib/types";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [types, locations, properties] = await Promise.all([
     getTypes(),
     getLocations(),
-    allForMap(new URLSearchParams()).catch((): PropertyCard[] => []),
+    getAllProperties(),
   ]);
   const paths: { path: string; date?: string }[] = [
     ...["/", "/properties", "/locations", "/contact"].map((path) => ({ path })),
