@@ -20,3 +20,5 @@ class User(TimestampMixin, Base):
     password_hash: Mapped[str] = mapped_column(String(255))
     role: Mapped[UserRole] = mapped_column(str_enum(UserRole, "role"), default=UserRole.AGENT)
     is_active: Mapped[bool] = mapped_column(default=True, server_default=true())
+    # Raised to end all of this user's logins (new password, access removed).
+    token_version: Mapped[int] = mapped_column(default=0, server_default="0")

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -28,8 +28,9 @@ class Settings(BaseSettings):
     # Public address of the bucket, as seen by a visitor's browser.
     media_public_url: str = "http://127.0.0.1:9000/greentech-media"
 
-    # Temporary protection for uploads until admin login (Phase 4). Empty = uploads are off.
-    admin_api_key: SecretStr = SecretStr("")
+    # Signs admin logins.
+    jwt_secret: SecretStr = Field(min_length=32)
+    login_hours: int = Field(default=8, ge=1, le=72)
 
     enquiry_limit: int = 5
     enquiry_window_seconds: int = 600

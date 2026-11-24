@@ -1,35 +1,25 @@
 import re
 import unicodedata
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.models import LookingFor
+from app.schemas.common import CleanStr, Input
 
-CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 
-
-class EnquiryIn(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
-
+class EnquiryIn(Input):
     property_code: str | None = Field(default=None, max_length=20)
-    name: str = Field(min_length=2, max_length=120)
-    company: str = Field(default="", max_length=160)
+    name: CleanStr = Field(min_length=2, max_length=120)
+    company: CleanStr = Field(default="", max_length=160)
     phone: str = Field(max_length=40, examples=["+974 5555 5555"])
     email: EmailStr | None = Field(default=None, max_length=254)
     looking_for: LookingFor | None = None
-    area: str = Field(default="", max_length=120, description="Preferred area")
-    space_needed: str = Field(
+    area: CleanStr = Field(default="", max_length=120, description="Preferred area")
+    space_needed: CleanStr = Field(
         default="", max_length=120, description="Number of staff / area needed"
     )
-    message: str = Field(default="", max_length=3000)
+    message: CleanStr = Field(default="", max_length=3000)
     reply_on_whatsapp: bool = False
-
-    @field_validator("name", "company", "area", "space_needed", "message")
-    @classmethod
-    def no_control_characters(cls, value: str) -> str:
-        if CONTROL_CHARS.search(value):
-            raise ValueError("Contains characters that are not allowed")
-        return value
 
     @field_validator("property_code", "email", "looking_for", mode="before")
     @classmethod

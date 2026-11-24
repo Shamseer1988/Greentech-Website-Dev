@@ -1,16 +1,16 @@
 import logging
-import secrets
 import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, status
-from fastapi.security import APIKeyHeader
 from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
 from app.core.db import get_db
+from app.core.security import current_user
 from app.models import MediaKind, Property, PropertyMedia
+from app.schemas.admin import MediaOrder
+from app.schemas.common import Id
 from app.schemas.public import MediaOut
 from app.services.media import (
     MAX_IMAGE_BYTES,
@@ -24,34 +24,46 @@ from app.services.media import (
 from app.services.storage import Storage, get_storage
 
 logger = logging.getLogger(__name__)
-api_key_header = APIKeyHeader(name="X-Admin-Key", auto_error=False)
+router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(current_user)])
+Db = Annotated[Session, Depends(get_db)]
+Files = Annotated[Storage, Depends(get_storage)]
 
 
-def require_admin_key(key: Annotated[str | None, Depends(api_key_header)]) -> None:
-    """Temporary until admin login (Phase 4)."""
-    expected = settings.admin_api_key.get_secret_value()
-    if not expected:
-        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "ADMIN_API_KEY is not set")
-    if not key or not secrets.compare_digest(key.encode(), expected.encode()):
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid admin key")
+def lock(db: Session, property_id: int) -> None:
+    """One photo change at a time per property, so there is never a second cover."""
+    found = db.scalar(select(Property.id).where(Property.id == property_id).with_for_update())
+    if found is None:
+        raise HTTPException(404, "Property not found")
 
 
-router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(require_admin_key)])
+def all_media(db: Session, property_id: int) -> list[PropertyMedia]:
+    return list(
+        db.scalars(
+            select(PropertyMedia)
+            .where(PropertyMedia.property_id == property_id)
+            .order_by(PropertyMedia.sort_order, PropertyMedia.id)
+        )
+    )
 
 
-@router.post("/properties/{code}/media", status_code=status.HTTP_201_CREATED)
+def find_media(db: Session, media_id: int) -> PropertyMedia:
+    media = db.get(PropertyMedia, media_id)
+    if media is None:
+        raise HTTPException(404, "Photo not found")
+    lock(db, media.property_id)
+    return media
+
+
+@router.post("/properties/{property_id}/media", status_code=status.HTTP_201_CREATED)
 def upload_media(
-    code: str,
+    property_id: Id,
     file: UploadFile,
-    db: Annotated[Session, Depends(get_db)],
-    storage: Annotated[Storage, Depends(get_storage)],
+    db: Db,
+    storage: Files,
     kind: Annotated[MediaKind, Form()] = MediaKind.IMAGE,
     is_cover: Annotated[bool, Form()] = False,
 ) -> MediaOut:
-    if "\x00" in code:
-        raise HTTPException(404, "Property not found")
-    prop = db.scalar(select(Property).where(Property.code == code.strip().upper()))
-    if prop is None:
+    if db.get(Property, property_id) is None:
         raise HTTPException(404, "Property not found")
     if is_cover and kind != MediaKind.IMAGE:
         raise HTTPException(422, "Only a photo can be the cover")
@@ -72,18 +84,22 @@ def upload_media(
     except MediaError as exc:
         raise HTTPException(422, str(exc)) from exc
 
-    key = f"properties/{prop.id}/{uuid.uuid4().hex}.{extension}"
+    key = f"properties/{property_id}/{uuid.uuid4().hex}.{extension}"
     storage.save(key, body, content_type)
     try:
-        media = _add_row(db, prop.id, key, kind, width, height, is_cover)
+        media = _add_row(db, property_id, key, kind, width, height, is_cover)
     except Exception:
         db.rollback()
-        try:
-            storage.delete(key)
-        except Exception:
-            logger.exception("Could not remove unused file %s", key)
+        _delete_file(storage, key)
         raise
     return MediaOut.build(media)
+
+
+def _delete_file(storage: Storage, key: str) -> None:
+    try:
+        storage.delete(key)
+    except Exception:
+        logger.exception("Could not remove file %s", key)
 
 
 def _add_row(
@@ -95,8 +111,7 @@ def _add_row(
     height: int | None,
     is_cover: bool,
 ) -> PropertyMedia:
-    # Lock the property so two uploads at once cannot both become the cover.
-    db.execute(select(Property.id).where(Property.id == property_id).with_for_update())
+    lock(db, property_id)
     mine = PropertyMedia.property_id == property_id
     last = db.scalar(select(func.max(PropertyMedia.sort_order)).where(mine))
     has_cover = db.scalar(select(PropertyMedia.id).where(mine, PropertyMedia.is_cover)) is not None
@@ -114,3 +129,47 @@ def _add_row(
     db.add(media)
     db.commit()
     return media
+
+
+@router.put("/properties/{property_id}/media/order")
+def reorder(property_id: Id, data: MediaOrder, db: Db) -> list[MediaOut]:
+    lock(db, property_id)
+    media = {m.id: m for m in all_media(db, property_id)}
+    if sorted(data.ids) != sorted(media):
+        raise HTTPException(409, "The photos changed. Reload the page and try again.")
+    for position, media_id in enumerate(data.ids):
+        media[media_id].sort_order = position
+    db.commit()
+    return [MediaOut.build(media[i]) for i in data.ids]
+
+
+@router.put("/media/{media_id}/cover")
+def set_cover(media_id: Id, db: Db) -> list[MediaOut]:
+    media = find_media(db, media_id)
+    if media.kind != MediaKind.IMAGE:
+        raise HTTPException(422, "Only a photo can be the cover")
+    db.execute(
+        update(PropertyMedia)
+        .where(PropertyMedia.property_id == media.property_id)
+        .values(is_cover=False)
+    )
+    db.execute(update(PropertyMedia).where(PropertyMedia.id == media_id).values(is_cover=True))
+    db.commit()
+    db.expire_all()
+    return [MediaOut.build(m) for m in all_media(db, media.property_id)]
+
+
+@router.delete("/media/{media_id}")
+def delete_media(media_id: Id, db: Db, storage: Files) -> list[MediaOut]:
+    media = find_media(db, media_id)
+    property_id, key, was_cover = media.property_id, media.object_key, media.is_cover
+    db.delete(media)
+    db.flush()
+    left = all_media(db, property_id)
+    if was_cover:
+        photo = next((m for m in left if m.kind == MediaKind.IMAGE), None)
+        if photo:
+            photo.is_cover = True
+    db.commit()
+    _delete_file(storage, key)
+    return [MediaOut.build(m) for m in left]

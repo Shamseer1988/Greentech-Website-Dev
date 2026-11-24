@@ -1,9 +1,11 @@
 from enum import StrEnum
 
 from sqlalchemy import ForeignKey, Index, String, Text, false
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin, str_enum
+from app.models.property import Property
+from app.models.user import User
 
 
 class EnquiryStatus(StrEnum):
@@ -47,3 +49,6 @@ class Enquiry(TimestampMixin, Base):
     assigned_to_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"), index=True
     )
+
+    property: Mapped[Property | None] = relationship()
+    assigned_to: Mapped[User | None] = relationship()

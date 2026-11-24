@@ -8,10 +8,8 @@ from sqlalchemy import select
 from alembic import command
 from app.models import Enquiry, Property, PropertyMedia, PropertyStatus
 from app.scripts.seed import seed
-from tests.conftest import KEY
 
-UPLOAD_URL = "/api/admin/properties/GT-LA-101/media"
-AUTH = {"X-Admin-Key": KEY}
+UPLOAD_URL = "/api/admin/properties/1/media"
 
 
 def codes(client, query=""):
@@ -33,7 +31,7 @@ def picture(fmt="JPEG", size=(3000, 1500), **save):
     return out.getvalue()
 
 
-def upload(client, content, name="photo.jpg", headers=AUTH, **data):
+def upload(client, content, headers, name="photo.jpg", **data):
     return client.post(UPLOAD_URL, files={"file": (name, content)}, data=data, headers=headers)
 
 
@@ -202,11 +200,11 @@ def test_enquiry_rate_limit(client):
 # --- media ----------------------------------------------------------------
 
 
-def test_photo_becomes_webp_without_gps(client, storage):
+def test_photo_becomes_webp_without_gps(client, agent, storage):
     exif = Image.Exif()
     exif[0x0112] = 6  # camera was held sideways
     exif[0x8825] = {1: "N", 2: (25.0, 10.0, 0.0)}
-    response = upload(client, picture(exif=exif))
+    response = upload(client, picture(exif=exif), agent)
     assert response.status_code == 201, response.text
     data = response.json()
     assert (data["width"], data["height"]) == (1000, 2000)
@@ -219,52 +217,54 @@ def test_photo_becomes_webp_without_gps(client, storage):
     assert page["cover_url"] == data["url"] and page["photo_count"] == 1
 
 
-def test_only_one_cover(client, db):
-    upload(client, picture())
-    upload(client, picture("PNG"))
-    third = upload(client, picture("WEBP"), is_cover="true").json()
+def test_only_one_cover(client, agent, db):
+    upload(client, picture(), agent)
+    upload(client, picture("PNG"), agent)
+    third = upload(client, picture("WEBP"), agent, is_cover="true").json()
     covers = db.scalars(select(PropertyMedia.id).where(PropertyMedia.is_cover)).all()
     assert covers == [third["id"]]
     assert third["sort_order"] == 2
 
 
-def test_video(client, storage):
+def test_video(client, agent, storage):
     mp4 = b"\x00\x00\x00\x18ftypisom" + b"0" * 100
-    assert upload(client, mp4, "tour.mp4", kind="video").json()["is_cover"] is False
+    assert upload(client, mp4, agent, "tour.mp4", kind="video").json()["is_cover"] is False
     assert next(iter(storage.files)).endswith(".mp4")
-    assert upload(client, mp4, kind="video", is_cover="true").status_code == 422
+    assert upload(client, mp4, agent, kind="video", is_cover="true").status_code == 422
 
 
 @pytest.mark.parametrize("kind", ["image", "video", "360"])
-def test_bad_files_are_refused(client, storage, kind):
-    assert upload(client, b"<script>alert(1)</script>", "x.jpg", kind=kind).status_code == 422
-    assert upload(client, picture()[:200], "x.jpg", kind=kind).status_code == 422
+def test_bad_files_are_refused(client, agent, storage, kind):
+    assert (
+        upload(client, b"<script>alert(1)</script>", agent, "x.jpg", kind=kind).status_code == 422
+    )
+    assert upload(client, picture()[:200], agent, "x.jpg", kind=kind).status_code == 422
     assert storage.files == {}
 
 
-def test_upload_needs_key(client, storage):
-    assert upload(client, picture(), headers={}).status_code == 401
-    assert upload(client, picture(), headers={"X-Admin-Key": "wrong"}).status_code == 401
+def test_upload_needs_key(client, agent, storage):
+    assert upload(client, picture(), {}).status_code == 401
+    assert upload(client, picture(), {"Authorization": "Bearer wrong"}).status_code == 401
     assert storage.files == {}
 
 
-def test_large_body_without_key_is_refused(client):
-    assert upload(client, b"0" * (2 * 1024 * 1024), headers={}).status_code == 413
+def test_large_body_without_key_is_refused(client, agent):
+    assert upload(client, b"0" * (2 * 1024 * 1024), {}).status_code == 413
 
 
-def test_chunked_body_is_refused(client):
+def test_chunked_body_is_refused(client, agent):
     response = client.post("/api/enquiries", content=iter([b"{}"]))
     assert response.status_code == 411
 
 
-def test_upload_unknown_property(client):
+def test_upload_unknown_property(client, agent):
     response = client.post(
-        "/api/admin/properties/NOPE/media", files={"file": ("a.jpg", picture())}, headers=AUTH
+        "/api/admin/properties/9999/media", files={"file": ("a.jpg", picture())}, headers=agent
     )
     assert response.status_code == 404
 
 
-def test_file_removed_when_database_fails(client, storage, monkeypatch):
+def test_file_removed_when_database_fails(client, agent, storage, monkeypatch):
     from app.api import media
 
     def fail(*args):
@@ -272,5 +272,5 @@ def test_file_removed_when_database_fails(client, storage, monkeypatch):
 
     monkeypatch.setattr(media, "_add_row", fail)
     with pytest.raises(RuntimeError):
-        upload(client, picture())
+        upload(client, picture(), agent)
     assert storage.files == {}

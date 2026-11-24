@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.core.db import get_db
 from app.models import Location, Property, PropertyType
+from app.schemas.common import MAX_INT
 from app.schemas.public import (
     LocationOut,
     PropertyCard,
@@ -19,7 +20,6 @@ from app.services import properties as service
 
 router = APIRouter(tags=["public"])
 Db = Annotated[Session, Depends(get_db)]
-MAX_INT = 2_147_483_647
 
 
 class PropertyFilters(BaseModel):

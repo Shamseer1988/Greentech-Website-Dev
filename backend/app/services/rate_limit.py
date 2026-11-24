@@ -22,12 +22,30 @@ class RateLimiter:
         now = time.monotonic()
         with self._lock:
             if now >= self._next_cleanup:
-                self._hits = {k: h for k, h in self._hits.items() if h[-1] > now - self.window}
+                self._hits = {
+                    k: h for k, h in self._hits.items() if h and h[-1] > now - self.window
+                }
                 self._next_cleanup = now + self.window
-            hits = self._hits.setdefault(key, deque())
-            while hits and hits[0] <= now - self.window:
-                hits.popleft()
-            if len(hits) >= self.limit:
-                return max(1, math.ceil(hits[0] + self.window - now))
-            hits.append(now)
+            wait = self._wait(key, now)
+            if not wait:
+                self._hits.setdefault(key, deque()).append(now)
+            return wait
+
+    def waiting(self, key: str) -> int:
+        """Seconds to wait, without counting this request."""
+        with self._lock:
+            return self._wait(key, time.monotonic())
+
+    def clear(self) -> None:
+        with self._lock:
+            self._hits.clear()
+
+    def _wait(self, key: str, now: float) -> int:
+        hits = self._hits.get(key)
+        if not hits:
             return 0
+        while hits and hits[0] <= now - self.window:
+            hits.popleft()
+        if len(hits) < self.limit:
+            return 0
+        return max(1, math.ceil(hits[0] + self.window - now))

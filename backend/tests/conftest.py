@@ -5,21 +5,21 @@ from pathlib import Path
 import pytest
 from alembic.config import Config
 from fastapi.testclient import TestClient
-from pydantic import SecretStr
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from alembic import command
-from app.api import enquiries
+from app.api import auth, enquiries
 from app.core.config import settings
 from app.core.db import get_db
+from app.core.security import create_token, hash_password
 from app.main import app
-from app.models import Base
+from app.models import Base, User, UserRole
 from app.scripts.seed import seed
 from app.services.storage import get_storage
 
 TEST_DB = "greentech_test"
-KEY = "test-key"
+PASSWORD = "correct horse battery"
 
 
 class FakeStorage:
@@ -71,16 +71,40 @@ def storage():
 
 
 @pytest.fixture
-def client(db, storage, engine, monkeypatch):
+def client(db, storage, engine):
     make_session = sessionmaker(bind=engine, expire_on_commit=False)
 
     def test_db():
         with make_session() as session:
             yield session
 
-    monkeypatch.setattr(settings, "admin_api_key", SecretStr(KEY))
-    enquiries.limiter._hits.clear()
+    for limiter in (enquiries.limiter, auth.per_visitor, auth.per_email):
+        limiter.clear()
     app.dependency_overrides = {get_db: test_db, get_storage: lambda: storage}
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides = {}
+
+
+PASSWORD_HASH = hash_password(PASSWORD)
+
+
+def make_user(db, email, role):
+    user = User(email=email, full_name=email.split("@")[0], role=role, password_hash=PASSWORD_HASH)
+    db.add(user)
+    db.commit()
+    return user
+
+
+def headers_for(user):
+    return {"Authorization": f"Bearer {create_token(user)}"}
+
+
+@pytest.fixture
+def admin(db):
+    return headers_for(make_user(db, "admin@example.com", UserRole.ADMIN))
+
+
+@pytest.fixture
+def agent(db):
+    return headers_for(make_user(db, "agent@example.com", UserRole.AGENT))

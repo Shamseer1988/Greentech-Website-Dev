@@ -1,7 +1,7 @@
 from starlette.responses import JSONResponse
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-from app.core.config import settings
+from app.core.security import decode_token
 
 SMALL = 1024 * 1024
 UPLOAD = 100 * 1024 * 1024
@@ -10,8 +10,8 @@ UPLOAD = 100 * 1024 * 1024
 class BodyLimitMiddleware:
     """Refuse oversized requests before the body is read.
 
-    FastAPI reads the whole upload before checking the admin key, so requests
-    without the right key only get the small limit.
+    FastAPI reads the whole upload before checking the login, so requests
+    without a valid login only get the small limit.
     """
 
     def __init__(self, app: ASGIApp) -> None:
@@ -31,8 +31,8 @@ class BodyLimitMiddleware:
 
     @staticmethod
     def _limit(headers: dict[bytes, bytes]) -> int:
-        key = settings.admin_api_key.get_secret_value().encode()
-        return UPLOAD if key and headers.get(b"x-admin-key") == key else SMALL
+        scheme, _, token = headers.get(b"authorization", b"").decode("latin-1").partition(" ")
+        return UPLOAD if scheme.lower() == "bearer" and decode_token(token) else SMALL
 
     @staticmethod
     async def _refuse(code: int, detail: str, scope: Scope, receive: Receive, send: Send) -> None:
