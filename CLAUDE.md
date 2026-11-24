@@ -87,3 +87,5 @@ standalone in a browser – read the HTML/inline styles and the `renderVals()` d
 - Start DB + MinIO: `docker compose up -d db minio`
 - Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload`
 - Frontend: `cd frontend && npm run dev`
+- Migrations: `cd backend && .venv\Scripts\alembic upgrade head` (new: `alembic revision --autogenerate -m "..."`)
+- Seed: `python -m app.scripts.seed` | Tests: `python -m pytest` | Lint: `ruff check app tests`

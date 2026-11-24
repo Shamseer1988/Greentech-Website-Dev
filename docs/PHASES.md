@@ -14,11 +14,11 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 - Test: `docker compose up -d db minio`, backend at http://localhost:8000/docs, frontend at http://localhost:3000
 
 ## Phase 2 – Database & API
-- [ ] SQLAlchemy models + first Alembic migration (see CLAUDE.md data model)
-- [ ] Seed script: property types, the 4 locations, 6 sample properties with placeholder values
-- [ ] Public API: list/filter/search properties, property by code, locations, featured
-- [ ] Enquiry API (POST) with validation + rate limit
-- [ ] Media upload to MinIO with WebP conversion
+- [x] SQLAlchemy models + first Alembic migration (see CLAUDE.md data model)
+- [x] Seed script: property types, the 4 locations, 6 sample properties with placeholder values
+- [x] Public API: list/filter/search properties, property by code, locations, featured
+- [x] Enquiry API (POST) with validation + rate limit
+- [x] Media upload to MinIO with WebP conversion
 - Test: Swagger UI at /docs
 
 ## Phase 3 – Public pages (from mockups)

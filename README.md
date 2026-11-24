@@ -14,6 +14,9 @@ cd backend
 py -3.12 -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
+.venv\Scripts\alembic upgrade head          # create tables
+.venv\Scripts\python -m app.scripts.seed    # sample data
+
 cd ..\frontend
 npm.cmd ci
 ```
@@ -39,6 +42,16 @@ npm.cmd run dev
 | API health | http://localhost:8000/api/health |
 | MinIO console | http://localhost:9001 (login is in `.env`) |
 
+## Backend tests
+```powershell
+cd backend
+.venv\Scripts\python -m pip install -r requirements-dev.txt
+.venv\Scripts\python -m pytest    # uses its own greentech_test database
+```
+
+Photo upload is in the API docs under **admin**. Click **Authorize** and paste `ADMIN_API_KEY` from `.env`.
+
+## Stopping
 Stop: `Ctrl+C` in both terminals, then `docker compose stop`.
 Do not run `docker compose down -v`: it deletes the local database and photos.
 
