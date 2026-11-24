@@ -7,7 +7,7 @@ Git, Node.js 20+, Python 3.12, Docker Desktop (running).
 
 ## First-time setup (PowerShell, from the project folder)
 ```powershell
-Copy-Item .env.example .env        # only if .env does not exist; then change the passwords
+Copy-Item .env.example .env        # only if .env does not exist; then change the passwords and set JWT_SECRET
 docker compose up -d --wait db minio
 
 cd backend
@@ -53,7 +53,18 @@ cd backend
 .venv\Scripts\python -m pytest    # uses its own greentech_test database
 ```
 
-Photo upload is in the API docs under **admin**. Click **Authorize** and paste `ADMIN_API_KEY` from `.env`.
+## Admin panel
+http://localhost:3000/admin
+
+Create the first admin, or reset a forgotten admin password (asks for email, name and password):
+```powershell
+cd backend
+.venv\Scripts\python -m app.scripts.create_admin
+```
+Add other users in the panel under **Users & roles**.
+
+After pulling new code, also run `.venv\Scripts\python -m pip install -r requirements.txt`,
+`.venv\Scripts\alembic upgrade head`, and `npm.cmd ci` in `frontend`.
 
 ## Stopping
 Stop: `Ctrl+C` in both terminals, then `docker compose stop`.

@@ -96,4 +96,5 @@ Website colours MUST match the approved logo:
 - Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload`
 - Frontend: `cd frontend && npm run dev`
 - Migrations: `cd backend && .venv\Scripts\alembic upgrade head` (new: `alembic revision --autogenerate -m "..."`)
+- Create/reset admin: `python -m app.scripts.create_admin`
 - Seed: `python -m app.scripts.seed` | Tests: `python -m pytest` | Lint: `ruff check app tests`

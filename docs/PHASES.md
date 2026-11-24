@@ -30,11 +30,11 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 - [x] Mobile layout check (bottom WhatsApp/Call bar)
 
 ## Phase 4 – Admin panel (/admin)
-- [ ] Login (JWT), roles
-- [ ] Properties CRUD, status change, featured toggle
-- [ ] Photo/video upload, drag to reorder, set cover
-- [ ] Enquiries inbox, assign agent, "Reply on WhatsApp"
-- [ ] Locations management, Export to Excel
+- [x] Login (JWT), roles
+- [x] Properties CRUD, status change, featured toggle
+- [x] Photo/video upload, drag to reorder, set cover
+- [x] Enquiries inbox, assign agent, "Reply on WhatsApp"
+- [x] Locations management, Export to Excel
 
 ## Phase 5 – Marketing & SEO
 - [ ] Arabic translations + RTL check
