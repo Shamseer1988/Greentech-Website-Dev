@@ -5,13 +5,16 @@ import type { LocationOut, PropertyCard, PropertyDetail, PropertyPage, PropertyT
 
 export const API_URL = process.env.API_URL || "http://127.0.0.1:8000";
 
+/** The admin panel clears this, so changes show on the site at once. */
+export const PUBLIC_TAG = "public";
+
 class NotFound extends Error {}
 
 async function get<T>(path: string): Promise<T> {
   // Load at request time, so building the site never needs a running backend.
   await connection();
   const response = await fetch(`${API_URL}/api${path}`, {
-    next: { revalidate: process.env.NODE_ENV === "production" ? 60 : 0 },
+    next: { revalidate: process.env.NODE_ENV === "production" ? 60 : 0, tags: [PUBLIC_TAG] },
     signal: AbortSignal.timeout(8000),
   });
   if (response.status === 404) throw new NotFound(path);
