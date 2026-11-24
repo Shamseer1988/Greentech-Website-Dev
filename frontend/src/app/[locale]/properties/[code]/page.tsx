@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "cn";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
+import { JsonLd } from "@/components/json-ld";
 import { MapView } from "@/components/maps/map";
 import { Gallery } from "@/components/property/gallery";
 import { Price } from "@/components/property/price";
@@ -12,7 +13,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { Link } from "@/i18n/navigation";
 import { getProperty } from "@/lib/api";
-import { amenityOf, ltr, nameOf, num, titleOf } from "@/lib/format";
+import { amenityOf, ltr, nameOf, num, specs, titleOf } from "@/lib/format";
+import { breadcrumbs, listing } from "@/lib/schema-org";
+import { pageMetadata, shareImage, summary } from "@/lib/seo";
 import { directionsHref, site } from "@/lib/site";
 
 type Props = { params: Promise<{ code: string }> };
@@ -21,12 +24,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const property = await getProperty((await params).code);
   if (!property) return {};
   const locale = await getLocale();
+  const brand = await getTranslations("brand");
+  const common = await getTranslations("common");
   const title = `${titleOf(property, locale)} – ${nameOf(property.location, locale)}`;
-  return {
+  const facts = [
+    common("code", { code: property.code }),
+    property.rent_qar === null
+      ? common("onRequest")
+      : `${common("price", { price: num(property.rent_qar) })} ${common("perMonth")}`,
+    ...specs(property, common, locale),
+  ];
+  const text = (locale === "ar" && property.description_ar) || property.description_en;
+  return pageMetadata({
+    locale,
+    path: `/properties/${property.code}`,
     title,
-    description: (locale === "ar" && property.description_ar) || property.description_en || title,
-    ...(property.cover_url && { openGraph: { title, images: [property.cover_url] } }),
-  };
+    description: summary(`${facts.join(" · ")}. ${text}`),
+    siteName: brand("name"),
+    image: shareImage(property.code, property.cover_url),
+  });
 }
 
 const CARD = "flex flex-col gap-4 rounded-2xl border border-line bg-white p-6";
@@ -57,6 +73,17 @@ export default async function PropertyPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={listing(property, locale)} />
+      <JsonLd
+        data={breadcrumbs(
+          [
+            { name: nav("home"), path: "/" },
+            { name: type, path: `/properties?type=${property.type.slug}` },
+            { name: title, path: `/properties/${property.code}` },
+          ],
+          locale,
+        )}
+      />
       <nav
         aria-label={t("breadcrumb")}
         className="no-print container-page max-w-[1240px] pt-5 text-sm text-muted-foreground"

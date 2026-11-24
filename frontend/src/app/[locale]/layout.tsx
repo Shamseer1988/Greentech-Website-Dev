@@ -2,11 +2,16 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { Analytics } from "@/components/analytics";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { JsonLd } from "@/components/json-ld";
 import { ContactBar } from "@/components/layout/contact-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { routing } from "@/i18n/routing";
+import { company } from "@/lib/schema-org";
+import { isLive } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { fontVariables } from "../fonts";
 import "../globals.css";
@@ -24,10 +29,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     metadataBase: new URL(site.url),
     title: { default: t("title"), template: `%s | ${brand("name")}` },
     description: t("description"),
-    openGraph: {
-      siteName: brand("name"),
-      images: [{ url: "/brand/og-image-1200x630.png", width: 1200, height: 630 }],
-    },
+    ...(!isLive && { robots: { index: false, follow: true } }),
+    ...(process.env.GOOGLE_SITE_VERIFICATION && {
+      verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
+    }),
   };
 }
 
@@ -38,10 +43,12 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: "nav" });
+  const brand = await getTranslations({ locale, namespace: "brand" });
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className={fontVariables}>
       <body>
+        <JsonLd data={company(brand("name"), locale)} />
         <NextIntlClientProvider>
           <MotionProvider>
             <a
@@ -51,9 +58,12 @@ export default async function LocaleLayout({
               {t("skip")}
             </a>
             <SiteHeader />
-            <main id="main">{children}</main>
+            <main id="main">
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </main>
             <SiteFooter />
             <ContactBar />
+            <Analytics />
           </MotionProvider>
         </NextIntlClientProvider>
       </body>

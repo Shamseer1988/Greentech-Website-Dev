@@ -46,23 +46,28 @@ export function HowItWorks() {
         </h2>
       </div>
       <div className="relative">
-        <svg
+        {/* GSAP scales the outer box; the mirroring for Arabic is inside, so they do not clash. */}
+        <div
           aria-hidden="true"
-          viewBox="0 0 1000 20"
-          preserveAspectRatio="none"
-          className="how-line absolute inset-x-[16%] top-8.5 hidden h-5 w-[68%] rtl:-scale-x-100 md:block"
+          className="how-line absolute inset-x-[16%] top-8.5 hidden h-5 md:block"
         >
-          <line
-            x1="0"
-            y1="10"
-            x2="1000"
-            y2="10"
-            stroke="#1F7A52"
-            strokeWidth="2"
-            strokeDasharray="8 10"
-            className="animate-dashflow"
-          />
-        </svg>
+          <svg
+            viewBox="0 0 1000 20"
+            preserveAspectRatio="none"
+            className="size-full rtl:-scale-x-100"
+          >
+            <line
+              x1="0"
+              y1="10"
+              x2="1000"
+              y2="10"
+              stroke="#1F7A52"
+              strokeWidth="2"
+              strokeDasharray="8 10"
+              className="animate-dashflow"
+            />
+          </svg>
+        </div>
         <ol className="relative grid gap-8 md:grid-cols-3">
           {STEPS.map(({ key, style }) => (
             <li key={key} className="how-step flex flex-col items-center gap-3.5 p-2 text-center">

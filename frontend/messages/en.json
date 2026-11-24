@@ -4,7 +4,20 @@
     "description": "Labour accommodation, warehouses, cafeterias and supermarket spaces for rent across Qatar.",
     "properties": "Properties for rent",
     "locations": "Locations",
-    "contact": "Contact"
+    "contact": "Contact",
+    "rentType": "{type} for rent in Qatar",
+    "rentArea": "Properties for rent in {area}, Qatar",
+    "rentTypeArea": "{type} for rent in {area}, Qatar",
+    "pageNumber": "{title} – page {page}",
+    "rentDescription": "{title}. See photos, monthly rent and map location, and get a quick reply on WhatsApp.",
+    "locationsDescription": "Labour accommodation, warehouses, cafeterias and shops for rent in Industrial Area, Umm Silal, Al Khor, Abu Nakhla and other areas of Qatar.",
+    "contactDescription": "Send an enquiry or WhatsApp our rental team in Doha about labour accommodation, warehouses, cafeterias and shops in Qatar."
+  },
+  "cookies": {
+    "title": "Cookies",
+    "text": "May we use cookies to count visits and improve our adverts? The site works the same without them.",
+    "accept": "Accept",
+    "decline": "No, thanks"
   },
   "brand": { "name": "Green Tech Real Estate Broker" },
   "nav": {
@@ -220,6 +233,7 @@
       "field": "Please check this field.",
       "property_code": "This property is no longer available.",
       "limit": "Too many enquiries. Please try again later or contact us on WhatsApp.",
+      "human": "Please complete the security check and send again.",
       "server": "We could not send your enquiry. Please try again."
     }
   },

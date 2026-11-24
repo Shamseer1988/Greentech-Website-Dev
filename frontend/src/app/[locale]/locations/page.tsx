@@ -9,10 +9,18 @@ import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { getLocations } from "@/lib/api";
 import { nameOf, num } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
-  return { title: t("locations"), description: t("description") };
+  const brand = await getTranslations("brand");
+  return pageMetadata({
+    locale: await getLocale(),
+    path: "/locations",
+    title: t("locations"),
+    description: t("locationsDescription"),
+    siteName: brand("name"),
+  });
 }
 
 const DOHA = { lat: 25.2854, lng: 51.531 };
@@ -80,7 +88,7 @@ export default async function LocationsPage() {
       <section className="grid gap-6 pt-4 pb-8 lg:grid-cols-[460fr_560fr]">
         <div className="relative isolate h-100 overflow-hidden rounded-[20px] border border-[#d6ded7] lg:h-auto lg:min-h-130">
           <MapView pins={pins} />
-          <span className="absolute end-4 top-4 z-10 rounded-md bg-white px-3 py-2 text-[13px] font-semibold shadow">
+          <span className="absolute right-4 top-4 z-10 rounded-md bg-white px-3 py-2 text-[13px] font-semibold shadow">
             {t("mapTitle")}
           </span>
         </div>

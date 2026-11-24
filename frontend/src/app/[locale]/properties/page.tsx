@@ -10,21 +10,63 @@ import { Link } from "@/i18n/navigation";
 import { allForMap, getLocations, getTypes, searchProperties } from "@/lib/api";
 import { nameOf, num } from "@/lib/format";
 import { apiParams, listingHref, parseListingQuery, type ListingQuery } from "@/lib/listing-query";
+import { pageMetadata } from "@/lib/seo";
 import { whatsappHref } from "@/lib/site";
 import type { PropertyCard as Property } from "@/lib/types";
 
 const PAGE_SIZE = "12";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("meta");
-  return { title: t("properties"), description: t("description") };
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const query = parseListingQuery(await searchParams);
+  const [t, brand, locale, types, locations] = await Promise.all([
+    getTranslations("meta"),
+    getTranslations("brand"),
+    getLocale(),
+    getTypes(),
+    getLocations(),
+  ]);
+  const type = types.find(({ slug }) => slug === query.type);
+  const area = locations.find(({ slug }) => slug === query.location);
+  const names = {
+    type: type ? nameOf(type, locale) : "",
+    area: area ? nameOf(area, locale) : "",
+  };
+  const heading =
+    type && area
+      ? t("rentTypeArea", names)
+      : type
+        ? t("rentType", names)
+        : area
+          ? t("rentArea", names)
+          : t("properties");
+  // Type and area pages are useful search results; other filters show the same units again.
+  const main = {
+    q: "",
+    budget: "",
+    sort: "",
+    type: type?.slug ?? "",
+    location: area?.slug ?? "",
+    page: query.page,
+  };
+  return pageMetadata({
+    locale,
+    path: listingHref(main),
+    title: query.page > 1 ? t("pageNumber", { title: heading, page: num(query.page) }) : heading,
+    description: t("rentDescription", { title: heading }),
+    siteName: brand("name"),
+    hidden: Boolean(
+      query.q ||
+        query.budget ||
+        query.sort ||
+        (query.type && !type) ||
+        (query.location && !area),
+    ),
+  });
 }
 
-export default async function PropertiesPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
+export default async function PropertiesPage({ searchParams }: Props) {
   const query = parseListingQuery(await searchParams);
   const t = await getTranslations("listings");
   const common = await getTranslations("common");
@@ -77,7 +119,7 @@ export default async function PropertiesPage({
         <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-6 lg:w-[400px] lg:flex-none">
           <div className="relative isolate h-90 overflow-hidden rounded-2xl border border-[#d6ded7] lg:h-[min(640px,calc(100svh-110px))]">
             <MapView pins={pins} />
-            <span className="absolute end-3.5 top-3.5 z-10 rounded-md bg-white px-3 py-2 text-[13px] font-semibold shadow">
+            <span className="absolute right-3.5 top-3.5 z-10 rounded-md bg-white px-3 py-2 text-[13px] font-semibold shadow">
               {t("mapTitle")}
             </span>
           </div>

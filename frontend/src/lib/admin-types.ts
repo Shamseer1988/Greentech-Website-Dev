@@ -93,6 +93,20 @@ export type EnquiryRow = {
   assigned_to_name: string | null;
 };
 
+export type SocialNetwork = "facebook" | "instagram";
+export type SocialPost = {
+  id: number;
+  network: SocialNetwork;
+  created_at: string;
+  user_name: string | null;
+};
+export type SocialState = {
+  networks: SocialNetwork[];
+  online: boolean;
+  site_url: string;
+  posts: SocialPost[];
+};
+
 export type Stats = {
   total: number;
   available: number;

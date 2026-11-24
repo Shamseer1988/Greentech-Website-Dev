@@ -7,11 +7,19 @@ import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { getLocations } from "@/lib/api";
 import { ltr } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 import { directionsHref, site } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
-  return { title: t("contact"), description: t("description") };
+  const brand = await getTranslations("brand");
+  return pageMetadata({
+    locale: await getLocale(),
+    path: "/contact",
+    title: t("contact"),
+    description: t("contactDescription"),
+    siteName: brand("name"),
+  });
 }
 
 type Props = { searchParams: Promise<{ for?: string | string[] }> };

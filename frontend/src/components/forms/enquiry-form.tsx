@@ -5,7 +5,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { nameOf } from "@/lib/format";
+import { track } from "@/lib/tracking";
 import type { Ref } from "@/lib/types";
+import { hasTurnstile, Turnstile } from "./turnstile";
 
 const OPTIONS = [
   "labour-accommodation",
@@ -21,13 +23,15 @@ type Props =
   | { kind: "property"; code: string }
   | { kind: "contact"; locations: Ref[]; lookingFor?: string };
 
-type Result = { reference?: number; fields?: string[]; error?: "limit" | "server" };
+type Result = { reference?: number; fields?: string[]; error?: "limit" | "server" | "human" };
 
 export function EnquiryForm(props: Props) {
   const t = useTranslations("form");
   const locale = useLocale();
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<Result>({});
+  const [token, setToken] = useState("");
+  const [attempt, setAttempt] = useState(0);
   const form = useRef<HTMLFormElement>(null);
   const thanks = useRef<HTMLDivElement>(null);
 
@@ -40,6 +44,7 @@ export function EnquiryForm(props: Props) {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (sending) return;
+    if (hasTurnstile && !token) return setResult({ error: "human" });
     setSending(true);
     const data = new FormData(event.currentTarget);
     const body: Record<string, unknown> = {
@@ -47,7 +52,12 @@ export function EnquiryForm(props: Props) {
       reply_on_whatsapp: data.has("reply_on_whatsapp"),
     };
     if (props.kind === "property") body.property_code = props.code;
-    setResult(await send(body));
+    if (token) body.turnstile_token = token;
+    const answer = await send(body);
+    if (answer.reference) track("enquiry", props.kind === "property" ? props.code : undefined);
+    setToken("");
+    setAttempt((n) => n + 1);
+    setResult(answer);
     setSending(false);
   }
 
@@ -154,6 +164,8 @@ export function EnquiryForm(props: Props) {
         {t("reply")}
       </label>
 
+      <Turnstile attempt={attempt} onToken={setToken} />
+
       <div className="col-span-full flex flex-wrap items-center gap-3">
         <Button
           type="submit"
@@ -239,6 +251,7 @@ async function send(body: Record<string, unknown>): Promise<Result> {
     });
     const data = await response.json().catch(() => null);
     if (response.status === 201) return { reference: data.reference };
+    if (response.status === 403) return { error: "human" };
     if (response.status === 429) return { error: "limit" };
     if (response.status === 404) return { fields: ["property_code"] };
     if (response.status === 422 && Array.isArray(data?.detail)) {

@@ -7,6 +7,8 @@ export const routing = defineRouting({
   localePrefix: "as-needed",
   // Always open English first; visitors choose Arabic with the button.
   localeDetection: false,
+  // The pages name their other language themselves (src/lib/seo.ts).
+  alternateLinks: false,
 });
 
 export type Locale = (typeof routing.locales)[number];
