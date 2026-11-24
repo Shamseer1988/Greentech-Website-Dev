@@ -211,7 +211,7 @@ def test_demo_data(db, storage, tmp_path):
     assert first == {"listings": 11, "photos and videos": 5, "enquiries": 5}
 
     # A file that arrives later is added once; nothing is doubled.
-    (tmp_path / "docks1.webm").write_bytes(b"\x1a\x45\xdf\xa3" + b"0" * 50)
+    (tmp_path / "tour-cafe.webm").write_bytes(b"\x1a\x45\xdf\xa3" + b"0" * 50)
     assert demo.load(db, storage, tmp_path)["photos and videos"] == 1
     assert set(demo.load(db, storage, tmp_path).values()) == {0}
     assert len(storage.files) == 6
