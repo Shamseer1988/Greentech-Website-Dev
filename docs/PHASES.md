@@ -37,11 +37,11 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 - [x] Locations management, Export to Excel
 
 ## Phase 5 – Marketing & SEO
-- [ ] Arabic translations + RTL check
-- [ ] SEO: metadata, sitemap.xml, robots.txt, schema.org RealEstateListing, Open Graph images
-- [ ] WhatsApp click-to-chat with property code; email alerts on new enquiry
-- [ ] Instagram/Facebook auto-post (Meta Graph API) – optional
-- [ ] Cloudflare Turnstile on forms, Google Analytics / Meta Pixel
+- [x] Arabic translations + RTL check
+- [x] SEO: metadata, sitemap.xml, robots.txt, schema.org RealEstateListing, Open Graph images
+- [x] WhatsApp click-to-chat with property code; email alerts on new enquiry
+- [x] Instagram/Facebook auto-post (Meta Graph API) – optional
+- [x] Cloudflare Turnstile on forms, Google Analytics / Meta Pixel
 
 ## Phase 6 – Deploy to Proxmox
 - [ ] Production Dockerfiles (multi-stage), full `docker-compose.prod.yml`

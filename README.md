@@ -53,6 +53,27 @@ cd backend
 .venv\Scripts\python -m pytest    # uses its own greentech_test database
 ```
 
+## Demo data
+Fills the development database with 17 listings, photos, videos and 5 enquiries (files in `demo-media/`, see [docs/DEMO_MEDIA.md](docs/DEMO_MEDIA.md)):
+```powershell
+cd backend
+.venv\Scripts\python -m app.scripts.demo            # add
+.venv\Scripts\python -m app.scripts.demo --remove   # remove
+```
+
+## Marketing settings (all optional)
+Empty values switch a feature off. Restart the servers after a change.
+
+| Feature | File | Values |
+|---|---|---|
+| Email alert for enquiries | `.env` | `SMTP_*`, `MAIL_FROM`, `ENQUIRY_EMAIL_TO` |
+| Turnstile (spam check) | `.env` + `frontend/.env.local` | `TURNSTILE_SECRET` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` |
+| Facebook / Instagram posts | `.env` | `META_*`, `SITE_URL` (public https address) |
+| Google Analytics, Meta Pixel | `frontend/.env.local` | `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_META_PIXEL_ID` |
+| Search engines | `frontend/.env.local` | `NEXT_PUBLIC_SITE_URL`, `GOOGLE_SITE_VERIFICATION` |
+
+Search engines are asked to stay away until `NEXT_PUBLIC_SITE_URL` is the public https address.
+
 ## Admin panel
 http://localhost:3000/admin
 
