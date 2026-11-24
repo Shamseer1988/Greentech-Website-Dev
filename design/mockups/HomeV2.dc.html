@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Greentech – Home v2 (motion)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#041D15}
+a{color:#3DDC97}a:hover{color:#8BF0C4}
+.ph{background-color:#DCE3DE;background-image:repeating-linear-gradient(135deg,rgba(14,90,67,.08) 0 12px,transparent 12px 24px)}
+.gridbg{background-image:linear-gradient(rgba(61,220,151,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(61,220,151,.07) 1px,transparent 1px);background-size:64px 64px;animation:gridmove 8s linear infinite}
+@keyframes gridmove{from{background-position:0 0}to{background-position:0 64px}}
+@keyframes lit{0%,100%{fill:#14503E}45%,60%{fill:#F2C14E}}
+.lit{animation:lit 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.float{animation:float 5s ease-in-out infinite}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.pulse{animation:pulse 2.2s ease-out infinite}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.rise{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee{animation:marquee 36s linear infinite}
+@keyframes wordA{from{opacity:0;transform:translateY(55%);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes wordB{from{opacity:0;transform:translateY(55%);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.wordA{display:inline-block;animation:wordA .7s cubic-bezier(.2,.7,.2,1) both}
+.wordB{display:inline-block;animation:wordB .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes progA{from{width:0}to{width:100%}}
+@keyframes progB{from{width:0}to{width:100%}}
+.progA{animation:progA 4.5s linear both}
+.progB{animation:progB 4.5s linear both}
+@keyframes dash{to{stroke-dashoffset:0}}
+.draw{stroke-dasharray:8 10;animation:dashflow 1.2s linear infinite}
+@keyframes dashflow{to{stroke-dashoffset:-36}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 40s linear infinite;transform-origin:center}
+.tilt{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s}
+.tilt:hover{transform:translateY(-8px);box-shadow:0 28px 60px rgba(0,0,0,.35);border-color:rgba(61,220,151,.55)}
+.lift{transition:transform .3s,box-shadow .3s}
+.lift:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(4,29,21,.18)}
+.still *{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div class="{{rootClass}}" style="width:100%;font-family:Inter,system-ui,sans-serif;color:#13201B;background:#F6F7F4;overflow:hidden">
+
+  <!-- ================= HERO (dark) ================= -->
+  <section class="gridbg" style="background-color:#062A1F;color:#FFFFFF;position:relative">
+    <div aria-hidden="true" style="position:absolute;right:-120px;top:80px;width:620px;height:620px;border-radius:999px;background:#0E5A43;filter:blur(120px);opacity:.55"></div>
+
+    <!-- Glass nav -->
+    <header style="position:relative;z-index:3">
+      <nav style="max-width:1280px;margin:0 auto;padding:20px 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+        <a href="Main.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#FFFFFF">
+          <span style="width:42px;height:42px;border-radius:12px;background:#3DDC97;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#062A1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"></path><path d="M5 21V8l7-5 7 5v13"></path><path d="M9 21v-6h6v6"></path></svg></span>
+          <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-family:'Space Grotesk';font-weight:700;font-size:20px">Greentech</span><span style="font-size:11px;letter-spacing:.14em;color:#A9CFC0">REAL ESTATE BROKER</span></span>
+        </a>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);border-radius:999px;padding:6px">
+          <a href="Listings.dc.html" style="color:#FFFFFF;text-decoration:none;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.1);font-size:14px;font-weight:500">Properties</a>
+          <a href="Locations.dc.html" style="color:#D3E4DC;text-decoration:none;padding:10px 16px;border-radius:999px;font-size:14px">Locations</a>
+          <a href="#" style="color:#D3E4DC;text-decoration:none;padding:10px 16px;border-radius:999px;font-size:14px">Services</a>
+          <a href="#" style="color:#D3E4DC;text-decoration:none;padding:10px 16px;border-radius:999px;font-size:14px">About</a>
+          <a href="Contact.dc.html" style="color:#D3E4DC;text-decoration:none;padding:10px 16px;border-radius:999px;font-size:14px">Contact</a>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button type="button" style="height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#FFFFFF;font:inherit;font-size:14px">عربي</button>
+          <a href="Contact.dc.html" style="height:44px;display:flex;align-items:center;padding:0 20px;border-radius:999px;background:{{accent}};color:#13201B;text-decoration:none;font-weight:600;font-size:14px">Send enquiry</a>
+        </div>
+      </nav>
+    </header>
+
+    <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:48px 24px 120px;display:flex;flex-wrap:wrap;gap:40px;align-items:center">
+      <!-- Left copy -->
+      <div style="flex:1 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px">
+        <span class="rise" style="align-self:flex-start;display:flex;align-items:center;gap:10px;background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.35);border-radius:999px;padding:8px 14px;font-size:13px;color:#BFF5DC">
+          <span style="position:relative;width:8px;height:8px"><span class="pulse" style="position:absolute;inset:0;border-radius:999px;background:#3DDC97"></span><span style="position:absolute;inset:0;border-radius:999px;background:#3DDC97"></span></span>
+          Commercial &amp; worker housing rentals · Qatar
+        </span>
+        <h1 class="rise" style="margin:0;font-family:'Space Grotesk';font-weight:700;font-size:72px;line-height:1.02;letter-spacing:-.02em;animation-delay:.1s">
+          Rent <span style="display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:6px"><span class="{{wordClass}}" style="color:{{accent}}">{{word}}</span></span><br>across Qatar.
+        </h1>
+        <p class="rise" style="margin:0;font-size:19px;line-height:1.6;color:#C8DDD3;max-width:540px;animation-delay:.2s">Labour accommodation, warehouses, cafeterias and supermarket spaces — photos, prices and live map locations, with a WhatsApp reply in minutes.</p>
+
+        <!-- Glass search -->
+        <form class="rise" style="animation-delay:.3s;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(18px);border-radius:20px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;max-width:640px">
+          <label style="flex:1 1 170px;display:flex;flex-direction:column;gap:2px;padding:8px 14px;font-size:12px;color:#A9CFC0;font-weight:600">Property type
+            <select style="height:32px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;font-weight:500;padding:0"><option style="color:#13201B">Labour accommodation</option><option style="color:#13201B">Warehouse</option><option style="color:#13201B">Cafeteria</option><option style="color:#13201B">Supermarket / Shop</option></select>
+          </label>
+          <span aria-hidden="true" style="width:1px;background:rgba(255,255,255,.16)"></span>
+          <label style="flex:1 1 150px;display:flex;flex-direction:column;gap:2px;padding:8px 14px;font-size:12px;color:#A9CFC0;font-weight:600">Location
+            <select style="height:32px;border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:16px;font-weight:500;padding:0"><option style="color:#13201B">Industrial Area</option><option style="color:#13201B">Umm Silal</option><option style="color:#13201B">Al Khor</option><option style="color:#13201B">Abu Nakhla</option></select>
+          </label>
+          <a href="Listings.dc.html" style="flex:0 0 auto;min-height:56px;display:flex;align-items:center;gap:8px;padding:0 24px;border-radius:14px;background:{{accent}};color:#13201B;text-decoration:none;font-weight:700">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>Search
+          </a>
+        </form>
+
+        <div class="rise" style="animation-delay:.4s;display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-size:14px;color:#A9CFC0">
+          <a href="#" style="display:flex;align-items:center;gap:8px;color:#FFFFFF;text-decoration:none;font-weight:600">
+            <span style="width:40px;height:40px;border-radius:999px;background:#1F9D55;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
+            WhatsApp +974 [NUMBER]
+          </a>
+          <span>Instagram · Facebook · YouTube</span>
+        </div>
+      </div>
+
+      <!-- Right: animated isometric scene -->
+      <div style="flex:1 1 520px;min-width:0;position:relative;height:560px">
+        <svg viewBox="0 0 560 500" style="position:absolute;inset:0;width:100%;height:100%" role="img" aria-label="Animated illustration of an accommodation building, warehouse and cafeteria">
+          <g class="spin" style="transform-origin:280px 380px" opacity=".35">
+            <ellipse cx="280" cy="380" rx="250" ry="110" fill="none" stroke="#3DDC97" stroke-width="1" stroke-dasharray="4 10"></ellipse>
+          </g>
+          <polygon points="40,380 280,500 540,370 300,250" fill="#0A3D2D" stroke="rgba(61,220,151,.25)"></polygon>
+          <!-- Tower: labour accommodation -->
+          <polygon points="200,120 280,80 360,120 280,160" fill="#3DDC97"></polygon>
+          <polygon points="200,120 280,160 280,400 200,360" fill="#0E5A43"></polygon>
+          <polygon points="280,160 360,120 360,360 280,400" fill="#0A4434"></polygon>
+          <g transform="translate(200,120) skewY(26.565)">
+            <rect x="14" y="24" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:.2s"></rect>
+            <rect x="46" y="24" width="20" height="18" fill="#14503E"></rect>
+            <rect x="14" y="58" width="20" height="18" fill="#14503E"></rect>
+            <rect x="46" y="58" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:1.4s"></rect>
+            <rect x="14" y="92" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:2.6s"></rect>
+            <rect x="46" y="92" width="20" height="18" fill="#14503E"></rect>
+            <rect x="14" y="126" width="20" height="18" fill="#14503E"></rect>
+            <rect x="46" y="126" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:.8s"></rect>
+            <rect x="14" y="160" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:3.4s"></rect>
+            <rect x="46" y="160" width="20" height="18" fill="#14503E"></rect>
+            <rect x="14" y="194" width="20" height="18" fill="#14503E"></rect>
+            <rect x="46" y="194" width="20" height="18" fill="#14503E" class="lit" style="animation-delay:2s"></rect>
+          </g>
+          <g transform="translate(280,160) skewY(-26.565)">
+            <rect x="14" y="24" width="20" height="18" fill="#103F31"></rect>
+            <rect x="46" y="24" width="20" height="18" fill="#103F31" class="lit" style="animation-delay:3s"></rect>
+            <rect x="14" y="58" width="20" height="18" fill="#103F31" class="lit" style="animation-delay:.5s"></rect>
+            <rect x="46" y="58" width="20" height="18" fill="#103F31"></rect>
+            <rect x="14" y="92" width="20" height="18" fill="#103F31"></rect>
+            <rect x="46" y="92" width="20" height="18" fill="#103F31" class="lit" style="animation-delay:1.8s"></rect>
+            <rect x="14" y="126" width="20" height="18" fill="#103F31" class="lit" style="animation-delay:4s"></rect>
+            <rect x="46" y="126" width="20" height="18" fill="#103F31"></rect>
+            <rect x="14" y="160" width="20" height="18" fill="#103F31"></rect>
+            <rect x="46" y="160" width="20" height="18" fill="#103F31" class="lit" style="animation-delay:1.1s"></rect>
+            <rect x="14" y="194" width="20" height="18" fill="#103F31" class="lit" style="animation-delay:2.3s"></rect>
+            <rect x="46" y="194" width="20" height="18" fill="#103F31"></rect>
+          </g>
+          <!-- Warehouse -->
+          <polygon points="370,330 430,360 510,320 450,290" fill="#E9EFEB"></polygon>
+          <polygon points="370,330 430,360 430,430 370,400" fill="#B9C9C0"></polygon>
+          <polygon points="430,360 510,320 510,390 430,430" fill="#93A99D"></polygon>
+          <polygon points="450,420 490,400 490,355 450,375" fill="#5F7A6D"></polygon>
+          <line x1="450" y1="384" x2="490" y2="364" stroke="#4A6457" stroke-width="2"></line>
+          <line x1="450" y1="396" x2="490" y2="376" stroke="#4A6457" stroke-width="2"></line>
+          <line x1="450" y1="408" x2="490" y2="388" stroke="#4A6457" stroke-width="2"></line>
+          <!-- Cafeteria kiosk -->
+          <polygon points="110,360 150,380 190,360 150,340" fill="#F2C14E"></polygon>
+          <polygon points="110,360 150,380 150,420 110,400" fill="#E3E9E5"></polygon>
+          <polygon points="150,380 190,360 190,400 150,420" fill="#C5D1CA"></polygon>
+          <polygon points="150,380 190,360 190,370 150,390" fill="#D9A632"></polygon>
+          <!-- Floating pins -->
+          <g class="float">
+            <circle cx="280" cy="52" r="16" fill="{{accent}}"></circle>
+            <circle cx="280" cy="52" r="6" fill="#062A1F"></circle>
+            <path d="M268 62 L280 80 L292 62 Z" fill="{{accent}}"></path>
+          </g>
+          <g class="float" style="animation-delay:1.2s">
+            <circle cx="470" cy="262" r="12" fill="#3DDC97"></circle>
+            <circle cx="470" cy="262" r="4.5" fill="#062A1F"></circle>
+            <path d="M461 270 L470 284 L479 270 Z" fill="#3DDC97"></path>
+          </g>
+          <g class="float" style="animation-delay:2.2s">
+            <circle cx="150" cy="306" r="11" fill="#3DDC97"></circle>
+            <circle cx="150" cy="306" r="4" fill="#062A1F"></circle>
+            <path d="M142 313 L150 326 L158 313 Z" fill="#3DDC97"></path>
+          </g>
+        </svg>
+
+        <!-- Glass info chips -->
+        <div class="float" style="position:absolute;left:0;top:40px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(16px);border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;color:#FFFFFF;animation-delay:.6s">
+          <span style="width:40px;height:40px;border-radius:12px;background:#3DDC97;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#062A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"></path><path d="M4 20v-8h16v8"></path><path d="M4 12l8-6 8 6"></path></svg></span>
+          <span style="display:flex;flex-direction:column"><span style="font-size:12px;color:#A9CFC0">GT-LA-101 · Available</span><span style="font-weight:600">[N] rooms · Industrial Area</span></span>
+        </div>
+        <div class="float" style="position:absolute;right:0;bottom:70px;background:#FFFFFF;border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;color:#13201B;box-shadow:0 20px 50px rgba(0,0,0,.3);animation-delay:1.8s">
+          <span style="width:40px;height:40px;border-radius:999px;background:#1F9D55;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
+          <span style="display:flex;flex-direction:column"><span style="font-size:12px;color:#4B5B55">WhatsApp · just now</span><span style="font-weight:600">“Viewing slot available today”</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MARQUEE ================= -->
+  <div style="background:{{accent}};overflow:hidden;border-top:1px solid rgba(0,0,0,.08)">
+    <div class="marquee" style="display:flex;gap:48px;width:max-content;padding:18px 0;font-family:'Space Grotesk';font-weight:600;font-size:22px;color:#13201B;white-space:nowrap">
+      <sc-for list="{{ticker}}" as="t" hint-placeholder-count="12">
+        <span style="display:flex;align-items:center;gap:48px">{{t}}<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.5 7.5H22l-6 4.5 2.5 7.5-6.5-4.5L5.5 21.5 8 14 2 9.5h7.5z" fill="#13201B"></path></svg></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ================= CATEGORIES (bento) ================= -->
+  <section style="max-width:1280px;margin:0 auto;padding:110px 24px 80px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#0E5A43">WHAT WE RENT</span>
+        <h2 style="margin:0;font-family:'Space Grotesk';font-size:52px;line-height:1.05;letter-spacing:-.02em;max-width:620px">Space for every part of your business.</h2>
+      </div>
+      <a href="Listings.dc.html" style="color:#0E5A43;font-weight:600">See all properties →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));grid-auto-rows:220px;gap:18px">
+      <a href="Listings.dc.html" class="tilt" style="grid-row:span 2;background:#062A1F;color:#FFFFFF;border:1px solid #0E5A43;border-radius:24px;padding:28px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
+        <span aria-hidden="true" style="position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:999px;background:#0E5A43;filter:blur(40px)"></span>
+        <span style="width:56px;height:56px;border-radius:16px;background:#3DDC97;display:flex;align-items:center;justify-content:center;position:relative"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#062A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"></path><path d="M2 16h20"></path><path d="M6 10V6h5v4"></path></svg></span>
+        <span style="display:flex;flex-direction:column;gap:10px;position:relative">
+          <span style="font-family:'Space Grotesk';font-size:32px;font-weight:700">Labour Accommodation</span>
+          <span style="color:#C8DDD3;line-height:1.6">Staff camps and worker rooms with kitchens, washrooms and bus parking.</span>
+          <span style="color:{{accent}};font-weight:600">[N] available →</span>
+        </span>
+      </a>
+      <sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+        <a href="Listings.dc.html" class="tilt" style="background:#FFFFFF;border:1px solid #E2E7E3;border-radius:24px;padding:24px;text-decoration:none;color:#13201B;display:flex;flex-direction:column;justify-content:space-between">
+          <span style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="width:50px;height:50px;border-radius:14px;background:#E4F0EA;display:flex;align-items:center;justify-content:center;color:#0E5A43">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+            </span>
+            <span style="font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px;{{c.tagStyle}}">{{c.tag}}</span>
+          </span>
+          <span style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-family:'Space Grotesk';font-size:24px;font-weight:600">{{c.name}}</span>
+            <span style="color:#4B5B55;font-size:14px">{{c.note}}</span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ================= FEATURED SLIDER ================= -->
+  <section style="max-width:1280px;margin:0 auto;padding:0 24px 110px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:28px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#0E5A43">FEATURED</span>
+        <h2 style="margin:0;font-family:'Space Grotesk';font-size:44px;letter-spacing:-.02em">Hand-picked this week</h2>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button type="button" aria-label="Previous property" onClick="{{prev}}" style="width:52px;height:52px;border-radius:999px;border:1px solid #CFD8D2;background:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#13201B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+        <button type="button" aria-label="Next property" onClick="{{next}}" style="width:52px;height:52px;border-radius:999px;border:0;background:#0E5A43;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+      </div>
+    </div>
+    <div style="overflow:hidden;border-radius:28px">
+      <div style="display:flex;transition:transform .9s cubic-bezier(.7,0,.2,1);transform:translateX(-{{offset}}%)">
+        <sc-for list="{{slides}}" as="s" hint-placeholder-count="3">
+          <div style="flex:0 0 100%;display:flex;flex-wrap:wrap;background:#FFFFFF;border:1px solid #E2E7E3;border-radius:28px;overflow:hidden;box-sizing:border-box">
+            <div class="ph" style="flex:1 1 560px;min-height:420px;position:relative;display:flex;align-items:center;justify-content:center;color:#2F4A3F">
+              [Photo / video – {{s.title}}]
+              <span style="position:absolute;left:20px;top:20px;background:#062A1F;color:#FFFFFF;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600">{{s.code}}</span>
+              <span style="position:absolute;left:20px;bottom:20px;background:rgba(255,255,255,.9);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600">360° tour · [N] photos</span>
+            </div>
+            <div style="flex:1 1 380px;padding:40px;display:flex;flex-direction:column;gap:16px;justify-content:center">
+              <span style="align-self:flex-start;background:#E4F0EA;color:#0E5A43;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600">{{s.type}}</span>
+              <span style="font-family:'Space Grotesk';font-size:36px;font-weight:700;line-height:1.1">{{s.title}}</span>
+              <span style="color:#4B5B55">{{s.location}}</span>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+                <span style="background:#F6F7F4;border-radius:12px;padding:12px"><span style="display:block;font-size:12px;color:#4B5B55">{{s.k1}}</span><span style="font-weight:700">{{s.v1}}</span></span>
+                <span style="background:#F6F7F4;border-radius:12px;padding:12px"><span style="display:block;font-size:12px;color:#4B5B55">{{s.k2}}</span><span style="font-weight:700">{{s.v2}}</span></span>
+              </div>
+              <span style="font-family:'Space Grotesk';font-size:28px;font-weight:700;color:#0E5A43">QAR [PRICE]<span style="font-size:15px;font-weight:400;color:#4B5B55"> / month</span></span>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <a href="PropertyDetail.dc.html" style="background:#0E5A43;color:#FFFFFF;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600">View details</a>
+                <a href="#" style="background:#1F9D55;color:#FFFFFF;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600">WhatsApp</a>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <sc-for list="{{dots}}" as="d" hint-placeholder-count="3">
+        <button type="button" aria-label="{{d.label}}" onClick="{{d.go}}" style="flex:1;height:44px;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center">
+          <span style="display:block;width:100%;height:4px;border-radius:4px;background:#D6DED7;overflow:hidden">
+            <sc-if value="{{d.active}}" hint-placeholder-val="{{ false }}"><span class="{{progClass}}" style="display:block;height:100%;background:#0E5A43"></span></sc-if>
+          </span>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ================= INTERACTIVE MAP ================= -->
+  <section class="gridbg" style="background-color:#062A1F;color:#FFFFFF">
+    <div style="max-width:1280px;margin:0 auto;padding:100px 24px;display:flex;flex-wrap:wrap;gap:56px;align-items:center">
+      <div style="flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:20px">
+        <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#3DDC97">LOCATIONS</span>
+        <h2 style="margin:0;font-family:'Space Grotesk';font-size:48px;line-height:1.05;letter-spacing:-.02em">Tap a pin to explore each area.</h2>
+        <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:13px;color:#A9CFC0">Selected area</span>
+          <span style="font-family:'Space Grotesk';font-size:34px;font-weight:700;color:{{accent}}">{{area.name}}</span>
+          <span style="color:#C8DDD3;line-height:1.6">{{area.types}}</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+            <a href="Listings.dc.html" style="background:#FFFFFF;color:#13201B;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600">View [N] listings</a>
+            <a href="#" style="border:1px solid rgba(255,255,255,.3);color:#FFFFFF;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600">Directions</a>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{pins}}" as="p" hint-placeholder-count="5">
+            <button type="button" onClick="{{p.pick}}" style="{{p.chip}}">{{p.name}}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex:1 1 400px;min-width:0;display:flex;justify-content:center">
+        <div style="position:relative;width:320px;height:460px">
+          <svg viewBox="0 0 320 460" width="320" height="460" role="img" aria-label="Stylised map of Qatar with Greentech locations">
+            <path d="M175 20 C200 30 215 60 225 100 C235 140 255 170 262 210 C270 240 258 260 252 285 C248 320 262 350 245 385 C232 410 215 430 190 445 L120 440 C110 420 95 410 80 390 C70 360 55 330 52 300 C48 270 70 250 80 220 C88 190 100 160 115 120 C128 85 150 40 175 20 Z" fill="#0A3D2D" stroke="#3DDC97" stroke-width="1.5"></path>
+            <path d="M215 120 L200 215 L250 250 L175 275 L150 300" fill="none" stroke="#3DDC97" stroke-width="1.5" class="draw" opacity=".7"></path>
+          </svg>
+          <sc-for list="{{pins}}" as="p" hint-placeholder-count="5">
+            <button type="button" onClick="{{p.pick}}" aria-label="{{p.name}}" style="position:absolute;left:{{p.x}}px;top:{{p.y}}px;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;background:transparent;cursor:pointer;padding:0">
+              <span class="pulse" style="position:absolute;left:14px;top:14px;width:16px;height:16px;border-radius:999px;background:{{p.color}}"></span>
+              <span style="position:absolute;left:14px;top:14px;width:16px;height:16px;border-radius:999px;background:{{p.color}};box-shadow:0 0 0 4px rgba(6,42,31,.9)"></span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section style="max-width:1280px;margin:0 auto;padding:110px 24px">
+    <div style="display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;margin-bottom:56px">
+      <span style="font-size:13px;font-weight:600;letter-spacing:.14em;color:#0E5A43">HOW IT WORKS</span>
+      <h2 style="margin:0;font-family:'Space Grotesk';font-size:44px;letter-spacing:-.02em">From search to keys in three steps</h2>
+    </div>
+    <div style="position:relative">
+      <svg aria-hidden="true" viewBox="0 0 1000 20" preserveAspectRatio="none" style="position:absolute;left:12%;right:12%;top:34px;width:76%;height:20px"><line x1="0" y1="10" x2="1000" y2="10" stroke="#0E5A43" stroke-width="2" class="draw"></line></svg>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;position:relative">
+        <div class="lift" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px">
+          <span style="width:72px;height:72px;border-radius:22px;background:#0E5A43;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">1</span>
+          <span style="font-family:'Space Grotesk';font-size:22px;font-weight:600">Browse &amp; shortlist</span>
+          <span style="color:#4B5B55;line-height:1.6;max-width:300px">Filter by type, area and capacity. See photos, prices and the exact map pin.</span>
+        </div>
+        <div class="lift" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px">
+          <span style="width:72px;height:72px;border-radius:22px;background:#1F9D55;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">2</span>
+          <span style="font-family:'Space Grotesk';font-size:22px;font-weight:600">Enquire or WhatsApp</span>
+          <span style="color:#4B5B55;line-height:1.6;max-width:300px">Send the property code. Our team replies with availability and a viewing time.</span>
+        </div>
+        <div class="lift" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:8px">
+          <span style="width:72px;height:72px;border-radius:22px;background:{{accent}};color:#13201B;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:28px;font-weight:700">3</span>
+          <span style="font-family:'Space Grotesk';font-size:22px;font-weight:600">Visit &amp; move in</span>
+          <span style="color:#4B5B55;line-height:1.6;max-width:300px">Inspect the site, sign the contract and move your team in.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA + FOOTER ================= -->
+  <section style="max-width:1280px;margin:0 auto;padding:0 24px 90px">
+    <div class="gridbg" style="background-color:#0E5A43;color:#FFFFFF;border-radius:32px;padding:64px 48px;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:center;position:relative;overflow:hidden">
+      <div style="flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:12px;position:relative">
+        <span style="color:{{accent}};font-weight:600;letter-spacing:.14em;font-size:13px">COMING SOON · RESIDENTIAL</span>
+        <h2 style="margin:0;font-family:'Space Grotesk';font-size:44px;line-height:1.05;letter-spacing:-.02em">Flats &amp; villas in Doha</h2>
+        <p style="margin:0;color:#D3E4DC;font-size:18px">Register now and hear first when residential units go live.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;position:relative">
+        <a href="Contact.dc.html" style="background:{{accent}};color:#13201B;text-decoration:none;padding:16px 24px;border-radius:14px;font-weight:700">Register interest</a>
+        <a href="#" style="background:#FFFFFF;color:#13201B;text-decoration:none;padding:16px 24px;border-radius:14px;font-weight:700">WhatsApp us</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background:#041D15;color:#A9CFC0">
+    <div style="max-width:1280px;margin:0 auto;padding:64px 24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;font-size:14px;line-height:1.9">
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Space Grotesk';font-weight:700;font-size:22px;color:#FFFFFF">Greentech</span><span>Real Estate Broker · Doha, Qatar</span><span>CR No. [CR NUMBER]</span></div>
+      <div style="display:flex;flex-direction:column"><span style="color:#FFFFFF;font-weight:600">Rent</span><a href="Listings.dc.html" style="color:#A9CFC0">Labour accommodation</a><a href="Listings.dc.html" style="color:#A9CFC0">Warehouses</a><a href="Listings.dc.html" style="color:#A9CFC0">Cafeterias</a><a href="Listings.dc.html" style="color:#A9CFC0">Supermarkets &amp; shops</a></div>
+      <div style="display:flex;flex-direction:column"><span style="color:#FFFFFF;font-weight:600">Social</span><a href="#" style="color:#A9CFC0">Instagram</a><a href="#" style="color:#A9CFC0">Facebook</a><a href="#" style="color:#A9CFC0">YouTube</a><a href="#" style="color:#A9CFC0">TikTok</a></div>
+      <div style="display:flex;flex-direction:column"><span style="color:#FFFFFF;font-weight:600">Also on</span><a href="#" style="color:#A9CFC0">Property Finder Qatar</a><a href="#" style="color:#A9CFC0">Qatar Living</a><a href="#" style="color:#A9CFC0">Mzad Qatar</a></div>
+    </div>
+    <div style="max-width:1280px;margin:0 auto;padding:16px 24px 28px;border-top:1px solid #0E3A2C;font-size:13px">© 2026 Greentech Real Estate Broker</div>
+  </footer>
+
+  <!-- Floating WhatsApp with pulse ring -->
+  <a href="#" aria-label="Chat on WhatsApp" style="position:fixed;right:28px;bottom:28px;width:64px;height:64px;z-index:20;display:block">
+    <span class="pulse" style="position:absolute;inset:0;border-radius:999px;background:#1F9D55"></span>
+    <span style="position:absolute;inset:0;border-radius:999px;background:#1F9D55;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.3)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.5A9 9 0 1 1 21 12z"></path></svg></span>
+  </a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"motion":{"editor":"boolean","default":true,"section":"Motion"},"accent":{"editor":"color","default":"#F2C14E","options":["#F2C14E","#3DDC97","#FF8A5B","#7DD3FC"]},"$preview":{"width":1440,"height":4000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { w: 0, wflip: false, slide: 0, pflip: false, area: 3 };
+  }
+  componentDidMount() {
+    this.t1 = setInterval(() => {
+      if (this.props.motion === false) return;
+      this.setState(s => ({ w: (s.w + 1) % 4, wflip: !s.wflip }));
+    }, 2600);
+    this.t2 = setInterval(() => {
+      if (this.props.motion === false) return;
+      this.setState(s => ({ slide: (s.slide + 1) % 3, pflip: !s.pflip }));
+    }, 4500);
+  }
+  componentWillUnmount() { clearInterval(this.t1); clearInterval(this.t2); }
+  go(i) { this.setState(s => ({ slide: (i + 3) % 3, pflip: !s.pflip })); }
+  renderVals() {
+    const accent = this.props.accent ?? '#F2C14E';
+    const motion = this.props.motion ?? true;
+    const words = ['labour camps', 'warehouses', 'cafeterias', 'supermarkets'];
+    const areas = [
+      { name: 'Al Khor', types: 'Cafeterias and staff accommodation in the north.', x: 215, y: 120 },
+      { name: 'Umm Silal', types: 'Warehouses and accommodation close to Doha.', x: 200, y: 215 },
+      { name: 'Doha', types: 'Residential flats and villas — coming soon.', x: 250, y: 250 },
+      { name: 'Industrial Area', types: 'Accommodation, warehouses and shops near the camps.', x: 175, y: 275 },
+      { name: 'Abu Nakhla', types: 'Staff camps and open yards.', x: 150, y: 300 }
+    ];
+    const sel = this.state.area;
+    const slides = [
+      { code: 'GT-LA-101', type: 'Labour Accommodation', title: 'Accommodation block', location: 'Industrial Area, Street [NO]', k1: 'Rooms', v1: '[N]', k2: 'Capacity', v2: '[N] persons' },
+      { code: 'GT-WH-204', type: 'Warehouse', title: 'Warehouse with office', location: 'Umm Silal', k1: 'Area', v1: '[N] sq.m', k2: 'Access', v2: 'Loading bay' },
+      { code: 'GT-CF-310', type: 'Cafeteria', title: 'Cafeteria unit', location: 'Al Khor', k1: 'Area', v1: '[N] sq.m', k2: 'Fit-out', v2: 'Kitchen fitted' }
+    ];
+    const ticker0 = ['Industrial Area', 'Labour Accommodation', 'Umm Silal', 'Warehouses', 'Al Khor', 'Cafeterias', 'Abu Nakhla', 'Supermarkets'];
+    return {
+      accent,
+      rootClass: motion ? '' : 'still',
+      word: words[this.state.w],
+      wordClass: this.state.wflip ? 'wordA' : 'wordB',
+      ticker: ticker0.concat(ticker0),
+      cats: [
+        { name: 'Warehouses', note: 'Storage, stores & open yards', tag: '[N] units', tagStyle: 'background:#E4F0EA;color:#0B3B2C', icon: 'M3 21V9l9-5 9 5v12M7 21v-7h10v7M7 17h10' },
+        { name: 'Cafeterias', note: 'Ready food-outlet units', tag: '[N] units', tagStyle: 'background:#E4F0EA;color:#0B3B2C', icon: 'M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2' },
+        { name: 'Supermarkets & Shops', note: 'Retail units near camps', tag: '[N] units', tagStyle: 'background:#E4F0EA;color:#0B3B2C', icon: 'M3 4h2l2.5 11h11L21 7H6.5M9 20h.01M18 20h.01' },
+        { name: 'Residential', note: 'Flats & villas in Doha', tag: 'Coming soon', tagStyle: 'background:#FBEAC2;color:#5C4210', icon: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' }
+      ],
+      slides,
+      offset: this.state.slide * 100,
+      progClass: this.state.pflip ? 'progA' : 'progB',
+      dots: slides.map((s, i) => ({ label: 'Show ' + s.title, active: i === this.state.slide, go: () => this.go(i) })),
+      prev: () => this.go(this.state.slide - 1),
+      next: () => this.go(this.state.slide + 1),
+      area: areas[sel],
+      pins: areas.map((a, i) => ({
+        ...a,
+        color: i === sel ? accent : '#3DDC97',
+        chip: i === sel
+          ? 'height:44px;padding:0 16px;border-radius:999px;border:1px solid ' + accent + ';background:' + accent + ';color:#13201B;font:inherit;font-weight:600;cursor:pointer'
+          : 'height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#FFFFFF;font:inherit;cursor:pointer',
+        pick: () => this.setState({ area: i })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
