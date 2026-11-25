@@ -3,7 +3,7 @@ import unicodedata
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
-from app.schemas.common import CleanStr, Input
+from app.schemas.common import CleanStr, Input, Source
 
 
 def normalise_phone(value: str) -> str:
@@ -37,6 +37,7 @@ class EnquiryIn(Input):
     )
     message: CleanStr = Field(default="", max_length=3000)
     reply_on_whatsapp: bool = False
+    source: Source = ""
     turnstile_token: str = Field(default="", max_length=2048)
 
     @field_validator("property_code", "email", "looking_for", mode="before")

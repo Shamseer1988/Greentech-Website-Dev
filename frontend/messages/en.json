@@ -22,6 +22,8 @@
   "brand": { "name": "Green Tech Real Estate Broker" },
   "nav": {
     "home": "Home",
+    "calculator": "Calculator",
+    "blog": "Blog",
     "properties": "Properties",
     "locations": "Locations",
     "services": "Services",
@@ -136,6 +138,7 @@
     "next": "Next"
   },
   "detail": {
+    "brochure": "Download PDF brochure",
     "rent": "Monthly rent",
     "viewPhotos": "View all photos",
     "video": "Video tour",
@@ -239,6 +242,7 @@
     }
   },
   "chat": {
+    "calculator": "Capacity calculator",
     "title": "Green Tech Assistant",
     "subtitle": "Answers about our properties",
     "open": "Open the chat assistant",
@@ -295,6 +299,72 @@
     "floors": "Floors: {n}",
     "facilities": "Facilities",
     "unknown": "I do not have that information on the website. Our team can answer you on WhatsApp, or try one of these:"
+  },
+  "saved": {
+    "title": "My favourites",
+    "text": "Saved in this browser only.",
+    "like": "Save",
+    "unlike": "Saved",
+    "compare": "Compare",
+    "uncompare": "Remove from compare",
+    "full": "You can compare up to {n}",
+    "openFavourites": "My favourites ({n})",
+    "chosen": "{n} of {max} to compare",
+    "clear": "Clear",
+    "compareNow": "Compare now",
+    "empty": "No favourites yet. Press the heart on a property to save it here.",
+    "browse": "See all properties",
+    "error": "The favourites could not be loaded. Please try again.",
+    "compareTitle": "Compare properties",
+    "compareText": "See the differences side by side.",
+    "perPerson": "Rent per person",
+    "perMetre": "Rent per sq.m",
+    "status": "Status",
+    "best": "Best",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "viewing": {
+    "open": "Book a viewing",
+    "title": "Book a viewing",
+    "close": "Close",
+    "day": "Choose a day",
+    "time": "Choose a time",
+    "note": "Note (optional)",
+    "submit": "Request this time",
+    "promise": "Our team will confirm by phone or WhatsApp.",
+    "choose": "Please choose a day and time, and check the form.",
+    "taken": "This time was just taken. Please choose another one.",
+    "none": "No viewing times are open now. Please contact us on WhatsApp.",
+    "thanks": "Thank you – we received your request.",
+    "thanksText": "Our team will confirm the visit. Your reference is {reference}."
+  },
+  "calculator": {
+    "title": "Camp capacity calculator",
+    "text": "Enter the number of workers and see how many rooms you need, the usual monthly budget and the properties that fit.",
+    "workers": "Number of workers",
+    "perRoom": "Workers per room",
+    "area": "Area",
+    "anyArea": "Any area",
+    "maxBudget": "Highest rent per month (QAR)",
+    "noLimit": "No limit",
+    "note": "Results use the current listings on this website. Please check the official limits for workers per room with the authorities.",
+    "rooms": "Rooms needed",
+    "budget": "Usual monthly rent",
+    "perWorker": "Middle rent per worker",
+    "found": "{count, plural, =0 {No option found} one {{n} option fits} other {{n} options fit}}",
+    "none": "No available property or combination fits. Our team may have other options.",
+    "enter": "Enter the number of workers.",
+    "wa": "Hello Green Tech, I need accommodation for {workers} workers.",
+    "places": "{n} places",
+    "each": "{price} per worker"
+  },
+  "blog": {
+    "title": "Blog & area guides",
+    "text": "Advice about renting labour accommodation, warehouses and shops in Qatar, and guides to our areas.",
+    "empty": "Articles are coming soon.",
+    "related": "Properties for this guide",
+    "seeAll": "See all"
   },
   "footer": {
     "place": "Doha, Qatar",

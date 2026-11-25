@@ -17,7 +17,7 @@ Opacity = Annotated[int, Field(ge=10, le=100)]
 
 
 class MenuItem(Input):
-    key: Literal["properties", "locations", "services", "how", "contact"]
+    key: Literal["properties", "locations", "services", "how", "calculator", "blog", "contact"]
     label_en: Annotated[CleanStr, Field(min_length=1, max_length=30)]
     label_ar: Annotated[CleanStr, Field(min_length=1, max_length=30)]
     show: bool = True

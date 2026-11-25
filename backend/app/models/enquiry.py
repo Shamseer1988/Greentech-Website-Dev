@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import StrEnum
 
 from sqlalchemy import ForeignKey, Index, String, Text, false
@@ -40,6 +41,9 @@ class Enquiry(TimestampMixin, Base):
         default=EnquiryStatus.NEW,
         server_default=EnquiryStatus.NEW.value,
     )
+    # Where the visitor came from, e.g. "google" or "instagram".
+    source: Mapped[str] = mapped_column(String(40), default="", server_default="")
+    first_response_at: Mapped[datetime | None]
     assigned_to_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"), index=True
     )

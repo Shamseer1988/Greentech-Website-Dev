@@ -3,11 +3,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "cn";
+import { PropertyView } from "@/components/counter";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
+import { ViewingBooking } from "@/components/forms/viewing-booking";
 import { JsonLd } from "@/components/json-ld";
 import { MapView } from "@/components/maps/map";
+import { BrochureLink } from "@/components/property/brochure-link";
 import { Gallery } from "@/components/property/gallery";
 import { Price } from "@/components/property/price";
+import { SaveButtons } from "@/components/property/save-buttons";
 import { Share } from "@/components/property/share";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
@@ -74,6 +78,7 @@ export default async function PropertyPage({ params }: Props) {
 
   return (
     <>
+      <PropertyView code={property.code} />
       <JsonLd data={listing(property, locale)} />
       <JsonLd
         data={breadcrumbs(
@@ -228,14 +233,12 @@ export default async function PropertyPage({ params }: Props) {
         </div>
 
         <aside className="flex w-full flex-col gap-4 lg:w-[380px] lg:flex-none">
-          <div
-            className={cn(CARD, "no-print shadow-[0_12px_32px_rgb(19_32_27/.08)]")}
-            id="enquire"
-          >
+          <div className={cn(CARD, "no-print shadow-[0_12px_32px_rgb(19_32_27/.08)]")} id="enquire">
             <h2 className="text-[22px] font-bold text-slate">{t("enquire")}</h2>
             {property.status === "rented" && (
               <p className="rounded-xl bg-rose-tint p-4 text-rose-700">{t("rented")}</p>
             )}
+            {property.status !== "rented" && <ViewingBooking code={property.code} title={title} />}
             <EnquiryForm kind="property" code={property.code} />
             <div className="flex items-center gap-2.5 text-[13px] text-muted-foreground before:h-px before:flex-1 before:bg-line after:h-px after:flex-1 after:bg-line">
               {t("or")}
@@ -256,6 +259,10 @@ export default async function PropertyPage({ params }: Props) {
                 {common("callNow")}
               </span>
             )}
+          </div>
+          <div className="no-print flex flex-col gap-2.5 rounded-2xl border border-line bg-white p-4.5">
+            <SaveButtons code={property.code} wide />
+            <BrochureLink code={property.code} />
           </div>
           <Share title={`${title} – ${property.code}`} />
         </aside>

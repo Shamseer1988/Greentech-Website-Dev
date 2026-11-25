@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { nameOf, num, specs, titleOf } from "@/lib/format";
 import { directionsHref } from "@/lib/site";
 import type { PropertyCard as Property } from "@/lib/types";
+import { SaveButtons } from "./save-buttons";
 import { Price } from "./price";
 import { PropertyPhoto } from "./property-photo";
 
@@ -19,12 +20,18 @@ export function PropertyCard({ property }: { property: Property }) {
   return (
     <article className="relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgb(4_29_21/.14)]">
       <div className="relative h-48">
-        <PropertyPhoto property={property} sizes="(min-width: 1280px) 420px, (min-width: 640px) 50vw, 100vw" />
+        <PropertyPhoto
+          property={property}
+          sizes="(min-width: 1280px) 420px, (min-width: 640px) 50vw, 100vw"
+        />
         <span className="absolute start-3 top-3 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-green-700">
           {nameOf(property.type, locale)}
         </span>
+        <span className="absolute end-3 top-3 z-10">
+          <SaveButtons code={property.code} />
+        </span>
         {property.status !== "available" && (
-          <span className="absolute end-3 top-3 rounded-full bg-rose px-2.5 py-1 text-xs font-semibold text-white">
+          <span className="absolute start-3 top-11 rounded-full bg-rose px-2.5 py-1 text-xs font-semibold text-white">
             {status(property.status)}
           </span>
         )}

@@ -24,6 +24,8 @@ export type ChatReply = {
   links: ChatLink[];
   suggestions: string[];
   state: ChatState;
+  /** Nothing on the website answers this. */
+  unanswered?: boolean;
 };
 
 const SHOWN = 3;
@@ -325,7 +327,7 @@ export async function reply(
   if (PRICE.test(text) || hasAny(list, SEARCH) || wish.available) return results(wish, 0);
   if (HOW.test(text)) return how();
 
-  return make({ text: t("unknown"), links: contactLinks, state: before });
+  return make({ text: t("unknown"), links: contactLinks, state: before, unanswered: true });
 
   function about(property: PropertyDetail, asked: string[]): ChatReply {
     const separator = lang === "ar" ? "، " : ", ";
@@ -452,7 +454,10 @@ export async function reply(
     return make({
       text: lines.filter(Boolean).join("\n"),
       properties: page,
-      links: found.length > page.length ? [all] : contactLinks.slice(0, 1),
+      links: [
+        ...(found.length > page.length ? [all] : contactLinks.slice(0, 1)),
+        ...(query.persons ? [{ label: t("calculator"), href: "/calculator" }] : []),
+      ],
       suggestions: [
         ...(rest > 0 ? [t("askMore")] : []),
         ...(query.sort !== "cheap" && found.length > 1 ? [t("askCheapest")] : []),

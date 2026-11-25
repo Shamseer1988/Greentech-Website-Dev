@@ -42,6 +42,7 @@ export function EnquiryCard({ enquiry: e, me, users }: Props) {
     ["Area", e.area],
     ["Space needed", e.space_needed],
     ["Email", e.email],
+    ["Came from", e.source],
   ].filter(([, value]) => value);
   // A disabled user can still hold old enquiries, so keep the name in the list.
   const people = users.filter((u) => u.is_active || u.id === e.assigned_to_id);

@@ -43,6 +43,11 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 - [x] Instagram/Facebook auto-post (Meta Graph API) – optional
 - [x] Cloudflare Turnstile on forms, Google Analytics / Meta Pixel
 
+## Phase 5b – Extra features
+- [x] Full-screen map, editable home page, menu, categories and company details
+- [x] Local chat assistant (no outside service)
+- [x] Viewing booking, favourites and compare, PDF brochure, reports, capacity calculator, blog
+
 ## Phase 6 – Deploy to Proxmox
 - [ ] Production Dockerfiles (multi-stage), full `docker-compose.prod.yml`
 - [ ] VM/LXC on Proxmox, Cloudflare Tunnel for the domain + SSL

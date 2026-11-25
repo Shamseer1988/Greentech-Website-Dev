@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { nameOf } from "@/lib/format";
+import { source } from "@/lib/stats";
 import { track } from "@/lib/tracking";
 import type { Ref } from "@/lib/types";
 import { hasTurnstile, Turnstile } from "./turnstile";
@@ -42,6 +43,7 @@ export function EnquiryForm(props: Props) {
     const body: Record<string, unknown> = {
       ...Object.fromEntries(data),
       reply_on_whatsapp: data.has("reply_on_whatsapp"),
+      source: source(),
     };
     if (props.kind === "property") body.property_code = props.code;
     if (token) body.turnstile_token = token;
@@ -76,7 +78,11 @@ export function EnquiryForm(props: Props) {
 
   const error = (name: string) =>
     result.fields?.includes(name)
-      ? t(name === "name" || name === "phone" || name === "email" ? `errors.${name}` : "errors.field")
+      ? t(
+          name === "name" || name === "phone" || name === "email"
+            ? `errors.${name}`
+            : "errors.field",
+        )
       : undefined;
   const contact = props.kind === "contact";
   const text = { error, required: t("required") };
@@ -95,14 +101,31 @@ export function EnquiryForm(props: Props) {
       </Field>
       <Field name="phone" label={t("phone")} {...text} isRequired>
         {(p) => (
-          <input {...p} type="tel" dir="ltr" autoComplete="tel" maxLength={40} placeholder="+974" className={cn(p.className, "rtl:text-right")} />
+          <input
+            {...p}
+            type="tel"
+            dir="ltr"
+            autoComplete="tel"
+            maxLength={40}
+            placeholder="+974"
+            className={cn(p.className, "rtl:text-right")}
+          />
         )}
       </Field>
 
       {contact ? (
         <>
           <Field name="email" label={t("email")} {...text}>
-            {(p) => <input {...p} type="email" dir="ltr" autoComplete="email" maxLength={254} className={cn(p.className, "rtl:text-right")} />}
+            {(p) => (
+              <input
+                {...p}
+                type="email"
+                dir="ltr"
+                autoComplete="email"
+                maxLength={254}
+                className={cn(p.className, "rtl:text-right")}
+              />
+            )}
           </Field>
           <Field name="looking_for" label={t("lookingFor")} {...text}>
             {(p) => (
@@ -135,7 +158,9 @@ export function EnquiryForm(props: Props) {
             )}
           </Field>
           <Field name="message" label={t("requirements")} {...text} className="sm:col-span-2">
-            {(p) => <textarea {...p} rows={4} maxLength={3000} placeholder={t("requirementsHint")} />}
+            {(p) => (
+              <textarea {...p} rows={4} maxLength={3000} placeholder={t("requirementsHint")} />
+            )}
           </Field>
         </>
       ) : (
@@ -164,12 +189,7 @@ export function EnquiryForm(props: Props) {
       <Turnstile attempt={attempt} onToken={setToken} />
 
       <div className="col-span-full flex flex-wrap items-center gap-3">
-        <Button
-          type="submit"
-          size="lg"
-          disabled={sending}
-          className={contact ? "" : "w-full"}
-        >
+        <Button type="submit" size="lg" disabled={sending} className={contact ? "" : "w-full"}>
           {sending ? t("sending") : t("submit")}
         </Button>
         <span className="text-[13px] text-muted-foreground">{t("privacy")}</span>

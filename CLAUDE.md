@@ -97,5 +97,6 @@ Website colours MUST match the approved logo:
 - Frontend: `cd frontend && npm run dev`
 - Migrations: `cd backend && .venv\Scripts\alembic upgrade head` (new: `alembic revision --autogenerate -m "..."`)
 - Demo listings with photos (dev only): `python -m app.scripts.demo` (remove: `--remove`)
+- Draft blog articles (once): `python -m app.scripts.starter_articles`
 - Create/reset admin: `python -m app.scripts.create_admin`
 - Seed: `python -m app.scripts.seed` | Tests: `python -m pytest` | Lint: `ruff check app tests`

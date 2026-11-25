@@ -9,6 +9,7 @@ from sqlalchemy import ColumnElement, func, or_, select, true
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
+from app.api.viewings import visible_to as viewing_visible
 from app.core.db import get_db
 from app.core.security import AdminUser, CurrentUser, current_user, hash_password
 from app.models import (
@@ -19,6 +20,7 @@ from app.models import (
     PropertyStatus,
     User,
     UserRole,
+    Viewing,
 )
 from app.schemas.admin import (
     EnquiryRow,
@@ -32,8 +34,10 @@ from app.schemas.admin import (
     UserUpdate,
 )
 from app.schemas.common import Id
+from app.services import qatar
 from app.services.excel import workbook
 from app.services.properties import with_relations
+from app.services.viewings import ACTIVE
 
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(current_user)])
 Db = Annotated[Session, Depends(get_db)]
@@ -68,6 +72,12 @@ def stats(user: CurrentUser, db: Db) -> Stats:
         total=count(Property.id),
         available=count(Property.id, Property.status == PropertyStatus.AVAILABLE),
         new_enquiries_7_days=count(Enquiry.id, visible_to(user), Enquiry.created_at >= week_ago),
+        upcoming_viewings=count(
+            Viewing.id,
+            viewing_visible(user),
+            Viewing.day >= qatar.today(),
+            Viewing.status.in_(ACTIVE),
+        ),
         open_enquiries=count(Enquiry.id, visible_to(user), Enquiry.status != EnquiryStatus.CLOSED),
     )
 
@@ -117,6 +127,8 @@ def find_enquiry(db: Session, user: User, enquiry_id: int) -> Enquiry:
 def update_enquiry(enquiry_id: Id, data: EnquiryUpdate, user: CurrentUser, db: Db) -> EnquiryRow:
     enquiry = find_enquiry(db, user, enquiry_id)
     if data.status is not None:
+        if data.status != EnquiryStatus.NEW and enquiry.first_response_at is None:
+            enquiry.first_response_at = datetime.now(UTC)
         enquiry.status = data.status
     if "assigned_to_id" in data.model_fields_set:
         target = data.assigned_to_id

@@ -6,17 +6,20 @@ from app.api import (
     admin_properties,
     admin_social,
     admin_types,
+    articles,
     auth,
     enquiries,
     health,
     media,
     properties,
+    reports,
     site,
+    viewings,
 )
 from app.core.body_limit import BodyLimitMiddleware
 from app.core.config import settings
 
-app = FastAPI(title="Greentech Real Estate Broker API", version="0.5.0")
+app = FastAPI(title="Greentech Real Estate Broker API", version="0.6.0")
 
 app.add_middleware(BodyLimitMiddleware)
 app.add_middleware(
@@ -38,6 +41,10 @@ for module in (
     admin_social,
     admin_types,
     site,
+    articles,
+    reports,
+    viewings,
 ):
     app.include_router(module.router, prefix="/api")
-app.include_router(site.admin, prefix="/api")
+for module in (site, articles, reports, viewings):
+    app.include_router(module.admin, prefix="/api")

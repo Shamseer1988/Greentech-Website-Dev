@@ -94,6 +94,7 @@ export type EnquiryRow = {
   space_needed: string;
   message: string;
   reply_on_whatsapp: boolean;
+  source: string;
   status: EnquiryStatus;
   property_id: number | null;
   property_code: string | null;
@@ -120,4 +121,83 @@ export type Stats = {
   available: number;
   new_enquiries_7_days: number;
   open_enquiries: number;
+  upcoming_viewings: number;
+};
+
+export const VIEWING_STATUSES = ["requested", "confirmed", "done", "cancelled"] as const;
+export type ViewingStatus = (typeof VIEWING_STATUSES)[number];
+export type ViewingRow = {
+  id: number;
+  day: string;
+  time: string;
+  name: string;
+  company: string;
+  phone: string;
+  email: string | null;
+  people: number | null;
+  note: string;
+  language: "en" | "ar";
+  source: string;
+  status: ViewingStatus;
+  property_id: number | null;
+  property_code: string | null;
+  property_title: string | null;
+  assigned_to_id: number | null;
+  assigned_to_name: string | null;
+};
+export type ViewingSettings = {
+  enabled: boolean;
+  days: number[];
+  start: string;
+  end: string;
+  minutes: 30 | 60 | 90 | 120;
+  lead_hours: number;
+  days_ahead: number;
+  closed: string[];
+};
+
+export type Totals = {
+  view: number;
+  whatsapp: number;
+  call: number;
+  brochure: number;
+  favourite: number;
+  enquiry: number;
+  viewing: number;
+};
+export type Report = {
+  days: number;
+  totals: Totals;
+  before: Totals;
+  daily: { day: string; views: number; leads: number }[];
+  properties: (Totals & { code: string; title: string; status: string })[];
+  sources: { source: string; enquiries: number; viewings: number }[];
+  agents: {
+    name: string;
+    enquiries: number;
+    answered: number;
+    average_hours: number | null;
+    closed: number;
+    viewings: number;
+  }[];
+  questions: { id: number; text: string; count: number; last_at: string }[];
+};
+
+export type ArticleInput = {
+  slug: string;
+  title_en: string;
+  title_ar: string;
+  summary_en: string;
+  summary_ar: string;
+  body_en: string;
+  body_ar: string;
+  location_id: number | null;
+  type_id: number | null;
+  published: boolean;
+};
+export type ArticleFull = ArticleInput & {
+  id: number;
+  cover_url: string | null;
+  published_at: string | null;
+  updated_at: string;
 };

@@ -1,7 +1,8 @@
+import { articleTexts } from "./article";
 import { nameOf, titleOf, amenityOf } from "./format";
 import { absoluteUrl, shareImage, summary } from "./seo";
 import { inLanguage, type Site } from "./site";
-import type { PropertyDetail } from "./types";
+import type { ArticleDetail, PropertyDetail } from "./types";
 
 const AGENT_ID = `${absoluteUrl("/")}#company`;
 
@@ -26,7 +27,11 @@ export function company(name: string, locale: string, site: Site) {
       addressCountry: "QA",
     },
     geo: site.officeLatLng
-      ? { "@type": "GeoCoordinates", latitude: site.officeLatLng[0], longitude: site.officeLatLng[1] }
+      ? {
+          "@type": "GeoCoordinates",
+          latitude: site.officeLatLng[0],
+          longitude: site.officeLatLng[1],
+        }
       : undefined,
     sameAs: [...site.social, ...site.portals].flatMap(({ href }) => href ?? []),
   };
@@ -45,16 +50,16 @@ export function listing(property: PropertyDetail, locale: string) {
     description: summary(text || title, 500),
     datePosted: property.published_at,
     inLanguage: locale,
-    image: images.length
-      ? images
-      : [absoluteUrl(shareImage(property.code, property.cover_url))],
+    image: images.length ? images : [absoluteUrl(shareImage(property.code, property.cover_url))],
     provider: { "@id": AGENT_ID },
     offers: {
       "@type": "Offer",
       url,
       businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
       availability: `https://schema.org/${
-        { available: "InStock", reserved: "LimitedAvailability", rented: "SoldOut" }[property.status]
+        { available: "InStock", reserved: "LimitedAvailability", rented: "SoldOut" }[
+          property.status
+        ]
       }`,
       ...(property.rent_qar !== null && {
         price: property.rent_qar,
@@ -109,5 +114,23 @@ export function breadcrumbs(items: { name: string; path: string }[], locale: str
       name,
       item: absoluteUrl(path, locale),
     })),
+  };
+}
+
+export function article(item: ArticleDetail, locale: string) {
+  const url = absoluteUrl(`/blog/${item.slug}`, locale);
+  const { title, summary: text } = articleTexts(item, locale);
+  return {
+    "@type": "Article",
+    "@id": url,
+    mainEntityOfPage: url,
+    headline: title,
+    description: text || undefined,
+    image: item.cover_url ?? undefined,
+    datePublished: item.published_at,
+    dateModified: item.updated_at,
+    inLanguage: locale,
+    author: { "@id": AGENT_ID },
+    publisher: { "@id": AGENT_ID },
   };
 }

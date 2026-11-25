@@ -15,6 +15,7 @@ export default async function Dashboard() {
     ["Available", stats.available, "/admin/properties?status=available"],
     ["New enquiries (7 days)", stats.new_enquiries_7_days, "/admin/enquiries"],
     ["Open enquiries", stats.open_enquiries, "/admin/enquiries"],
+    ["Upcoming viewings", stats.upcoming_viewings, "/admin/viewings"],
   ] as const;
 
   return (
@@ -24,7 +25,7 @@ export default async function Dashboard() {
           + Add property
         </Link>
       </PageTitle>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {boxes.map(([label, value, href]) => (
           <Link key={label} href={href} className={`${CARD} flex flex-col gap-1 hover:shadow-md`}>
             <span className="text-[13px] text-muted-foreground">{label}</span>

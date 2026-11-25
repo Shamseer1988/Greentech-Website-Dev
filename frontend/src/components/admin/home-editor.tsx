@@ -230,6 +230,8 @@ const MENU_PLACES: Record<MenuItem["key"], string> = {
   locations: "Locations page",
   services: "Category cards on the home page",
   how: "“How it works” on the home page",
+  calculator: "Camp calculator page",
+  blog: "Blog (shown when an article is published)",
   contact: "Contact page",
 };
 const LANGUAGES = [

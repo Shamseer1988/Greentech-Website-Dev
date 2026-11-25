@@ -75,13 +75,21 @@ export const STANDARD_HOME: HomeContent = {
   show_map: true,
   show_how: true,
   show_soon: true,
-  menu: (["properties", "locations", "services", "how", "contact"] as const).map(menuItem),
+  menu: (
+    ["properties", "locations", "services", "how", "calculator", "blog", "contact"] as const
+  ).map(menuItem),
 };
 
 /** The saved texts, with the standard one wherever the office has not saved any. */
 export function fullHome(saved: SavedHome | null): HomeContent {
   const own = Object.entries(saved ?? {}).filter(([, value]) => value !== null);
-  return { ...STANDARD_HOME, ...Object.fromEntries(own) };
+  const content: HomeContent = { ...STANDARD_HOME, ...Object.fromEntries(own) };
+  // Pages that are newer than the saved menu come before the last item.
+  const missing = STANDARD_HOME.menu.filter((m) => !content.menu.some((own) => own.key === m.key));
+  return {
+    ...content,
+    menu: [...content.menu.slice(0, -1), ...missing, ...content.menu.slice(-1)],
+  };
 }
 
 export const getHomeContent = cache(async () => {
@@ -105,12 +113,18 @@ const MENU_LINKS: Record<MenuItem["key"], string> = {
   locations: "/locations",
   services: "/#services",
   how: "/#how",
+  calculator: "/calculator",
+  blog: "/blog",
   contact: "/contact",
 };
 
 /** The main menu. Links to a hidden section of the home page are left out. */
-export function menuLinks(content: HomeContent, locale: string) {
-  const hidden = { services: !content.show_categories, how: !content.show_how };
+export function menuLinks(content: HomeContent, locale: string, hasBlog: boolean) {
+  const hidden = {
+    services: !content.show_categories,
+    how: !content.show_how,
+    blog: !hasBlog,
+  };
   return content.menu
     .filter(({ key, show }) => show && !(key in hidden && hidden[key as keyof typeof hidden]))
     .map((item) => ({

@@ -67,7 +67,7 @@ export type PropertyPage = {
 
 // Mirrors backend/app/schemas/site.py
 export type MenuItem = {
-  key: "properties" | "locations" | "services" | "how" | "contact";
+  key: "properties" | "locations" | "services" | "how" | "calculator" | "blog" | "contact";
   label_en: string;
   label_ar: string;
   show: boolean;
@@ -128,3 +128,19 @@ export type CompanyContent = {
   lng: number | null;
   links: CompanyLink[];
 };
+
+export type DaySlots = { day: string; times: string[] };
+
+export type ArticleCard = {
+  slug: string;
+  title_en: string;
+  title_ar: string;
+  summary_en: string;
+  summary_ar: string;
+  cover_url: string | null;
+  published_at: string;
+  updated_at: string;
+  location: Ref | null;
+  type: Ref | null;
+};
+export type ArticleDetail = ArticleCard & { body_en: string; body_ar: string };

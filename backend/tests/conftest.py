@@ -9,7 +9,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from alembic import command
-from app.api import auth, enquiries
+from app.api import auth, enquiries, reports, viewings
 from app.core.config import settings
 from app.core.db import get_db
 from app.core.security import create_token, hash_password
@@ -81,7 +81,13 @@ def client(db, storage, engine):
         with make_session() as session:
             yield session
 
-    for limiter in (enquiries.limiter, auth.per_visitor, auth.per_email):
+    for limiter in (
+        enquiries.limiter,
+        viewings.limiter,
+        reports.limiter,
+        auth.per_visitor,
+        auth.per_email,
+    ):
         limiter.clear()
     app.dependency_overrides = {get_db: test_db, get_storage: lambda: storage}
     with TestClient(app) as test_client:

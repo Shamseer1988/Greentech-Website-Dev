@@ -6,7 +6,7 @@ from email.utils import formataddr
 from urllib.parse import quote
 
 from app.core.config import settings
-from app.models import Enquiry
+from app.models import Enquiry, Viewing
 
 logger = logging.getLogger(__name__)
 TIMEOUT = 20
@@ -79,3 +79,39 @@ def notify(enquiry: Enquiry) -> None:
         send(enquiry_email(enquiry))
     except Exception:
         logger.exception("Could not send the email for enquiry %s", enquiry.id)
+
+
+def viewing_email(viewing: Viewing) -> EmailMessage:
+    site = settings.site_url.rstrip("/")
+    code = viewing.property.code if viewing.property else ""
+    rows = [
+        ("Reference", f"V{viewing.id}"),
+        ("Property", f"{code} - {site}/properties/{code}"),
+        ("Date", f"{viewing.day:%A %d %B %Y}"),
+        ("Time", viewing.time),
+        ("Name", viewing.name),
+        ("Company", viewing.company),
+        ("Phone", viewing.phone),
+        ("Email", viewing.email),
+        ("People", viewing.people),
+        ("Note", viewing.note),
+    ]
+    lines = [f"{name}: {value}" for name, value in rows if value]
+    lines += ["", f"Confirm it in the admin panel: {site}/admin/viewings"]
+    message = EmailMessage()
+    message["Subject"] = (
+        f"New viewing {code} - {viewing.day:%d %b} {viewing.time} - {one_line(viewing.name)}"
+    )
+    message["From"] = formataddr(("Green Tech Website", settings.mail_from))
+    message["To"] = ", ".join(settings.enquiry_email_to)
+    if viewing.email:
+        message["Reply-To"] = viewing.email
+    message.set_content("\n".join(lines))
+    return message
+
+
+def notify_viewing(viewing: Viewing) -> None:
+    try:
+        send(viewing_email(viewing))
+    except Exception:
+        logger.exception("Could not send the email for viewing %s", viewing.id)

@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import { cn } from "cn";
 import { buttonVariants } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
+import { FavouritesLink } from "@/components/property/save-buttons";
 import { LanguageSwitch } from "./language-switch";
 
 export type MenuLink = { key: string; href: string; label: string };
@@ -53,7 +54,7 @@ export function SiteHeader({ links }: { links: MenuLink[] }) {
 
         <div
           className={cn(
-            "hidden gap-1 rounded-full border p-1.5 lg:flex",
+            "hidden gap-1 rounded-full border p-1.5 xl:flex",
             dark ? "border-white/12 bg-white/6 backdrop-blur-md" : "border-transparent",
           )}
         >
@@ -63,7 +64,7 @@ export function SiteHeader({ links }: { links: MenuLink[] }) {
               href={href}
               aria-current={isActive(href) ? "page" : undefined}
               className={cn(
-                "rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
+                "rounded-full px-3.5 py-2.5 text-sm whitespace-nowrap font-medium transition-colors",
                 dark
                   ? "text-sage hover:bg-white/10 hover:text-white"
                   : "hover:bg-tint hover:text-green-700",
@@ -76,6 +77,7 @@ export function SiteHeader({ links }: { links: MenuLink[] }) {
         </div>
 
         <div className="flex items-center gap-2">
+          <FavouritesLink dark={dark} />
           <Suspense>
             <LanguageSwitch dark={dark} />
           </Suspense>
@@ -95,7 +97,7 @@ export function SiteHeader({ links }: { links: MenuLink[] }) {
             aria-controls="mobile-menu"
             onClick={() => setOpen(!open)}
             className={cn(
-              "flex size-11 items-center justify-center rounded-full border lg:hidden",
+              "flex size-11 items-center justify-center rounded-full border xl:hidden",
               dark ? "border-white/20" : "border-field",
             )}
           >
@@ -107,7 +109,7 @@ export function SiteHeader({ links }: { links: MenuLink[] }) {
       {open && (
         <div
           id="mobile-menu"
-          className="absolute inset-x-4 top-full flex flex-col rounded-2xl border border-line bg-white p-3 text-ink shadow-2xl lg:hidden"
+          className="absolute inset-x-4 top-full flex flex-col rounded-2xl border border-line bg-white p-3 text-ink shadow-2xl xl:hidden"
         >
           {links.map(({ href, key, label }) => (
             <Link

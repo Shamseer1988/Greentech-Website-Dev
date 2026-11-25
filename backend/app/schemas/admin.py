@@ -266,6 +266,7 @@ class EnquiryRow(BaseModel):
     space_needed: str
     message: str
     reply_on_whatsapp: bool
+    source: str
     status: EnquiryStatus
     property_id: int | None
     property_code: str | None
@@ -298,6 +299,7 @@ class Stats(BaseModel):
     available: int
     new_enquiries_7_days: int
     open_enquiries: int
+    upcoming_viewings: int
 
 
 # --- Facebook and Instagram -----------------------------------------------

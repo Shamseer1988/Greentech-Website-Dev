@@ -58,6 +58,11 @@ const BADGES: Record<string, string> = {
   new: "bg-rose text-white",
   contacted: "bg-tint text-deep",
   closed: "bg-[#eceFed] text-[#3a4842]",
+  requested: "bg-rose text-white",
+  confirmed: "bg-tint text-deep",
+  done: "bg-[#eceFed] text-[#3a4842]",
+  cancelled: "bg-[#eceFed] text-[#3a4842]",
+  published: "bg-tint text-deep",
 };
 
 export function Badge({ value }: { value: string }) {

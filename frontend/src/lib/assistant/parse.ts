@@ -130,6 +130,7 @@ function findNumbers(message: string): Wish {
   });
   for (const item of found) {
     const { value, kind, before } = item;
+    if (value > 9_999_999) continue; // a phone number, not a rent
     if (kind === "persons") wish.persons = value;
     if (kind === "rooms") wish.rooms = value;
     if (kind === "area") {

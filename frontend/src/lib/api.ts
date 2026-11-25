@@ -3,6 +3,8 @@ import { connection } from "next/server";
 import { cache } from "react";
 import { buildSite } from "./site";
 import type {
+  ArticleCard,
+  ArticleDetail,
   ChatContent,
   CompanyContent,
   HomeOut,
@@ -89,3 +91,17 @@ export const getProperty = cache(async (code: string): Promise<PropertyDetail | 
     throw error;
   }
 });
+
+export const getArticles = cache(() => optional(get<ArticleCard[]>("/articles"), []));
+
+export const getArticle = cache(async (slug: string): Promise<ArticleDetail | null> => {
+  try {
+    return await get<ArticleDetail>(`/articles/${encodeURIComponent(slug)}`);
+  } catch (error) {
+    if (error instanceof NotFound) return null;
+    throw error;
+  }
+});
+
+export const getPropertyCards = (codes: string[]) =>
+  get<PropertyCard[]>(`/property-cards?${new URLSearchParams(codes.map((c) => ["codes", c]))}`);

@@ -3,14 +3,16 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Analytics } from "@/components/analytics";
+import { Counter } from "@/components/counter";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { JsonLd } from "@/components/json-ld";
 import { ContactBar } from "@/components/layout/contact-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { MotionProvider } from "@/components/motion/motion-provider";
+import { CompareBar } from "@/components/property/save-buttons";
 import { SiteProvider } from "@/components/site-provider";
-import { getSite } from "@/lib/api";
+import { getArticles, getSite } from "@/lib/api";
 import { routing } from "@/i18n/routing";
 import { welcome } from "@/lib/assistant/answer";
 import { getHomeContent, menuLinks } from "@/lib/home-content";
@@ -49,10 +51,11 @@ export default async function LocaleLayout({
   const t = await getTranslations({ locale, namespace: "nav" });
   const brand = await getTranslations({ locale, namespace: "brand" });
 
-  const [{ content }, chat, site] = await Promise.all([
+  const [{ content }, chat, site, articles] = await Promise.all([
     getHomeContent(),
     welcome(locale),
     getSite(),
+    getArticles(),
   ]);
 
   return (
@@ -68,7 +71,7 @@ export default async function LocaleLayout({
               >
                 {t("skip")}
               </a>
-              <SiteHeader links={menuLinks(content, locale)} />
+              <SiteHeader links={menuLinks(content, locale, articles.length > 0)} />
               <main id="main">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </main>
@@ -76,7 +79,9 @@ export default async function LocaleLayout({
               <ContactBar
                 chat={chat.enabled ? { text: chat.text, suggestions: chat.suggestions } : null}
               />
+              <CompareBar />
               <Analytics />
+              <Counter />
             </MotionProvider>
           </SiteProvider>
         </NextIntlClientProvider>

@@ -11,9 +11,12 @@ const MENU = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/properties", label: "Properties" },
   { href: "/admin/enquiries", label: "Enquiries" },
+  { href: "/admin/viewings", label: "Viewings" },
+  { href: "/admin/reports", label: "Reports", adminOnly: true },
   { href: "/admin/locations", label: "Locations", adminOnly: true },
   { href: "/admin/categories", label: "Categories", adminOnly: true },
   { href: "/admin/home", label: "Home page", adminOnly: true },
+  { href: "/admin/blog", label: "Blog", adminOnly: true },
   { href: "/admin/chat", label: "Chat assistant", adminOnly: true },
   { href: "/admin/company", label: "Company details", adminOnly: true },
   { href: "/admin/users", label: "Users & roles", adminOnly: true },
@@ -33,7 +36,7 @@ export function Sidebar({ me }: { me: AdminUser }) {
   return (
     <nav
       aria-label="Admin"
-      className="flex flex-col gap-1.5 bg-deep px-4 py-5 text-sage lg:sticky lg:top-0 lg:h-svh lg:w-60 lg:flex-none"
+      className="flex flex-col gap-1.5 bg-deep px-4 py-5 text-sage lg:sticky lg:top-0 lg:h-svh lg:w-60 lg:overflow-y-auto lg:flex-none"
     >
       <Link href="/admin" className="mb-2 lg:mb-4">
         <Image

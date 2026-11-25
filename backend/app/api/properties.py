@@ -1,11 +1,12 @@
 from math import ceil
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.api.site import company
 from app.core.db import get_db
 from app.models import Location, Property, PropertyType
 from app.schemas.common import MAX_INT
@@ -18,6 +19,7 @@ from app.schemas.public import (
     media_url,
 )
 from app.services import properties as service
+from app.services.brochure import brochure
 from app.services.share_image import cover_key, share_jpeg
 from app.services.storage import Storage, get_storage
 
@@ -117,6 +119,36 @@ def get_property(code: str, db: Db) -> PropertyDetail:
     if prop is None:
         raise HTTPException(404, "Property not found")
     return PropertyDetail.build(prop)
+
+
+@router.get("/properties/{code}/brochure.pdf")
+def property_brochure(
+    code: str,
+    db: Db,
+    storage: Annotated[Storage, Depends(get_storage)],
+    language: Literal["en", "ar"] = "en",
+) -> Response:
+    prop = service.get_public(db, code) if "\x00" not in code else None
+    if prop is None:
+        raise HTTPException(404, "Property not found")
+    return Response(
+        brochure(prop, storage, language, company(db)),
+        media_type="application/pdf",
+        headers={"Cache-Control": "public, max-age=300"},
+    )
+
+
+@router.get("/property-cards")
+def property_cards(codes: Annotated[list[str], Query(max_length=60)], db: Db) -> list[PropertyCard]:
+    """Chosen properties, e.g. favourites, in the order asked."""
+    wanted = [c.upper() for c in codes if "\x00" not in c and len(c) <= 20]
+    rows = db.scalars(
+        service.with_relations(select(Property)).where(
+            Property.code.in_(wanted), service.is_public()
+        )
+    )
+    found = {p.code: PropertyCard.build(p) for p in rows}
+    return [found[c] for c in dict.fromkeys(wanted) if c in found]
 
 
 def listed_count(column):
