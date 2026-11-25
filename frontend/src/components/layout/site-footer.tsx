@@ -14,8 +14,8 @@ export async function SiteFooter() {
 
   return (
     <footer className="no-print bg-deepest pb-20 text-sm text-[#a9cfc0] md:pb-0">
-      <div className="container-page flex flex-col gap-10 pt-16 pb-10 xl:flex-row xl:justify-between">
-        <div className="grid flex-1 gap-8 sm:grid-cols-2 lg:grid-cols-[auto_1fr_1fr_1fr] xl:grid-cols-[auto_1fr_1fr] xl:gap-10">
+      <div className="container-page flex flex-col gap-10 pt-16 pb-10 xl:flex-row xl:items-center xl:py-6">
+        <div className="grid flex-1 gap-8 sm:grid-cols-2 lg:grid-cols-[auto_1fr_1fr_1fr] xl:grid-cols-[auto_auto_auto] xl:items-start xl:justify-between xl:gap-x-6 xl:gap-y-4">
           <div className="flex flex-col gap-3 sm:max-xl:row-span-2 lg:max-xl:row-span-1 xl:row-span-2">
             <Image
               src="/brand/greentech-logo-stacked-on-dark.svg"
@@ -23,7 +23,7 @@ export async function SiteFooter() {
               width={508}
               height={359}
               unoptimized
-              className="-ms-3 h-auto w-55"
+              className="-ms-3 h-auto w-55 xl:w-50"
             />
             <span>
               {t("place")}
@@ -52,7 +52,7 @@ export async function SiteFooter() {
             </FooterColumn>
           )}
         </div>
-        <OfficeCard className="w-full xl:w-[620px] xl:flex-none" />
+        <OfficeCard className="w-full xl:w-[640px] xl:flex-none" />
       </div>
       <div className="border-t border-[#0e3a2c]">
         <div className="container-page py-5 text-[13px]">
@@ -65,7 +65,7 @@ export async function SiteFooter() {
 
 function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start xl:whitespace-nowrap">
       <span className="mb-1 font-semibold text-white">{title}</span>
       {children}
     </div>
