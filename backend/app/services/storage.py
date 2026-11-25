@@ -1,4 +1,5 @@
 import json
+import logging
 from functools import lru_cache
 from typing import BinaryIO
 
@@ -7,6 +8,8 @@ from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class Storage:
@@ -75,3 +78,11 @@ class Storage:
 @lru_cache
 def get_storage() -> Storage:
     return Storage()
+
+
+def delete_file(storage: Storage, key: str) -> None:
+    """Remove a file that is no longer used. A failure only leaves a spare file behind."""
+    try:
+        storage.delete(key)
+    except Exception:
+        logger.exception("Could not remove file %s", key)

@@ -115,7 +115,7 @@ function Explorer({ properties, onClose }: { properties: PropertyCard[]; onClose
           lng: p.lng,
           label: p.rent_qar === null ? p.code : common("price", { price: num(p.rent_qar) }),
           title: `${titleOf(p, locale)} · ${p.code}`,
-          type: p.type.slug,
+          icon: p.type.icon,
           area: nameOf(p.location, locale),
           reserved: p.status !== "available",
         }),

@@ -2,11 +2,11 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "cn";
 import { CardPhoto } from "@/components/home/card-photo";
 import { Reveal } from "@/components/motion/reveal";
+import { TypeIcon } from "@/components/type-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 import { Link } from "@/i18n/navigation";
 import { nameOf, num } from "@/lib/format";
-import { typeIcon } from "@/lib/type-icons";
 import type { LocationOut, PropertyTypeOut } from "@/lib/types";
 
 export async function Ticker({
@@ -19,8 +19,7 @@ export async function Ticker({
   const locale = await getLocale();
   const rentable = types.filter((type) => !type.coming_soon);
   const words = Array.from({ length: Math.max(rentable.length, locations.length) }).flatMap(
-    (_, i) =>
-      [locations[i], rentable[i]].flatMap((item) => (item ? [nameOf(item, locale)] : [])),
+    (_, i) => [locations[i], rentable[i]].flatMap((item) => (item ? [nameOf(item, locale)] : [])),
   );
   if (!words.length) return null;
 
@@ -46,40 +45,44 @@ export async function Ticker({
   );
 }
 
-function Icon({ slug, className }: { slug: string; className: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={typeIcon(slug)} />
-    </svg>
-  );
-}
-
 const TILT =
   "group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border transition duration-300 hover:-translate-y-2 hover:border-mint/60 hover:shadow-[0_28px_60px_rgb(4_29_21/.25)]";
 
-export async function Categories({ types }: { types: PropertyTypeOut[] }) {
+const cardHref = (type: PropertyTypeOut) =>
+  type.coming_soon ? `/contact?for=${type.slug}` : `/properties?type=${type.slug}`;
+
+/** Width of a small card on a computer: the grid never ends with a hole, for any number of cards. */
+function width(index: number, count: number): string {
+  if (count === 1) return "lg:col-span-2 lg:row-span-2";
+  if (count === 2) return "lg:col-span-2";
+  if (index < count - 1) return "";
+  // The large card takes two places of the three columns.
+  return ["lg:col-span-1", "lg:col-span-3", "lg:col-span-2"][(count + 2) % 3];
+}
+
+export async function Categories({
+  types,
+  eyebrow,
+  title,
+}: {
+  types: PropertyTypeOut[];
+  eyebrow: string;
+  title: string;
+}) {
   const t = await getTranslations("home");
   const common = await getTranslations("common");
   const locale = await getLocale();
-  const text = (slug: string) => (t.has(`catText.${slug}`) ? t(`catText.${slug}`) : "");
+  const text = (type: PropertyTypeOut) => (locale === "ar" && type.text_ar) || type.text_en;
   const [big, ...rest] = types;
+  if (!big) return null;
 
   return (
     <section id="services" className="container-page scroll-mt-6 pt-20 pb-16 lg:pt-28 lg:pb-20">
       <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2.5">
-          <span className="eyebrow text-rose">{t("categoriesEyebrow")}</span>
+          {eyebrow && <span className="eyebrow text-rose">{eyebrow}</span>}
           <h2 className="max-w-155 text-4xl leading-[1.05] font-bold tracking-tight text-slate lg:text-[52px]">
-            {t("categoriesTitle")}
+            {title}
           </h2>
         </div>
         <Link href="/properties" className="py-2 font-semibold text-green-700 hover:text-green-800">
@@ -88,45 +91,56 @@ export async function Categories({ types }: { types: PropertyTypeOut[] }) {
       </Reveal>
 
       <div className="grid gap-4.5 sm:grid-cols-2 lg:auto-rows-[220px] lg:grid-cols-3">
-        {big && (
-          <Reveal className="min-h-96 sm:col-span-2 lg:col-span-1 lg:row-span-2">
-            <Link
-              href={`/properties?type=${big.slug}`}
-              className={cn(TILT, "border-green-700 bg-deep p-7 text-white")}
-            >
-              {big.image_url && <CardPhoto src={big.image_url} opacity={big.image_opacity} dark />}
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute -end-15 -bottom-15 size-65 rounded-full bg-green-700 blur-2xl",
-                  big.image_url && "opacity-60",
-                )}
-              />
-              <span className="relative flex size-14 items-center justify-center rounded-2xl bg-mint text-deep">
-                <Icon slug={big.slug} className="size-7" />
+        <Reveal
+          className={cn(
+            "min-h-96 sm:col-span-2 lg:row-span-2",
+            rest.length ? "lg:col-span-1" : "lg:col-span-3",
+          )}
+        >
+          <Link
+            href={cardHref(big)}
+            className={cn(TILT, "border-green-700 bg-deep p-7 text-white")}
+          >
+            {big.image_url && <CardPhoto src={big.image_url} opacity={big.image_opacity} dark />}
+            <span
+              aria-hidden="true"
+              className={cn(
+                "absolute -end-15 -bottom-15 size-65 rounded-full bg-green-700 blur-2xl",
+                big.image_url && "opacity-60",
+              )}
+            />
+            <span className="relative flex size-14 items-center justify-center rounded-2xl bg-mint text-deep">
+              <TypeIcon name={big.icon} className="size-7" />
+            </span>
+            <span className="relative flex flex-col gap-2.5">
+              <span className="font-heading text-[32px] leading-tight font-bold">
+                {nameOf(big, locale)}
               </span>
-              <span className="relative flex flex-col gap-2.5">
-                <span className="font-heading text-[32px] leading-tight font-bold">
-                  {nameOf(big, locale)}
-                </span>
-                <span className="leading-relaxed text-sage">{text(big.slug)}</span>
-                <span className="font-semibold text-mint">
-                  {t("available", { n: num(big.property_count) })} <Arrow />
-                </span>
+              <span className="leading-relaxed text-sage">{text(big)}</span>
+              <span className="font-semibold text-mint">
+                {big.coming_soon
+                  ? common("comingSoon")
+                  : t("available", { n: num(big.property_count) })}{" "}
+                <Arrow />
               </span>
-            </Link>
-          </Reveal>
-        )}
+            </span>
+          </Link>
+        </Reveal>
         {rest.map((type, i) => (
-          <Reveal key={type.slug} delay={0.08 * (i + 1)} className="min-h-50">
-            <Link
-              href={type.coming_soon ? "/contact?for=residential" : `/properties?type=${type.slug}`}
-              className={cn(TILT, "border-line bg-white p-6")}
-            >
+          <Reveal
+            key={type.slug}
+            delay={0.08 * (i + 1)}
+            className={cn(
+              "min-h-50",
+              i === rest.length - 1 && rest.length % 2 === 1 && "sm:col-span-2",
+              width(i, rest.length),
+            )}
+          >
+            <Link href={cardHref(type)} className={cn(TILT, "border-line bg-white p-6")}>
               {type.image_url && <CardPhoto src={type.image_url} opacity={type.image_opacity} />}
               <span className="relative flex items-start justify-between">
                 <span className="flex size-12.5 items-center justify-center rounded-xl bg-tint text-green-700">
-                  <Icon slug={type.slug} className="size-6" />
+                  <TypeIcon name={type.icon} className="size-6" />
                 </span>
                 <span
                   className={cn(
@@ -143,7 +157,7 @@ export async function Categories({ types }: { types: PropertyTypeOut[] }) {
                 <span className="font-heading text-2xl font-semibold text-slate">
                   {nameOf(type, locale)}
                 </span>
-                <span className="text-sm text-muted-foreground">{text(type.slug)}</span>
+                <span className="text-sm text-muted-foreground">{text(type)}</span>
               </span>
             </Link>
           </Reveal>

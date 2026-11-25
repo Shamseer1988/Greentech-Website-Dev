@@ -27,7 +27,13 @@ class LocationRef(TypeRef):
     lng: float
 
 
-class TypeImage(TypeRef):
+class CategoryRef(TypeRef):
+    icon: str
+
+
+class TypeImage(CategoryRef):
+    text_en: str
+    text_ar: str
     image_url: str | None
     image_opacity: int
 
@@ -69,7 +75,7 @@ class PropertyCard(BaseModel):
     code: str
     title_en: str
     title_ar: str
-    type: TypeRef
+    type: CategoryRef
     location: LocationRef
     status: PropertyStatus
     rent_qar: int | None
@@ -122,7 +128,7 @@ def card_fields(prop: Property) -> dict:
         "code": prop.code,
         "title_en": prop.title_en,
         "title_ar": prop.title_ar,
-        "type": TypeRef.model_validate(prop.type),
+        "type": CategoryRef.model_validate(prop.type),
         "location": LocationRef.model_validate(prop.location),
         "status": prop.status,
         "rent_qar": prop.rent_qar,

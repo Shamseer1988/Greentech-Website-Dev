@@ -2,6 +2,7 @@ import io
 from dataclasses import dataclass
 from typing import BinaryIO
 
+from fastapi import HTTPException, UploadFile
 from PIL import Image, ImageOps
 
 MAX_IMAGE_BYTES = 20 * 1024 * 1024
@@ -10,6 +11,7 @@ MAX_VIDEO_BYTES = 95 * 1024 * 1024
 MAX_PIXELS = 60_000_000
 PHOTO_SIDE = 2000
 CARD_SIDE = 1400
+HERO_SIDE = 2400
 PANORAMA_SIDE = 6000
 
 
@@ -45,6 +47,17 @@ def to_webp(source: BinaryIO, max_side: int) -> WebP:
     result.save(out, "WEBP", quality=82, method=4)
     out.seek(0)
     return WebP(out, result.width, result.height)
+
+
+def read_photo(file: UploadFile, max_side: int) -> WebP:
+    """Check and convert one uploaded photo."""
+    if (file.size or 0) > MAX_IMAGE_BYTES:
+        limit = MAX_IMAGE_BYTES // 1024 // 1024
+        raise HTTPException(413, f"File is too large (maximum {limit} MB)")
+    try:
+        return to_webp(file.file, max_side)
+    except MediaError as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 def video_type(source: BinaryIO) -> tuple[str, str]:

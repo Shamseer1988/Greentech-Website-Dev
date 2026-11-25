@@ -14,14 +14,8 @@ class EnquiryStatus(StrEnum):
     CLOSED = "closed"
 
 
-class LookingFor(StrEnum):
-    LABOUR_ACCOMMODATION = "labour-accommodation"
-    WAREHOUSE = "warehouse"
-    CAFETERIA = "cafeteria"
-    SUPERMARKET_SHOP = "supermarket-shop"
-    RESIDENTIAL = "residential"
-    LIST_MY_PROPERTY = "list-my-property"
-    OTHER = "other"
+# Choices of the enquiry form that are not a category.
+OTHER_WISHES = ("list-my-property", "other")
 
 
 class Enquiry(TimestampMixin, Base):
@@ -36,7 +30,7 @@ class Enquiry(TimestampMixin, Base):
     company: Mapped[str] = mapped_column(String(160), default="", server_default="")
     phone: Mapped[str] = mapped_column(String(20))
     email: Mapped[str | None] = mapped_column(String(254))
-    looking_for: Mapped[LookingFor | None] = mapped_column(str_enum(LookingFor, "looking_for"))
+    looking_for: Mapped[str | None] = mapped_column(String(60))  # a category, or OTHER_WISHES
     area: Mapped[str] = mapped_column(String(120), default="", server_default="")
     space_needed: Mapped[str] = mapped_column(String(120), default="", server_default="")
     message: Mapped[str] = mapped_column(Text, default="", server_default="")

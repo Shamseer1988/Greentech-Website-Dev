@@ -29,7 +29,13 @@ function spot(location: LocationOut): [number, number] {
   );
 }
 
-export function QatarMap({ locations }: { locations: LocationOut[] }) {
+export function QatarMap({
+  locations,
+  residentialSoon,
+}: {
+  locations: LocationOut[];
+  residentialSoon: boolean;
+}) {
   const t = useTranslations("home");
   const common = useTranslations("common");
   const locale = useLocale();
@@ -43,15 +49,20 @@ export function QatarMap({ locations }: { locations: LocationOut[] }) {
       spot: spot(location),
       location: location as LocationOut | null,
     })),
-    {
-      slug: "doha",
-      name: t("dohaName"),
-      text: t("dohaText"),
-      spot: [250, 250] as [number, number],
-      location: null,
-    },
+    ...(residentialSoon
+      ? [
+          {
+            slug: "doha",
+            name: t("dohaName"),
+            text: t("dohaText"),
+            spot: [250, 250] as [number, number],
+            location: null,
+          },
+        ]
+      : []),
   ];
   const area = areas.find((a) => a.slug === selected) ?? areas[0];
+  if (!area) return null;
 
   return (
     <section className="grid-bg bg-deep text-white">
@@ -136,7 +147,13 @@ export function QatarMap({ locations }: { locations: LocationOut[] }) {
 
         <div className="flex min-w-0 flex-[1_1_300px] justify-center">
           <div dir="ltr" className="relative h-115 w-80">
-            <svg viewBox="0 0 320 460" width="320" height="460" role="img" aria-label={t("mapLabel")}>
+            <svg
+              viewBox="0 0 320 460"
+              width="320"
+              height="460"
+              role="img"
+              aria-label={t("mapLabel")}
+            >
               <path
                 d="M175 20 C200 30 215 60 225 100 C235 140 255 170 262 210 C270 240 258 260 252 285 C248 320 262 350 245 385 C232 410 215 430 190 445 L120 440 C110 420 95 410 80 390 C70 360 55 330 52 300 C48 270 70 250 80 220 C88 190 100 160 115 120 C128 85 150 40 175 20 Z"
                 fill="#0A3D2D"

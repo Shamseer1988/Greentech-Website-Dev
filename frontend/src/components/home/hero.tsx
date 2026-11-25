@@ -5,7 +5,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { nameOf, specs } from "@/lib/format";
 import { site } from "@/lib/site";
-import type { LocationOut, PropertyCard, PropertyTypeOut } from "@/lib/types";
+import type { homeTexts } from "@/lib/home-content";
+import type { HomeContent, LocationOut, PropertyCard, PropertyTypeOut } from "@/lib/types";
+import { HeroBackground } from "./hero-background";
 import { HeroScene } from "./hero-scene";
 import { RotatingWord } from "./rotating-word";
 
@@ -13,14 +15,17 @@ type Props = {
   types: PropertyTypeOut[];
   locations: LocationOut[];
   highlight: PropertyCard | undefined;
+  content: HomeContent;
+  texts: ReturnType<typeof homeTexts>;
+  images: string[];
 };
 
-export async function Hero({ types, locations, highlight }: Props) {
+export async function Hero({ types, locations, highlight, content, texts, images }: Props) {
   const t = await getTranslations("home");
   const common = await getTranslations("common");
   const status = await getTranslations("status");
   const locale = await getLocale();
-  const words = [t("words.0"), t("words.1"), t("words.2"), t("words.3")];
+  const list = new Intl.ListFormat(locale, { type: "conjunction" }).format(texts.words);
 
   return (
     <section className="grid-bg relative overflow-hidden bg-deep text-white">
@@ -28,121 +33,143 @@ export async function Hero({ types, locations, highlight }: Props) {
         aria-hidden="true"
         className="absolute -end-30 top-20 size-155 rounded-full bg-green-700 opacity-55 blur-[120px]"
       />
+      <HeroBackground images={images} opacity={content.image_opacity} priority />
       <div className="container-page relative flex flex-wrap items-center gap-10 pt-32 pb-20 lg:pt-36 lg:pb-30">
         <div className="flex min-w-0 flex-[1_1_300px] flex-col gap-6 lg:flex-[1_1_520px]">
-          <span className="flex animate-rise items-center gap-2.5 self-start rounded-full border border-mint/35 bg-mint/12 px-3.5 py-2 text-[13px] text-[#bff5dc]">
-            <span className="relative size-2">
-              <span className="absolute inset-0 animate-pulse-ring rounded-full bg-mint" />
-              <span className="absolute inset-0 rounded-full bg-mint" />
+          {texts.badge && (
+            <span className="flex animate-rise items-center gap-2.5 self-start rounded-full border border-mint/35 bg-mint/12 px-3.5 py-2 text-[13px] text-[#bff5dc]">
+              <span className="relative size-2">
+                <span className="absolute inset-0 animate-pulse-ring rounded-full bg-mint" />
+                <span className="absolute inset-0 rounded-full bg-mint" />
+              </span>
+              {texts.badge}
             </span>
-            {t("badge")}
-          </span>
+          )}
 
           <h1
             className="animate-rise text-[clamp(2.4rem,6.2vw,4.5rem)] leading-[1.05] font-bold tracking-tight"
             style={{ animationDelay: ".1s" }}
           >
-            <span className="sr-only">{t("headline")}</span>
+            <span className="sr-only">{`${texts.start} ${list} ${texts.end}`.trim()}</span>
             <span aria-hidden="true">
-              {t("rent")} <RotatingWord words={words} />
+              {texts.start} <RotatingWord words={texts.words} />
               <br />
-              {t("across")}
+              {texts.end}
             </span>
           </h1>
 
-          <p
-            className="max-w-135 animate-rise text-lg leading-relaxed text-sage"
-            style={{ animationDelay: ".2s" }}
-          >
-            {t("intro")}
-          </p>
+          {texts.intro && (
+            <p
+              className="max-w-135 animate-rise text-lg leading-relaxed text-sage"
+              style={{ animationDelay: ".2s" }}
+            >
+              {texts.intro}
+            </p>
+          )}
 
-          <form
-            action={locale === "ar" ? "/ar/properties" : "/properties"}
-            className="flex max-w-160 animate-rise flex-wrap gap-2 rounded-[20px] border border-white/16 bg-white/8 p-2.5 backdrop-blur-lg"
-            style={{ animationDelay: ".3s" }}
-          >
-            <HeroSelect name="type" label={t("type")} any={t("anyType")}>
-              {types
-                .filter((type) => !type.coming_soon)
-                .map((type) => (
-                  <option key={type.slug} value={type.slug} className="text-ink">
-                    {nameOf(type, locale)}
+          {content.show_search && (
+            <form
+              action={locale === "ar" ? "/ar/properties" : "/properties"}
+              className="flex max-w-160 animate-rise flex-wrap gap-2 rounded-[20px] border border-white/16 bg-white/8 p-2.5 backdrop-blur-lg"
+              style={{ animationDelay: ".3s" }}
+            >
+              <HeroSelect name="type" label={t("type")} any={t("anyType")}>
+                {types
+                  .filter((type) => !type.coming_soon)
+                  .map((type) => (
+                    <option key={type.slug} value={type.slug} className="text-ink">
+                      {nameOf(type, locale)}
+                    </option>
+                  ))}
+              </HeroSelect>
+              <span aria-hidden="true" className="hidden w-px bg-white/16 sm:block" />
+              <HeroSelect name="location" label={t("location")} any={t("anyLocation")}>
+                {locations.map((location) => (
+                  <option key={location.slug} value={location.slug} className="text-ink">
+                    {nameOf(location, locale)}
                   </option>
                 ))}
-            </HeroSelect>
-            <span aria-hidden="true" className="hidden w-px bg-white/16 sm:block" />
-            <HeroSelect name="location" label={t("location")} any={t("anyLocation")}>
-              {locations.map((location) => (
-                <option key={location.slug} value={location.slug} className="text-ink">
-                  {nameOf(location, locale)}
-                </option>
-              ))}
-            </HeroSelect>
-            <button
-              type="submit"
-              className={cn(
-                buttonVariants({ variant: "mint", size: "lg" }),
-                "min-h-14 flex-1 font-bold sm:flex-none",
-              )}
-            >
-              <Search />
-              {t("search")}
-            </button>
-          </form>
+              </HeroSelect>
+              <button
+                type="submit"
+                className={cn(
+                  buttonVariants({ variant: "mint", size: "lg" }),
+                  "min-h-14 flex-1 font-bold sm:flex-none",
+                )}
+              >
+                <Search />
+                {t("search")}
+              </button>
+            </form>
+          )}
 
-          <div
-            className="flex animate-rise flex-wrap items-center gap-5 text-sm"
-            style={{ animationDelay: ".4s" }}
-          >
-            <WhatsAppLink
-              text={common("waGeneral")}
-              className="flex items-center gap-2 font-semibold hover:text-mint"
-            >
-              <span className="flex size-10 items-center justify-center rounded-full bg-whatsapp text-white">
-                <WhatsAppIcon />
-              </span>
-              {common("whatsapp")} <bdi dir="ltr">{site.whatsapp}</bdi>
-            </WhatsAppLink>
-          </div>
-        </div>
-
-        <HeroScene label={t("sceneLabel")}>
-          {highlight && (
+          {content.show_whatsapp && (
             <div
-              className="absolute start-0 top-6 flex max-w-[75%] animate-float items-center gap-3 rounded-2xl border border-white/18 bg-white/10 px-4 py-3.5 backdrop-blur-lg sm:top-10"
-              style={{ animationDelay: ".6s" }}
+              className="flex animate-rise flex-wrap items-center gap-5 text-sm"
+              style={{ animationDelay: ".4s" }}
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mint text-deep">
-                <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M3 20h18M4 20v-8h16v8M4 12l8-6 8 6" />
-                </svg>
-              </span>
-              <span className="flex flex-col">
-                <span className="text-xs text-sage">
-                  <bdi>{highlight.code}</bdi> · {status(highlight.status)}
+              <WhatsAppLink
+                text={common("waGeneral")}
+                className="flex items-center gap-2 font-semibold hover:text-mint"
+              >
+                <span className="flex size-10 items-center justify-center rounded-full bg-whatsapp text-white">
+                  <WhatsAppIcon />
                 </span>
-                <span className="text-sm font-semibold sm:text-base">
-                  {[specs(highlight, common, locale)[0], nameOf(highlight.location, locale)]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </span>
-              </span>
+                {common("whatsapp")} <bdi dir="ltr">{site.whatsapp}</bdi>
+              </WhatsAppLink>
             </div>
           )}
-          <div
-            className="absolute end-0 bottom-8 flex animate-float items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-ink shadow-[0_20px_50px_rgb(0_0_0/.3)] sm:bottom-17"
-            style={{ animationDelay: "1.8s" }}
-          >
-            <span className="flex size-10 items-center justify-center rounded-full bg-whatsapp text-white">
-              <WhatsAppIcon />
-            </span>
-            <span className="flex flex-col">
-              <span className="text-xs text-muted-foreground">{t("chipReply")}</span>
-              <span className="text-sm font-semibold sm:text-base">{t("chipText")}</span>
-            </span>
-          </div>
-        </HeroScene>
+        </div>
+
+        {content.show_scene && (
+          <HeroScene label={t("sceneLabel")}>
+            {content.show_property && highlight && (
+              <div
+                className="absolute start-0 top-6 flex max-w-[75%] animate-float items-center gap-3 rounded-2xl border border-white/18 bg-white/10 px-4 py-3.5 backdrop-blur-lg sm:top-10"
+                style={{ animationDelay: ".6s" }}
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mint text-deep">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="size-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 20h18M4 20v-8h16v8M4 12l8-6 8 6" />
+                  </svg>
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-xs text-sage">
+                    <bdi>{highlight.code}</bdi> · {status(highlight.status)}
+                  </span>
+                  <span className="text-sm font-semibold sm:text-base">
+                    {[specs(highlight, common, locale)[0], nameOf(highlight.location, locale)]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </span>
+                </span>
+              </div>
+            )}
+            {texts.chipText && (
+              <div
+                className="absolute end-0 bottom-8 flex animate-float items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-ink shadow-[0_20px_50px_rgb(0_0_0/.3)] sm:bottom-17"
+                style={{ animationDelay: "1.8s" }}
+              >
+                <span className="flex size-10 items-center justify-center rounded-full bg-whatsapp text-white">
+                  <WhatsAppIcon />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-xs text-muted-foreground">{texts.chipLabel}</span>
+                  <span className="text-sm font-semibold sm:text-base">{texts.chipText}</span>
+                </span>
+              </div>
+            )}
+          </HeroScene>
+        )}
       </div>
     </section>
   );

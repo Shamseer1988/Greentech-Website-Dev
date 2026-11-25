@@ -13,12 +13,18 @@ from app.core.db import SessionLocal
 from app.models import Location, Property, PropertyStatus, PropertyType
 
 TYPES = [
-    ("labour-accommodation", "Labour Accommodation", "سكن عمال", False),
-    ("warehouse", "Warehouse", "مستودع", False),
-    ("cafeteria", "Cafeteria", "كافتيريا", False),
-    ("supermarket-shop", "Supermarket / Shop", "سوبرماركت / محل", False),
-    ("residential", "Residential", "سكني", True),
-]
+    ("labour-accommodation", "Labour Accommodation", "سكن عمال", "bed", False,
+     "Staff camps and worker rooms with kitchens, washrooms and bus parking.",
+     "مجمعات سكنية وغرف عمال مع مطابخ ودورات مياه ومواقف حافلات."),
+    ("warehouse", "Warehouse", "مستودع", "warehouse", False,
+     "Storage, stores & open yards", "تخزين ومخازن وساحات مفتوحة"),
+    ("cafeteria", "Cafeteria", "كافتيريا", "cup", False,
+     "Ready food-outlet units", "وحدات جاهزة للمطاعم"),
+    ("supermarket-shop", "Supermarket / Shop", "سوبرماركت / محل", "cart", False,
+     "Retail units near camps", "وحدات تجارية بالقرب من سكن العمال"),
+    ("residential", "Residential", "سكني", "home", True,
+     "Flats & villas in Doha", "شقق وفلل في الدوحة"),
+]  # fmt: skip
 
 # Area centre points are approximate. Check them before going live.
 LOCATIONS = [
@@ -147,10 +153,19 @@ def seed(db: Session, *, samples: bool) -> dict[str, int]:
     added = {"property types": 0, "locations": 0, "sample properties": 0}
 
     types = {t.slug: t for t in db.scalars(select(PropertyType))}
-    for order, (slug, en, ar, soon) in enumerate(TYPES):
-        if slug not in types:
+    # Categories the office deleted do not come back (the samples need them all).
+    first_time = not types
+    for order, (slug, en, ar, icon, soon, text_en, text_ar) in enumerate(TYPES):
+        if slug not in types and (first_time or samples):
             types[slug] = PropertyType(
-                slug=slug, name_en=en, name_ar=ar, coming_soon=soon, sort_order=order
+                slug=slug,
+                name_en=en,
+                name_ar=ar,
+                icon=icon,
+                coming_soon=soon,
+                text_en=text_en,
+                text_ar=text_ar,
+                sort_order=order,
             )
             db.add(types[slug])
             added["property types"] += 1

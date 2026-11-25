@@ -33,6 +33,10 @@ class PropertyType(Base):
     name_ar: Mapped[str] = mapped_column(String(80))
     sort_order: Mapped[int] = mapped_column(default=0, server_default="0")
     coming_soon: Mapped[bool] = mapped_column(default=False, server_default=false())
+    text_en: Mapped[str] = mapped_column(String(200), default="", server_default="")
+    text_ar: Mapped[str] = mapped_column(String(200), default="", server_default="")
+    icon: Mapped[str] = mapped_column(String(30), default="warehouse", server_default="warehouse")
+    is_active: Mapped[bool] = mapped_column(default=True, server_default=true())
     # Background photo of the card on the home page.
     image_key: Mapped[str | None] = mapped_column(String(255))
     image_opacity: Mapped[int] = mapped_column(default=50, server_default="50")

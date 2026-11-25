@@ -9,19 +9,11 @@ import { track } from "@/lib/tracking";
 import type { Ref } from "@/lib/types";
 import { hasTurnstile, Turnstile } from "./turnstile";
 
-const OPTIONS = [
-  "labour-accommodation",
-  "warehouse",
-  "cafeteria",
-  "supermarket-shop",
-  "residential",
-  "list-my-property",
-  "other",
-] as const;
+const OTHER = ["list-my-property", "other"] as const;
 
 type Props =
   | { kind: "property"; code: string }
-  | { kind: "contact"; locations: Ref[]; lookingFor?: string };
+  | { kind: "contact"; locations: Ref[]; types: Ref[]; lookingFor?: string };
 
 type Result = { reference?: number; fields?: string[]; error?: "limit" | "server" | "human" };
 
@@ -116,7 +108,12 @@ export function EnquiryForm(props: Props) {
             {(p) => (
               <select {...p} defaultValue={props.lookingFor ?? ""}>
                 <option value="">{t("choose")}</option>
-                {OPTIONS.map((option) => (
+                {props.types.map((type) => (
+                  <option key={type.slug} value={type.slug}>
+                    {nameOf(type, locale)}
+                  </option>
+                ))}
+                {OTHER.map((option) => (
                   <option key={option} value={option}>
                     {t(`options.${option}`)}
                   </option>

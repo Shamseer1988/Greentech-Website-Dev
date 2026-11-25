@@ -8,7 +8,7 @@ import { MapView } from "@/components/maps/map";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { getAllProperties, getLocations } from "@/lib/api";
+import { getAllProperties, getLocations, getTypes } from "@/lib/api";
 import { nameOf, num } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
 
@@ -30,7 +30,12 @@ export default async function LocationsPage() {
   const t = await getTranslations("locations");
   const common = await getTranslations("common");
   const locale = await getLocale();
-  const [locations, properties] = await Promise.all([getLocations(), getAllProperties()]);
+  const [locations, properties, types] = await Promise.all([
+    getLocations(),
+    getAllProperties(),
+    getTypes(),
+  ]);
+  const residentialSoon = types.some((type) => type.slug === "residential" && type.coming_soon);
 
   const cards = [
     ...locations.map((location) => ({
@@ -52,14 +57,18 @@ export default async function LocationsPage() {
       action: t("ask"),
       arrow: true,
     },
-    {
-      key: "doha",
-      href: "/contact?for=residential",
-      name: t("doha"),
-      text: t("dohaText"),
-      action: common("comingSoon"),
-      arrow: false,
-    },
+    ...(residentialSoon
+      ? [
+          {
+            key: "doha",
+            href: "/contact?for=residential",
+            name: t("doha"),
+            text: t("dohaText"),
+            action: common("comingSoon"),
+            arrow: false,
+          },
+        ]
+      : []),
   ];
 
   const pins = [
@@ -70,13 +79,17 @@ export default async function LocationsPage() {
       label: `${nameOf(location, locale)} · ${num(location.property_count)}`,
       href: `/properties?location=${location.slug}`,
     })),
-    {
-      id: "doha",
-      ...DOHA,
-      label: `${t("doha")} (${common("comingSoon")})`,
-      href: "/contact?for=residential",
-      accent: true,
-    },
+    ...(residentialSoon
+      ? [
+          {
+            id: "doha",
+            ...DOHA,
+            label: `${t("doha")} (${common("comingSoon")})`,
+            href: "/contact?for=residential",
+            accent: true,
+          },
+        ]
+      : []),
   ];
 
   return (

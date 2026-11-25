@@ -1,4 +1,3 @@
-import logging
 import uuid
 from typing import Annotated
 
@@ -7,13 +6,12 @@ from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from app.core.db import get_db
-from app.core.security import AdminUser, current_user
-from app.models import MediaKind, Property, PropertyMedia, PropertyType
-from app.schemas.admin import MediaOrder, TypeFull, TypeImageEdit
+from app.core.security import current_user
+from app.models import MediaKind, Property, PropertyMedia
+from app.schemas.admin import MediaOrder
 from app.schemas.common import Id
 from app.schemas.public import MediaOut
 from app.services.media import (
-    CARD_SIDE,
     MAX_IMAGE_BYTES,
     MAX_VIDEO_BYTES,
     PANORAMA_SIDE,
@@ -22,9 +20,8 @@ from app.services.media import (
     to_webp,
     video_type,
 )
-from app.services.storage import Storage, get_storage
+from app.services.storage import Storage, delete_file, get_storage
 
-logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(current_user)])
 Db = Annotated[Session, Depends(get_db)]
 Files = Annotated[Storage, Depends(get_storage)]
@@ -91,16 +88,9 @@ def upload_media(
         media = _add_row(db, property_id, key, kind, width, height, is_cover)
     except Exception:
         db.rollback()
-        _delete_file(storage, key)
+        delete_file(storage, key)
         raise
     return MediaOut.build(media)
-
-
-def _delete_file(storage: Storage, key: str) -> None:
-    try:
-        storage.delete(key)
-    except Exception:
-        logger.exception("Could not remove file %s", key)
 
 
 def _add_row(
@@ -172,59 +162,5 @@ def delete_media(media_id: Id, db: Db, storage: Files) -> list[MediaOut]:
         if photo:
             photo.is_cover = True
     db.commit()
-    _delete_file(storage, key)
+    delete_file(storage, key)
     return [MediaOut.build(m) for m in left]
-
-
-# --- card photos of the property types (home page) ------------------------
-
-
-def find_type(db: Session, type_id: int) -> PropertyType:
-    kind = db.scalar(select(PropertyType).where(PropertyType.id == type_id).with_for_update())
-    if kind is None:
-        raise HTTPException(404, "Property type not found")
-    return kind
-
-
-@router.post("/property-types/{type_id}/image", status_code=status.HTTP_201_CREATED)
-def upload_type_image(
-    type_id: Id, file: UploadFile, db: Db, storage: Files, _: AdminUser
-) -> TypeFull:
-    if (file.size or 0) > MAX_IMAGE_BYTES:
-        limit = MAX_IMAGE_BYTES // 1024 // 1024
-        raise HTTPException(413, f"File is too large (maximum {limit} MB)")
-    try:
-        webp = to_webp(file.file, CARD_SIDE)
-    except MediaError as exc:
-        raise HTTPException(422, str(exc)) from exc
-    kind = find_type(db, type_id)
-    old, key = kind.image_key, f"types/{type_id}/{uuid.uuid4().hex}.webp"
-    storage.save(key, webp.file, "image/webp")
-    try:
-        kind.image_key = key
-        db.commit()
-    except Exception:
-        db.rollback()
-        _delete_file(storage, key)
-        raise
-    if old:
-        _delete_file(storage, old)
-    return TypeFull.build(kind)
-
-
-@router.patch("/property-types/{type_id}/image")
-def update_type_image(type_id: Id, data: TypeImageEdit, db: Db, _: AdminUser) -> TypeFull:
-    kind = find_type(db, type_id)
-    kind.image_opacity = data.image_opacity
-    db.commit()
-    return TypeFull.build(kind)
-
-
-@router.delete("/property-types/{type_id}/image")
-def delete_type_image(type_id: Id, db: Db, storage: Files, _: AdminUser) -> TypeFull:
-    kind = find_type(db, type_id)
-    old, kind.image_key = kind.image_key, None
-    db.commit()
-    if old:
-        _delete_file(storage, old)
-    return TypeFull.build(kind)

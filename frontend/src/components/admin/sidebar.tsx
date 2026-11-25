@@ -12,7 +12,8 @@ const MENU = [
   { href: "/admin/properties", label: "Properties" },
   { href: "/admin/enquiries", label: "Enquiries" },
   { href: "/admin/locations", label: "Locations", adminOnly: true },
-  { href: "/admin/cards", label: "Category cards", adminOnly: true },
+  { href: "/admin/categories", label: "Categories", adminOnly: true },
+  { href: "/admin/home", label: "Home page", adminOnly: true },
   { href: "/admin/users", label: "Users & roles", adminOnly: true },
   { href: "/admin/account", label: "My account" },
 ];

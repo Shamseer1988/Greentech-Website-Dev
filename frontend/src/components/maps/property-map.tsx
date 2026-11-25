@@ -13,7 +13,7 @@ export type MapProperty = {
   lng: number;
   label: string;
   title: string;
-  type: string;
+  icon: string;
   area: string;
   reserved: boolean;
 };
@@ -37,7 +37,7 @@ function pinIcon(property: MapProperty, active: boolean): L.DivIcon {
   const svg = document.createElementNS(SVG, "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
   const path = document.createElementNS(SVG, "path");
-  path.setAttribute("d", typeIcon(property.type));
+  path.setAttribute("d", typeIcon(property.icon));
   svg.append(path);
   const text = document.createElement("span");
   text.dir = "auto";

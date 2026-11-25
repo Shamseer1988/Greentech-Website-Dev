@@ -127,13 +127,18 @@ def listed_count(column):
 def list_property_types(db: Db) -> list[PropertyTypeOut]:
     count = listed_count(Property.type_id == PropertyType.id)
     rows = db.execute(
-        select(PropertyType, count).order_by(PropertyType.sort_order, PropertyType.id)
+        select(PropertyType, count)
+        .where(PropertyType.is_active)
+        .order_by(PropertyType.sort_order, PropertyType.id)
     )
     return [
         PropertyTypeOut(
             slug=t.slug,
             name_en=t.name_en,
             name_ar=t.name_ar,
+            icon=t.icon,
+            text_en=t.text_en,
+            text_ar=t.text_ar,
             image_url=t.image_key and media_url(t.image_key),
             image_opacity=t.image_opacity,
             coming_soon=t.coming_soon,

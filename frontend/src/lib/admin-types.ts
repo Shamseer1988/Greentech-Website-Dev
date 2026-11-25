@@ -1,5 +1,5 @@
 // Mirrors backend/app/schemas/admin.py
-import type { LocationRef, Media, Ref, TypeImage } from "./types";
+import type { LocationRef, Media, Ref } from "./types";
 
 export const STATUSES = ["draft", "available", "reserved", "rented"] as const;
 export type PropertyStatus = (typeof STATUSES)[number];
@@ -72,7 +72,15 @@ export type LocationInput = {
 };
 export type LocationFull = LocationInput & { id: number; property_count: number };
 
-export type TypeFull = TypeImage & { id: number };
+export type TypeInput = Ref & {
+  text_en: string;
+  text_ar: string;
+  icon: string;
+  coming_soon: boolean;
+  is_active: boolean;
+  image_opacity: number;
+};
+export type TypeFull = TypeInput & { id: number; image_url: string | null; property_count: number };
 
 export type EnquiryRow = {
   id: number;

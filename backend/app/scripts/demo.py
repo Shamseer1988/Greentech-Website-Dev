@@ -21,7 +21,6 @@ from app.models import (
     Enquiry,
     EnquiryStatus,
     Location,
-    LookingFor,
     MediaKind,
     Property,
     PropertyMedia,
@@ -165,15 +164,15 @@ LISTINGS = [
 ]  # fmt: skip
 
 ENQUIRIES = [
-    ("Demo Construction", "GT-LA-101", LookingFor.LABOUR_ACCOMMODATION, EnquiryStatus.NEW,
+    ("Demo Construction", "GT-LA-101", "labour-accommodation", EnquiryStatus.NEW,
      "We need rooms for 120 workers from next month."),
-    ("Demo Trading", "GT-WH-230", LookingFor.WAREHOUSE, EnquiryStatus.NEW,
+    ("Demo Trading", "GT-WH-230", "warehouse", EnquiryStatus.NEW,
      "Is the loading dock suitable for 40 ft containers?"),
-    ("Demo Catering", "GT-CF-318", LookingFor.CAFETERIA, EnquiryStatus.CONTACTED,
+    ("Demo Catering", "GT-CF-318", "cafeteria", EnquiryStatus.CONTACTED,
      "نرغب في معاينة الكافتيريا هذا الأسبوع."),
-    ("Demo Mart", "GT-SM-428", LookingFor.SUPERMARKET_SHOP, EnquiryStatus.NEW,
+    ("Demo Mart", "GT-SM-428", "supermarket-shop", EnquiryStatus.NEW,
      "Please share the contract period and deposit."),
-    ("Demo Owner", None, LookingFor.LIST_MY_PROPERTY, EnquiryStatus.CLOSED,
+    ("Demo Owner", None, "list-my-property", EnquiryStatus.CLOSED,
      "I have a camp in Umm Silal to list."),
 ]  # fmt: skip
 

@@ -17,7 +17,6 @@ from app.schemas.admin import (
     PropertyQuickEdit,
     PropertyRow,
     PropertyRows,
-    TypeFull,
 )
 from app.schemas.common import Id
 from app.services.properties import text_match, with_relations
@@ -44,12 +43,6 @@ def rows_query():
         .scalar_subquery()
     )
     return with_relations(select(Property, enquiries).join(Property.type).join(Property.location))
-
-
-@router.get("/property-types")
-def list_types(db: Db) -> list[TypeFull]:
-    rows = db.scalars(select(PropertyType).order_by(PropertyType.sort_order, PropertyType.id))
-    return [TypeFull.build(t) for t in rows]
 
 
 @router.get("/properties")

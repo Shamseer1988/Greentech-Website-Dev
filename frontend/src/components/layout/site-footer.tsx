@@ -1,14 +1,15 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { ltr } from "@/lib/format";
+import { getTypes } from "@/lib/api";
+import { ltr, nameOf } from "@/lib/format";
 import { site } from "@/lib/site";
-
-const RENT = ["labour-accommodation", "warehouse", "cafeteria", "supermarket-shop"] as const;
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
   const brand = await getTranslations("brand");
+  const locale = await getLocale();
+  const types = (await getTypes()).filter((type) => !type.coming_soon);
 
   return (
     <footer className="no-print bg-deepest pb-20 text-sm text-[#a9cfc0] md:pb-0">
@@ -27,13 +28,13 @@ export async function SiteFooter() {
           </span>
         </div>
         <FooterColumn title={t("rent")}>
-          {RENT.map((slug) => (
+          {types.map((type) => (
             <Link
-              key={slug}
-              href={`/properties?type=${slug}`}
+              key={type.slug}
+              href={`/properties?type=${type.slug}`}
               className="py-1.5 hover:text-white"
             >
-              {t(slug)}
+              {nameOf(type, locale)}
             </Link>
           ))}
         </FooterColumn>

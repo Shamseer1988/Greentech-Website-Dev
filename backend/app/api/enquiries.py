@@ -1,11 +1,12 @@
 from typing import Annotated
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.db import get_db
-from app.models import Enquiry
+from app.models import OTHER_WISHES, Enquiry, PropertyType
 from app.schemas.enquiry import EnquiryIn, EnquiryOut
 from app.services import mailer, properties, turnstile
 from app.services.rate_limit import RateLimiter
@@ -34,6 +35,14 @@ def create_enquiry(
 ) -> EnquiryOut:
     # Called here, not as a dependency, so a typing mistake in the form is not counted.
     rate_limit(request)
+    wish = data.looking_for
+    if wish and wish not in OTHER_WISHES:
+        known = "\x00" not in wish and db.scalar(
+            select(PropertyType.id).where(PropertyType.slug == wish)
+        )
+        if not known:
+            problem = {"loc": ["body", "looking_for"], "msg": "Choose from the list"}
+            raise HTTPException(422, [problem])
     if not turnstile.is_human(data.turnstile_token):
         raise HTTPException(403, "Please complete the security check")
     property_id = None

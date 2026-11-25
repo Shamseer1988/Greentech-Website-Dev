@@ -4,9 +4,9 @@ from typing import Annotated, Self
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from app.models import (
+    OTHER_WISHES,
     Enquiry,
     EnquiryStatus,
-    LookingFor,
     Property,
     PropertyStatus,
     PropertyType,
@@ -16,7 +16,7 @@ from app.models import (
     UserRole,
 )
 from app.schemas.common import MAX_INT, CleanStr, Input
-from app.schemas.public import LocationRef, MediaOut, TypeImage, TypeRef, card_fields, media_url
+from app.schemas.public import LocationRef, MediaOut, TypeRef, card_fields, media_url
 
 Positive = Annotated[int, Field(ge=0, le=MAX_INT)]
 Lat = Annotated[float, Field(ge=-90, le=90)]
@@ -207,23 +207,42 @@ class LocationFull(LocationIn):
     property_count: int
 
 
-class TypeFull(TypeImage):
+class TypeIn(Input):
+    slug: str = Field(min_length=2, max_length=60, pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$")
+    name_en: CleanStr = Field(min_length=2, max_length=80)
+    name_ar: CleanStr = Field(min_length=2, max_length=80)
+    text_en: CleanStr = Field(default="", max_length=200)
+    text_ar: CleanStr = Field(default="", max_length=200)
+    icon: str = Field(default="warehouse", max_length=30, pattern=r"^[a-z]+$")
+    coming_soon: bool = False
+    is_active: bool = True
+    image_opacity: int = Field(default=50, ge=10, le=100)
+
+    @field_validator("slug")
+    @classmethod
+    def not_reserved(cls, value: str) -> str:
+        if value in OTHER_WISHES:
+            raise ValueError("This web name is reserved")
+        return value
+
+
+class TypeFull(TypeIn):
     id: int
+    image_url: str | None
+    property_count: int
 
     @classmethod
-    def build(cls, kind: PropertyType) -> Self:
-        return cls(
+    def build(cls, kind: PropertyType, property_count: int) -> Self:
+        return cls.model_construct(
+            **{name: getattr(kind, name) for name in TypeIn.model_fields},
             id=kind.id,
-            slug=kind.slug,
-            name_en=kind.name_en,
-            name_ar=kind.name_ar,
             image_url=kind.image_key and media_url(kind.image_key),
-            image_opacity=kind.image_opacity,
+            property_count=property_count,
         )
 
 
-class TypeImageEdit(Input):
-    image_opacity: Annotated[int, Field(ge=10, le=100)]
+class TypeOrder(Input):
+    ids: list[int] = Field(max_length=1000)
 
 
 # --- enquiries ------------------------------------------------------------
@@ -242,7 +261,7 @@ class EnquiryRow(BaseModel):
     company: str
     phone: str
     email: str | None
-    looking_for: LookingFor | None
+    looking_for: str | None
     area: str
     space_needed: str
     message: str

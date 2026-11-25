@@ -63,7 +63,6 @@
     "rent": "Rent",
     "words": { "0": "labour camps", "1": "warehouses", "2": "cafeterias", "3": "supermarkets" },
     "across": "across Qatar.",
-    "headline": "Rent labour camps, warehouses, cafeterias and supermarkets across Qatar.",
     "intro": "Labour accommodation, warehouses, cafeterias and supermarket spaces — photos, prices and live map locations, with a quick reply on WhatsApp.",
     "type": "Property type",
     "anyType": "Any type",
@@ -77,13 +76,6 @@
     "categoriesTitle": "Space for every part of your business.",
     "seeAll": "See all properties",
     "available": "{n} available",
-    "catText": {
-      "labour-accommodation": "Staff camps and worker rooms with kitchens, washrooms and bus parking.",
-      "warehouse": "Storage, stores & open yards",
-      "cafeteria": "Ready food-outlet units",
-      "supermarket-shop": "Retail units near camps",
-      "residential": "Flats & villas in Doha"
-    },
     "featuredEyebrow": "Featured",
     "featuredTitle": "Hand-picked properties",
     "previous": "Previous property",
@@ -233,11 +225,6 @@
     "required": "required",
     "optional": "optional",
     "options": {
-      "labour-accommodation": "Labour accommodation",
-      "warehouse": "Warehouse",
-      "cafeteria": "Cafeteria",
-      "supermarket-shop": "Supermarket / Shop",
-      "residential": "Residential flat (Doha)",
       "list-my-property": "List my property with Green Tech",
       "other": "Other"
     },
@@ -257,11 +244,7 @@
     "cr": "CR No. {number}",
     "rent": "Rent",
     "social": "Social",
-    "also": "Also on",
-    "labour-accommodation": "Labour accommodation",
-    "warehouse": "Warehouses",
-    "cafeteria": "Cafeterias",
-    "supermarket-shop": "Supermarkets & shops"
+    "also": "Also on"
   },
   "errors": {
     "notFoundTitle": "Page not found",

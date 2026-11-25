@@ -90,7 +90,11 @@ def test_agent_limits(client, agent):
         ("DELETE", "/locations/1"),
         ("POST", "/users"),
         ("POST", "/property-types/1/image"),
-        ("PATCH", "/property-types/1/image"),
+        ("PUT", "/property-types/1"),
+        ("DELETE", "/property-types/1"),
+        ("PUT", "/home"),
+        ("DELETE", "/home"),
+        ("DELETE", "/home/images/1"),
         ("DELETE", "/property-types/1/image"),
         ("PATCH", "/users/1"),
         ("DELETE", "/enquiries/1"),
@@ -284,34 +288,123 @@ def test_agents_see_own_and_free_enquiries(client, db, admin, agent):
     assert client.delete(f"{url}{free.id}", headers=admin).status_code == 204
 
 
-def test_type_image(client, storage, admin):
+NEW_TYPE = {"slug": "factory", "name_en": "Factory", "name_ar": "مصنع", "icon": "factory"}
+
+
+def test_categories(client, db, storage, admin, agent):
+    url = "/api/admin/property-types"
+
+    def public():
+        return {t["slug"]: t for t in client.get("/api/property-types").json()}
+
+    assert client.post(url, json=NEW_TYPE, headers=agent).status_code == 403
+    made = client.post(url, json=NEW_TYPE | {"text_en": "Plants"}, headers=admin).json()
+    assert client.post(url, json=NEW_TYPE, headers=admin).status_code == 409
+    for bad in (
+        {"slug": "Bad Name"},
+        {"slug": "other"},
+        {"name_ar": ""},
+        {"icon": "<svg>"},
+        {"image_opacity": 9},
+        {"image_opacity": 101},
+    ):
+        assert client.post(url, json=NEW_TYPE | bad, headers=admin).status_code == 422, bad
+    assert list(public())[-1] == "factory"
+    assert (public()["factory"]["text_en"], public()["factory"]["icon"]) == ("Plants", "factory")
+
+    # A new category can be asked for in the enquiry form.
+    ask = {"name": "Ali", "phone": "55555555", "looking_for": "factory"}
+    assert client.post("/api/enquiries", json=ask).status_code == 201
+
+    ids = [t["id"] for t in client.get(url, headers=admin).json()][::-1]
+    assert client.put(url + "/order", json={"ids": ids[1:]}, headers=admin).status_code == 409
+    assert client.put(url + "/order", json={"ids": ids}, headers=admin).status_code == 200
+    assert next(iter(public())) == "factory"
+
+    mine = f"{url}/{made['id']}"
+    edit = NEW_TYPE | {"name_en": "Plant", "is_active": False}
+    assert client.put(mine, json=edit, headers=admin).json()["name_en"] == "Plant"
+    assert "factory" not in public()
+    files = {"file": ("a.jpg", picture())}
+    assert client.post(mine + "/image", files=files, headers=admin).status_code == 201
+    assert client.delete(mine, headers=admin).status_code == 204
+    assert storage.files == {}
+    assert client.delete(f"{url}/1", headers=admin).status_code == 409
+    assert "labour-accommodation" in public()
+
+
+def test_category_photo(client, storage, admin):
     url = "/api/admin/property-types/2/image"
 
     def public():
-        return client.get("/api/property-types").json()[1]
+        return client.get("/api/property-types").json()[1]["image_url"]
 
     def send(content):
         return client.post(url, files={"file": ("a.jpg", content)}, headers=admin)
 
-    assert (public()["image_url"], public()["image_opacity"]) == (None, 50)
+    assert public() is None
     assert send(picture()).status_code == 201
     first = list(storage.files)
-    assert public()["image_url"].endswith(first[0])
+    assert public().endswith(first[0])
     assert send(b"not a picture").status_code == 422
     assert list(storage.files) == first
 
     # A new photo takes the place of the old file.
     assert send(picture()).status_code == 201
     assert len(storage.files) == 1 and list(storage.files) != first
-
-    assert client.patch(url, json={"image_opacity": 80}, headers=admin).status_code == 200
-    assert public()["image_opacity"] == 80
-    for bad in (9, 101, None):
-        assert client.patch(url, json={"image_opacity": bad}, headers=admin).status_code == 422
     assert client.delete(url, headers=admin).json()["image_url"] is None
-    assert storage.files == {} and public()["image_url"] is None
-    missing = "/api/admin/property-types/99/image"
-    assert client.delete(missing, headers=admin).status_code == 404
+    assert storage.files == {} and public() is None
+    assert client.delete(url.replace("2", "99"), headers=admin).status_code == 404
+
+
+def test_home_page(client, storage, admin, agent):
+    url = "/api/admin/home"
+    body = {
+        "words_en": ["offices", " shops "],
+        "words_ar": ["مكاتب"],
+        "categories_title_en": "Title",
+        "categories_title_ar": "عنوان",
+        "badge_en": "Hi",
+        "image_opacity": 70,
+        "show_scene": False,
+    }
+    assert client.get("/api/home").json() == {"content": None, "images": []}
+    assert client.put(url, json=body, headers=agent).status_code == 403
+    for bad in (
+        {"words_en": []},
+        {"words_en": [""]},
+        {"words_ar": ["x"] * 11},
+        {"categories_title_en": ""},
+        {"image_opacity": 5},
+        {"badge_en": "x" * 81},
+    ):
+        assert client.put(url, json=body | bad, headers=admin).status_code == 422, bad
+    for _ in range(2):
+        assert client.put(url, json=body, headers=admin).status_code == 200
+    saved = client.get("/api/home").json()["content"]
+    assert saved["words_en"] == ["offices", "shops"]
+    assert (saved["show_scene"], saved["show_search"], saved["image_opacity"]) == (False, True, 70)
+
+    def add(content=None):
+        files = {"file": ("a.jpg", content or picture())}
+        return client.post(url + "/images", files=files, headers=admin)
+
+    assert add(b"no").status_code == 422
+    for _ in range(8):
+        assert add().status_code == 201
+    assert add().status_code == 409
+    ids = [i["id"] for i in client.get("/api/home").json()["images"]][::-1]
+    order = client.put(url + "/images/order", json={"ids": ids}, headers=admin)
+    assert [i["id"] for i in order.json()] == ids
+    bad = client.put(url + "/images/order", json={"ids": ids[1:]}, headers=admin)
+    assert bad.status_code == 409
+    left = client.delete(f"{url}/images/{ids[0]}", headers=admin).json()
+    assert [i["id"] for i in left] == ids[1:] and len(storage.files) == 7
+    assert client.delete(f"{url}/images/{ids[0]}", headers=admin).status_code == 404
+
+    assert client.delete(url, headers=admin).status_code == 204
+    home = client.get("/api/home").json()
+    assert home["content"] is None and len(home["images"]) == 7
 
 
 # --- locations ------------------------------------------------------------

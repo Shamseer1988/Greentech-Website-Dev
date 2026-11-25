@@ -20,7 +20,7 @@ def one_line(text: str) -> str:
 def enquiry_email(enquiry: Enquiry) -> EmailMessage:
     site = settings.site_url.rstrip("/")
     code = enquiry.property.code if enquiry.property else None
-    wanted = enquiry.looking_for.value.replace("-", " ") if enquiry.looking_for else ""
+    wanted = (enquiry.looking_for or "").replace("-", " ")
     greeting = f"Hello {enquiry.name}, thank you for contacting Green Tech Real Estate Broker"
     greeting += f" about property {code}." if code else "."
     rows = [

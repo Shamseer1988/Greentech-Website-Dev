@@ -3,7 +3,6 @@ import unicodedata
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
-from app.models import LookingFor
 from app.schemas.common import CleanStr, Input
 
 
@@ -13,7 +12,7 @@ class EnquiryIn(Input):
     company: CleanStr = Field(default="", max_length=160)
     phone: str = Field(max_length=40, examples=["+974 5555 5555"])
     email: EmailStr | None = Field(default=None, max_length=254)
-    looking_for: LookingFor | None = None
+    looking_for: str | None = Field(default=None, max_length=60)
     area: CleanStr = Field(default="", max_length=120, description="Preferred area")
     space_needed: CleanStr = Field(
         default="", max_length=120, description="Number of staff / area needed"

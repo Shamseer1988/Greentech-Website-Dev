@@ -1,5 +1,5 @@
 from app.models.base import Base
-from app.models.enquiry import Enquiry, EnquiryStatus, LookingFor
+from app.models.enquiry import OTHER_WISHES, Enquiry, EnquiryStatus
 from app.models.property import (
     Location,
     MediaKind,
@@ -8,15 +8,18 @@ from app.models.property import (
     PropertyStatus,
     PropertyType,
 )
+from app.models.site import HeroImage, SiteSetting
 from app.models.social import SocialNetwork, SocialPost
 from app.models.user import User, UserRole
 
 __all__ = [
+    "HeroImage",
+    "SiteSetting",
     "Base",
     "Enquiry",
     "EnquiryStatus",
     "Location",
-    "LookingFor",
+    "OTHER_WISHES",
     "MediaKind",
     "Property",
     "PropertyMedia",

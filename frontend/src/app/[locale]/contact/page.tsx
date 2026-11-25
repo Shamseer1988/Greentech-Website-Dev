@@ -5,7 +5,7 @@ import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { MapView } from "@/components/maps/map";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
-import { getLocations } from "@/lib/api";
+import { getLocations, getTypes } from "@/lib/api";
 import { ltr } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
 import { directionsHref, site } from "@/lib/site";
@@ -32,7 +32,7 @@ export default async function ContactPage({ searchParams }: Props) {
   const common = await getTranslations("common");
   const brand = await getTranslations("brand");
   const locale = await getLocale();
-  const locations = await getLocations();
+  const [locations, types] = await Promise.all([getLocations(), getTypes()]);
   const lookingFor = (await searchParams).for;
 
   return (
@@ -47,7 +47,8 @@ export default async function ContactPage({ searchParams }: Props) {
           <EnquiryForm
             kind="contact"
             locations={locations.map(({ slug, name_en, name_ar }) => ({ slug, name_en, name_ar }))}
-            lookingFor={lookingFor === "residential" ? "residential" : undefined}
+            types={types.map(({ slug, name_en, name_ar }) => ({ slug, name_en, name_ar }))}
+            lookingFor={types.find((type) => type.slug === lookingFor)?.slug}
           />
         </div>
 

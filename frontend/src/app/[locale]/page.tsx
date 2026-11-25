@@ -5,7 +5,8 @@ import { Hero } from "@/components/home/hero";
 import { HowItWorks } from "@/components/home/how-it-works";
 import { QatarMap } from "@/components/home/qatar-map";
 import { Categories, ResidentialCta, Ticker } from "@/components/home/sections";
-import { getFeatured, getLocations, getTypes } from "@/lib/api";
+import { getFeatured, getHome, getLocations, getTypes } from "@/lib/api";
+import { homeTexts, STANDARD_HOME } from "@/lib/home-content";
 import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,21 +23,34 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [types, locations, featured] = await Promise.all([
+  const locale = await getLocale();
+  const [types, locations, featured, home] = await Promise.all([
     getTypes(),
     getLocations(),
     getFeatured(),
+    getHome(),
   ]);
+
+  const content = home.content ?? STANDARD_HOME;
+  const texts = homeTexts(content, locale);
+  const residentialSoon = types.some((type) => type.slug === "residential" && type.coming_soon);
 
   return (
     <>
-      <Hero types={types} locations={locations} highlight={featured[0]} />
+      <Hero
+        types={types}
+        locations={locations}
+        highlight={featured[0]}
+        content={content}
+        texts={texts}
+        images={home.images.map((image) => image.url)}
+      />
       <Ticker types={types} locations={locations} />
-      <Categories types={types} />
+      <Categories types={types} eyebrow={texts.eyebrow} title={texts.title} />
       <FeaturedSlider items={featured} />
-      <QatarMap locations={locations} />
+      <QatarMap locations={locations} residentialSoon={residentialSoon} />
       <HowItWorks />
-      <ResidentialCta />
+      {residentialSoon && <ResidentialCta />}
     </>
   );
 }

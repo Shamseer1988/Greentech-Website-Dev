@@ -5,11 +5,13 @@ from app.api import (
     admin_office,
     admin_properties,
     admin_social,
+    admin_types,
     auth,
     enquiries,
     health,
     media,
     properties,
+    site,
 )
 from app.core.body_limit import BodyLimitMiddleware
 from app.core.config import settings
@@ -34,5 +36,8 @@ for module in (
     media,
     admin_office,
     admin_social,
+    admin_types,
+    site,
 ):
     app.include_router(module.router, prefix="/api")
+app.include_router(site.admin, prefix="/api")

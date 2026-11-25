@@ -303,7 +303,7 @@ def export_enquiries(db: Db, admin: AdminUser) -> Response:
             + ["Area", "Space needed", "Message", "Reply on WhatsApp", "Status", "Assigned to"],
             (
                 [e.id, e.created_at, e.name, e.company, e.phone, e.email, e.property_code]
-                + [e.looking_for.value if e.looking_for else None, e.area, e.space_needed]
+                + [e.looking_for, e.area, e.space_needed]
                 + [e.message, "Yes" if e.reply_on_whatsapp else "No", e.status.value]
                 + [e.assigned_to_name]
                 for e in rows
