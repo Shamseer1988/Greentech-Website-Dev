@@ -196,7 +196,6 @@
     "office": "Office",
     "phone": "Phone: {phone}",
     "email": "Email: {email}",
-    "hours": "Sat–Thu · {hours}",
     "follow": "Follow & find us",
     "openMaps": "Open in Google Maps",
     "officePin": "Green Tech office"
@@ -267,7 +266,7 @@
     "phone": "Phone",
     "email": "Email",
     "address": "Office",
-    "hours": "Hours (Sat–Thu)",
+    "hours": "Hours",
     "social": "Find us here:",
     "noSocial": "Our social media links are not on the website yet. Please contact our team.",
     "owner": "We would be glad to list your property. Send us the details and our team will contact you.",

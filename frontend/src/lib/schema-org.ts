@@ -1,6 +1,6 @@
 import { nameOf, titleOf, amenityOf } from "./format";
 import { absoluteUrl, shareImage, summary } from "./seo";
-import { site } from "./site";
+import { inLanguage, type Site } from "./site";
 import type { PropertyDetail } from "./types";
 
 const AGENT_ID = `${absoluteUrl("/")}#company`;
@@ -8,7 +8,7 @@ const AGENT_ID = `${absoluteUrl("/")}#company`;
 /** Placeholders such as "[HOURS]" must not reach search engines. */
 const real = (value: string | null) => (value && !value.includes("[") ? value : undefined);
 
-export function company(name: string, locale: string) {
+export function company(name: string, locale: string, site: Site) {
   return {
     "@type": "RealEstateAgent",
     "@id": AGENT_ID,
@@ -21,7 +21,7 @@ export function company(name: string, locale: string) {
     areaServed: { "@type": "Country", name: "Qatar" },
     address: {
       "@type": "PostalAddress",
-      streetAddress: real(locale === "ar" ? site.addressAr : site.addressEn),
+      streetAddress: real(inLanguage(site.address, locale)),
       addressLocality: "Doha",
       addressCountry: "QA",
     },

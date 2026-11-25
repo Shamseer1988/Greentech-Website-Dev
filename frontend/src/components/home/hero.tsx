@@ -4,7 +4,7 @@ import { cn } from "cn";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { nameOf, specs } from "@/lib/format";
-import { site } from "@/lib/site";
+import { getSite } from "@/lib/api";
 import type { HomeTexts } from "@/lib/home-content";
 import type { HomeContent, LocationOut, PropertyCard, PropertyTypeOut } from "@/lib/types";
 import { HeroBackground } from "./hero-background";
@@ -25,6 +25,7 @@ export async function Hero({ types, locations, highlight, content, texts, images
   const common = await getTranslations("common");
   const status = await getTranslations("status");
   const locale = await getLocale();
+  const site = await getSite();
   const list = new Intl.ListFormat(locale, { type: "conjunction" }).format(texts.words);
 
   return (
@@ -115,7 +116,7 @@ export async function Hero({ types, locations, highlight, content, texts, images
                 <span className="flex size-10 items-center justify-center rounded-full bg-whatsapp text-white">
                   <WhatsAppIcon />
                 </span>
-                {common("whatsapp")} <bdi dir="ltr">{site.whatsapp}</bdi>
+                {common("whatsapp")} {site.whatsapp && <bdi dir="ltr">{site.whatsapp}</bdi>}
               </WhatsAppLink>
             </div>
           )}

@@ -113,3 +113,18 @@ export type ChatContent = {
   welcome_ar: string;
   answers: ChatAnswer[];
 };
+
+export type CompanyLink = { name: string; url: string; group: "social" | "portal" };
+export type CompanyContent = {
+  whatsapp: string;
+  phone: string;
+  email: string | null;
+  address_en: string;
+  address_ar: string;
+  hours_en: string;
+  hours_ar: string;
+  cr_number: string;
+  lat: number | null;
+  lng: number | null;
+  links: CompanyLink[];
+};

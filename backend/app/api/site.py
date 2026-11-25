@@ -1,4 +1,4 @@
-"""The home page and the chat assistant: public content, and the admin pages that edit it."""
+"""Home page, chat assistant and company details: public content and its admin pages."""
 
 import uuid
 from typing import Annotated
@@ -12,7 +12,14 @@ from app.core.security import require_admin
 from app.models import HeroImage, SiteSetting
 from app.schemas.common import Id
 from app.schemas.public import media_url
-from app.schemas.site import ChatContent, HeroImageOut, HeroOrder, HomeContent, HomeOut
+from app.schemas.site import (
+    ChatContent,
+    CompanyContent,
+    HeroImageOut,
+    HeroOrder,
+    HomeContent,
+    HomeOut,
+)
 from app.services.media import HERO_SIDE, read_photo
 from app.services.storage import Storage, delete_file, get_storage
 
@@ -126,5 +133,27 @@ def admin_chat(db: Db) -> ChatContent:
 @admin.put("/chat")
 def save_chat(data: ChatContent, db: Db) -> ChatContent:
     db.merge(SiteSetting(key=CHAT_KEY, value=data.model_dump()))
+    db.commit()
+    return data
+
+
+COMPANY_KEY = "company"
+
+
+@router.get("/company")
+def company(db: Db) -> CompanyContent | None:
+    """Empty until the office saves its details: the website then uses its settings file."""
+    saved = db.get(SiteSetting, COMPANY_KEY)
+    return CompanyContent.model_validate(saved.value) if saved else None
+
+
+@admin.get("/company")
+def admin_company(db: Db) -> CompanyContent | None:
+    return company(db)
+
+
+@admin.put("/company")
+def save_company(data: CompanyContent, db: Db) -> CompanyContent:
+    db.merge(SiteSetting(key=COMPANY_KEY, value=data.model_dump()))
     db.commit()
     return data

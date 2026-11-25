@@ -9,12 +9,14 @@ import { ContactBar } from "@/components/layout/contact-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { MotionProvider } from "@/components/motion/motion-provider";
+import { SiteProvider } from "@/components/site-provider";
+import { getSite } from "@/lib/api";
 import { routing } from "@/i18n/routing";
 import { welcome } from "@/lib/assistant/answer";
 import { getHomeContent, menuLinks } from "@/lib/home-content";
 import { company } from "@/lib/schema-org";
 import { isLive } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { fontVariables } from "../fonts";
 import "../globals.css";
 
@@ -28,7 +30,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "meta" });
   const brand = await getTranslations({ locale, namespace: "brand" });
   return {
-    metadataBase: new URL(site.url),
+    metadataBase: new URL(SITE_URL),
     title: { default: t("title"), template: `%s | ${brand("name")}` },
     description: t("description"),
     ...(!isLive && { robots: { index: false, follow: true } }),
@@ -47,30 +49,36 @@ export default async function LocaleLayout({
   const t = await getTranslations({ locale, namespace: "nav" });
   const brand = await getTranslations({ locale, namespace: "brand" });
 
-  const [{ content }, chat] = await Promise.all([getHomeContent(), welcome(locale)]);
+  const [{ content }, chat, site] = await Promise.all([
+    getHomeContent(),
+    welcome(locale),
+    getSite(),
+  ]);
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className={fontVariables}>
       <body>
-        <JsonLd data={company(brand("name"), locale)} />
+        <JsonLd data={company(brand("name"), locale, site)} />
         <NextIntlClientProvider>
-          <MotionProvider>
-            <a
-              href="#main"
-              className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-3"
-            >
-              {t("skip")}
-            </a>
-            <SiteHeader links={menuLinks(content, locale)} />
-            <main id="main">
-              <ErrorBoundary>{children}</ErrorBoundary>
-            </main>
-            <SiteFooter />
-            <ContactBar
-              chat={chat.enabled ? { text: chat.text, suggestions: chat.suggestions } : null}
-            />
-            <Analytics />
-          </MotionProvider>
+          <SiteProvider site={site}>
+            <MotionProvider>
+              <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-3"
+              >
+                {t("skip")}
+              </a>
+              <SiteHeader links={menuLinks(content, locale)} />
+              <main id="main">
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </main>
+              <SiteFooter />
+              <ContactBar
+                chat={chat.enabled ? { text: chat.text, suggestions: chat.suggestions } : null}
+              />
+              <Analytics />
+            </MotionProvider>
+          </SiteProvider>
         </NextIntlClientProvider>
       </body>
     </html>

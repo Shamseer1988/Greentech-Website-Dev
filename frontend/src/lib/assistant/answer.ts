@@ -1,10 +1,10 @@
 // The chat assistant. It answers only from what the website shows: no outside service is used.
 import "server-only";
 import { getTranslations } from "next-intl/server";
-import { getAllProperties, getChat, getLocations, getProperty, getTypes } from "@/lib/api";
+import { getAllProperties, getChat, getLocations, getProperty, getSite, getTypes } from "@/lib/api";
 import { amenityOf, ltr, nameOf, num, titleOf } from "@/lib/format";
 import { getHomeContent, homeTexts } from "@/lib/home-content";
-import { site, whatsappHref } from "@/lib/site";
+import { inLanguage, whatsappHref } from "@/lib/site";
 import type {
   ChatAnswer,
   LocationOut,
@@ -150,22 +150,25 @@ export async function reply(
   before: ChatState,
 ): Promise<ChatReply> {
   const lang = isArabic(message) ? "ar" : /[a-z]/i.test(message) ? "en" : siteLocale;
-  const [t, common, statusText, types, locations, properties, chat, home] = await Promise.all([
-    getTranslations({ locale: lang, namespace: "chat" }),
-    getTranslations({ locale: lang, namespace: "common" }),
-    getTranslations({ locale: lang, namespace: "status" }),
-    getTypes(),
-    getLocations(),
-    getAllProperties(),
-    getChat(),
-    getHomeContent(),
-  ]);
+  const [t, common, statusText, types, locations, properties, chat, home, site] = await Promise.all(
+    [
+      getTranslations({ locale: lang, namespace: "chat" }),
+      getTranslations({ locale: lang, namespace: "common" }),
+      getTranslations({ locale: lang, namespace: "status" }),
+      getTypes(),
+      getLocations(),
+      getAllProperties(),
+      getChat(),
+      getHomeContent(),
+      getSite(),
+    ],
+  );
   const data: Data = { types, locations, properties };
   const text = clean(message);
   const list = words(message);
   const content = list.filter((w) => !STOP.has(w));
 
-  const wa = whatsappHref(t("waQuestion", { question: message.slice(0, 200) }));
+  const wa = whatsappHref(site, t("waQuestion", { question: message.slice(0, 200) }));
   const contactLinks: ChatLink[] = [
     ...(wa ? [{ label: common("whatsappUs"), href: wa }] : []),
     { label: t("sendEnquiry"), href: "/contact" },
@@ -191,15 +194,16 @@ export async function reply(
   const rentOf = (p: PropertyCard) =>
     p.rent_qar === null ? common("onRequest") : `${price(p.rent_qar)} ${common("perMonth")}`;
 
+  const address = inLanguage(site.address, lang);
+  const hours = inLanguage(site.hours, lang);
   const contactText = () =>
     [
       t("contactIntro"),
-      site.hasWhatsapp && `${common("whatsapp")}: ${ltr(site.whatsapp)}`,
-      site.phoneHref && `${t("phone")}: ${ltr(site.phone)}`,
-      real(site.email) && `${t("email")}: ${ltr(site.email as string)}`,
-      real(lang === "ar" ? site.addressAr : site.addressEn) &&
-        `${t("address")}: ${lang === "ar" ? site.addressAr : site.addressEn}`,
-      real(site.hours) && `${t("hours")}: ${site.hours}`,
+      site.whatsapp && `${common("whatsapp")}: ${ltr(site.whatsapp)}`,
+      site.phone && `${t("phone")}: ${ltr(site.phone)}`,
+      site.email && `${t("email")}: ${ltr(site.email)}`,
+      address && `${t("address")}: ${address}`,
+      hours && `${t("hours")}: ${hours}`,
     ]
       .filter(Boolean)
       .join("\n");
@@ -350,7 +354,7 @@ export async function reply(
         `${t("facilities")}: ${property.amenities.map(name).join(separator)}`,
       DETAIL.test(text) && description.slice(0, 350),
     ];
-    const book = whatsappHref(common("waProperty", { code: property.code }));
+    const book = whatsappHref(site, common("waProperty", { code: property.code }));
     return make({
       text: lines.filter(Boolean).join("\n"),
       properties: [property],

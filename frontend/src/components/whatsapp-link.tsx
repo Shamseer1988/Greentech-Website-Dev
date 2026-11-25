@@ -1,12 +1,15 @@
+"use client";
+
 import type { ComponentProps } from "react";
 import { Link } from "@/i18n/navigation";
+import { useSite } from "@/components/site-provider";
 import { whatsappHref } from "@/lib/site";
 
 type Props = Omit<ComponentProps<"a">, "href" | "ref"> & { text?: string };
 
 /** Opens WhatsApp; until the number is set it opens the contact page. */
 export function WhatsAppLink({ text, ...props }: Props) {
-  const href = whatsappHref(text);
+  const href = whatsappHref(useSite(), text);
   if (!href) return <Link href="/contact" {...props} />;
   return <a href={href} target="_blank" rel="noopener noreferrer" {...props} />;
 }

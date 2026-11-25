@@ -439,6 +439,28 @@ def test_chat_settings(client, admin, agent):
     assert client.put(url, json=bad, headers=admin).status_code == 422
 
 
+def test_company_details(client, admin, agent):
+    url = "/api/admin/company"
+    assert client.get("/api/company").json() is None
+    link = {"name": "Instagram", "url": "https://instagram.com/x", "group": "social"}
+    body = {"whatsapp": "5555 5555", "email": "a@example.com", "lat": 25, "lng": 51}
+    body["links"] = [link]
+    assert client.put(url, json=body, headers=agent).status_code == 403
+    assert client.put(url, json=body, headers=admin).status_code == 200
+    saved = client.get("/api/company").json()
+    assert (saved["whatsapp"], saved["phone"], saved["links"]) == ("+97455555555", "", [link])
+    for bad in (
+        {"whatsapp": "abc"},
+        {"email": "nope"},
+        {"lng": None},
+        {"lat": 91},
+        {"links": [link | {"url": "javascript:alert(1)"}]},
+        {"links": [link | {"url": "http://x.com"}]},
+        {"links": [link | {"group": "other"}]},
+    ):
+        assert client.put(url, json=body | bad, headers=admin).status_code == 422, bad
+
+
 # --- locations ------------------------------------------------------------
 
 

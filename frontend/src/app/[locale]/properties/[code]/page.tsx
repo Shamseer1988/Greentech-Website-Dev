@@ -12,11 +12,11 @@ import { Share } from "@/components/property/share";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { Link } from "@/i18n/navigation";
-import { getProperty } from "@/lib/api";
+import { getProperty, getSite } from "@/lib/api";
 import { amenityOf, ltr, nameOf, num, specs, titleOf } from "@/lib/format";
 import { breadcrumbs, listing } from "@/lib/schema-org";
 import { pageMetadata, shareImage, summary } from "@/lib/seo";
-import { directionsHref, site } from "@/lib/site";
+import { directionsHref } from "@/lib/site";
 
 type Props = { params: Promise<{ code: string }> };
 
@@ -54,6 +54,7 @@ export default async function PropertyPage({ params }: Props) {
   const t = await getTranslations("detail");
   const nav = await getTranslations("nav");
   const common = await getTranslations("common");
+  const site = await getSite();
   const status = await getTranslations("status");
   const locale = await getLocale();
   const title = titleOf(property, locale);
@@ -246,13 +247,13 @@ export default async function PropertyPage({ params }: Props) {
               <WhatsAppIcon />
               {t("waAbout", { code: property.code })}
             </WhatsAppLink>
-            {site.phoneHref ? (
+            {site.phone && site.phoneHref ? (
               <a href={site.phoneHref} className={buttonVariants({ variant: "outline" })}>
                 {common("call", { phone: ltr(site.phone) })}
               </a>
             ) : (
               <span className={cn(buttonVariants({ variant: "outline" }), "pointer-events-none")}>
-                {common("call", { phone: ltr(site.phone) })}
+                {common("callNow")}
               </span>
             )}
           </div>

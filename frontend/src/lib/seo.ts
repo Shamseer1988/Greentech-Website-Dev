@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { site } from "./site";
+import { SITE_URL } from "./site";
 
-const base = site.url.replace(/\/$/, "");
+const base = SITE_URL.replace(/\/$/, "");
 
 export const DEFAULT_IMAGE = "/brand/og-image-1200x630.png";
 

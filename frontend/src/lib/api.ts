@@ -1,7 +1,17 @@
 import "server-only";
 import { connection } from "next/server";
 import { cache } from "react";
-import type { ChatContent, HomeOut, LocationOut, PropertyCard, PropertyDetail, PropertyPage, PropertyTypeOut } from "./types";
+import { buildSite } from "./site";
+import type {
+  ChatContent,
+  CompanyContent,
+  HomeOut,
+  LocationOut,
+  PropertyCard,
+  PropertyDetail,
+  PropertyPage,
+  PropertyTypeOut,
+} from "./types";
 
 export const API_URL = process.env.API_URL || "http://127.0.0.1:8000";
 
@@ -36,9 +46,7 @@ async function optional<T>(promise: Promise<T>, fallback: T): Promise<T> {
 
 export const getTypes = cache(() => optional(get<PropertyTypeOut[]>("/property-types"), []));
 export const getLocations = cache(() => optional(get<LocationOut[]>("/locations"), []));
-export const getHome = cache(() =>
-  optional(get<HomeOut>("/home"), { content: null, images: [] }),
-);
+export const getHome = cache(() => optional(get<HomeOut>("/home"), { content: null, images: [] }));
 export const getChat = cache(() =>
   optional(get<ChatContent>("/chat"), {
     enabled: false,
@@ -48,6 +56,11 @@ export const getChat = cache(() =>
   }),
 );
 export const getFeatured = () => optional(get<PropertyCard[]>("/properties/featured"), []);
+
+/** Company details: contact, office and social media. */
+export const getSite = cache(async () =>
+  buildSite(await optional(get<CompanyContent | null>("/company"), null)),
+);
 
 export const searchProperties = (params: URLSearchParams) =>
   get<PropertyPage>(`/properties?${params}`);

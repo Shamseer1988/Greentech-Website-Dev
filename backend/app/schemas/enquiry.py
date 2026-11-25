@@ -6,6 +6,24 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from app.schemas.common import CleanStr, Input
 
 
+def normalise_phone(value: str) -> str:
+    """Return +<digits>. Accepts Arabic digits; 8 digits alone means a Qatar number."""
+    digits = "".join(
+        str(unicodedata.decimal(c)) if unicodedata.decimal(c, None) is not None else c
+        for c in value
+    )
+    digits = re.sub(r"[\s().\-‎‏]", "", digits)
+    if digits.startswith("00"):
+        digits = "+" + digits[2:]
+    if re.fullmatch(r"\d{8}", digits):
+        digits = "+974" + digits
+    if not re.fullmatch(r"\+[1-9]\d{6,14}", digits):
+        raise ValueError("Enter a valid phone number, with country code if outside Qatar")
+    if digits.startswith("+974") and len(digits) != 12:
+        raise ValueError("A Qatar phone number has 8 digits")
+    return digits
+
+
 class EnquiryIn(Input):
     property_code: str | None = Field(default=None, max_length=20)
     name: CleanStr = Field(min_length=2, max_length=120)
@@ -29,22 +47,8 @@ class EnquiryIn(Input):
 
     @field_validator("phone")
     @classmethod
-    def normalise_phone(cls, value: str) -> str:
-        """Return +<digits>. Accepts Arabic digits; 8 digits alone means a Qatar number."""
-        digits = "".join(
-            str(unicodedata.decimal(c)) if unicodedata.decimal(c, None) is not None else c
-            for c in value
-        )
-        digits = re.sub(r"[\s().\-‎‏]", "", digits)
-        if digits.startswith("00"):
-            digits = "+" + digits[2:]
-        if re.fullmatch(r"\d{8}", digits):
-            digits = "+974" + digits
-        if not re.fullmatch(r"\+[1-9]\d{6,14}", digits):
-            raise ValueError("Enter a valid phone number, with country code if outside Qatar")
-        if digits.startswith("+974") and len(digits) != 12:
-            raise ValueError("A Qatar phone number has 8 digits")
-        return digits
+    def phone_number(cls, value: str) -> str:
+        return normalise_phone(value)
 
 
 class EnquiryOut(BaseModel):

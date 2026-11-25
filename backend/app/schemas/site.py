@@ -1,10 +1,11 @@
-"""The editable home page, menu and chat assistant."""
+"""The editable home page, menu, chat assistant and company details."""
 
 from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from app.schemas.common import CleanStr, Input
+from app.schemas.enquiry import normalise_phone
 
 Short = Annotated[CleanStr, Field(max_length=80)]
 Long = Annotated[CleanStr, Field(max_length=120)]
@@ -127,3 +128,35 @@ class ChatContent(Input):
     welcome_en: Annotated[CleanStr, Field(max_length=300)] = ""
     welcome_ar: Annotated[CleanStr, Field(max_length=300)] = ""
     answers: list[ChatAnswer] = Field(default=[], max_length=200)
+
+
+class CompanyLink(Input):
+    name: Annotated[CleanStr, Field(min_length=1, max_length=40)]
+    # Only web addresses: never "javascript:" or other code.
+    url: Annotated[CleanStr, Field(max_length=300, pattern=r"^https://[^\s/]+\.[^\s]+$")]
+    group: Literal["social", "portal"]
+
+
+class CompanyContent(Input):
+    whatsapp: Annotated[str, Field(max_length=40)] = ""
+    phone: Annotated[str, Field(max_length=40)] = ""
+    email: EmailStr | None = None
+    address_en: Annotated[CleanStr, Field(max_length=200)] = ""
+    address_ar: Annotated[CleanStr, Field(max_length=200)] = ""
+    hours_en: Long = ""
+    hours_ar: Long = ""
+    cr_number: Annotated[CleanStr, Field(max_length=40)] = ""
+    lat: float | None = Field(default=None, ge=-90, le=90)
+    lng: float | None = Field(default=None, ge=-180, le=180)
+    links: list[CompanyLink] = Field(default=[], max_length=30)
+
+    @field_validator("whatsapp", "phone")
+    @classmethod
+    def phone_number(cls, value: str) -> str:
+        return normalise_phone(value) if value else ""
+
+    @model_validator(mode="after")
+    def whole_point(self) -> Self:
+        if (self.lat is None) != (self.lng is None):
+            raise ValueError("Fill in both map numbers, or none")
+        return self

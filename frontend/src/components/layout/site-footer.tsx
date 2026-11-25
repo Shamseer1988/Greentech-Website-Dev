@@ -1,14 +1,14 @@
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getTypes } from "@/lib/api";
+import { getSite, getTypes } from "@/lib/api";
 import { ltr, nameOf } from "@/lib/format";
-import { site } from "@/lib/site";
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
   const brand = await getTranslations("brand");
   const locale = await getLocale();
+  const site = await getSite();
   const types = (await getTypes()).filter((type) => !type.coming_soon);
 
   return (
@@ -24,7 +24,8 @@ export async function SiteFooter() {
             className="-ms-3 h-auto w-55"
           />
           <span>
-            {t("place")} · {t("cr", { number: ltr(site.crNumber) })}
+            {t("place")}
+            {site.crNumber && ` · ${t("cr", { number: ltr(site.crNumber) })}`}
           </span>
         </div>
         <FooterColumn title={t("rent")}>
@@ -38,12 +39,16 @@ export async function SiteFooter() {
             </Link>
           ))}
         </FooterColumn>
-        <FooterColumn title={t("social")}>
-          <ExternalLinks links={site.social} />
-        </FooterColumn>
-        <FooterColumn title={t("also")}>
-          <ExternalLinks links={site.portals} />
-        </FooterColumn>
+        {site.social.length > 0 && (
+          <FooterColumn title={t("social")}>
+            <ExternalLinks links={site.social} />
+          </FooterColumn>
+        )}
+        {site.portals.length > 0 && (
+          <FooterColumn title={t("also")}>
+            <ExternalLinks links={site.portals} />
+          </FooterColumn>
+        )}
       </div>
       <div className="border-t border-[#0e3a2c]">
         <div className="container-page py-5 text-[13px]">
@@ -63,23 +68,16 @@ function FooterColumn({ title, children }: { title: string; children: React.Reac
   );
 }
 
-/** Links without an address yet are shown as plain text. */
-function ExternalLinks({ links }: { links: { name: string; href: string | null }[] }) {
-  return links.map(({ name, href }) =>
-    href ? (
-      <a
-        key={name}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="py-1.5 hover:text-white"
-      >
-        {name}
-      </a>
-    ) : (
-      <span key={name} className="py-1.5">
-        {name}
-      </span>
-    ),
-  );
+function ExternalLinks({ links }: { links: { name: string; href: string }[] }) {
+  return links.map(({ name, href }) => (
+    <a
+      key={href}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="py-1.5 hover:text-white"
+    >
+      {name}
+    </a>
+  ));
 }

@@ -7,11 +7,10 @@ import { PropertyCard } from "@/components/property/property-card";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { Link } from "@/i18n/navigation";
-import { allForMap, getLocations, getTypes, searchProperties } from "@/lib/api";
+import { allForMap, getLocations, getSite, getTypes, searchProperties } from "@/lib/api";
 import { nameOf, num } from "@/lib/format";
 import { apiParams, listingHref, parseListingQuery, type ListingQuery } from "@/lib/listing-query";
 import { pageMetadata } from "@/lib/seo";
-import { whatsappHref } from "@/lib/site";
 import type { PropertyCard as Property } from "@/lib/types";
 
 const PAGE_SIZE = "12";
@@ -69,6 +68,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function PropertiesPage({ searchParams }: Props) {
   const query = parseListingQuery(await searchParams);
   const t = await getTranslations("listings");
+  const site = await getSite();
   const common = await getTranslations("common");
   const locale = await getLocale();
 
@@ -128,7 +128,7 @@ export default async function PropertiesPage({ searchParams }: Props) {
             className={cn(buttonVariants({ variant: "whatsapp" }), "py-3 whitespace-normal")}
           >
             <WhatsAppIcon />
-            {whatsappHref() ? t("ask") : t("askForm")}
+            {site.whatsapp ? t("ask") : t("askForm")}
           </WhatsAppLink>
         </aside>
       </section>

@@ -6,10 +6,10 @@ import { useParams } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { cn } from "cn";
 import { ChatAssistant, ChatIcon, type Welcome } from "@/components/chat/chat-assistant";
+import { useSite } from "@/components/site-provider";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { Link } from "@/i18n/navigation";
-import { site } from "@/lib/site";
 
 const ROUND = "fixed end-7 bottom-7 z-20 hidden size-16 md:block";
 const FACE =
@@ -19,6 +19,7 @@ const FACE =
 export function ContactBar({ chat }: { chat: Welcome | null }) {
   const t = useTranslations("common");
   const c = useTranslations("chat");
+  const site = useSite();
   const [open, setOpen] = useState(false);
   const opener = useRef<HTMLElement | null>(null);
   // On a property page, mention its code.

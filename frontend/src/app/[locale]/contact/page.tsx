@@ -5,10 +5,10 @@ import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { MapView } from "@/components/maps/map";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
-import { getLocations, getTypes } from "@/lib/api";
+import { getLocations, getSite, getTypes } from "@/lib/api";
 import { ltr } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
-import { directionsHref, site } from "@/lib/site";
+import { directionsHref, inLanguage } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
@@ -32,7 +32,14 @@ export default async function ContactPage({ searchParams }: Props) {
   const common = await getTranslations("common");
   const brand = await getTranslations("brand");
   const locale = await getLocale();
-  const [locations, types] = await Promise.all([getLocations(), getTypes()]);
+  const [locations, types, site] = await Promise.all([
+    getLocations(),
+    getTypes(),
+    getSite(),
+  ]);
+  const address = inLanguage(site.address, locale);
+  const hours = inLanguage(site.hours, locale);
+  const links = [...site.social, ...site.portals];
   const lookingFor = (await searchParams).for;
 
   return (
@@ -53,7 +60,7 @@ export default async function ContactPage({ searchParams }: Props) {
         </div>
 
         <aside className="flex w-full flex-col gap-4 lg:w-[380px] lg:flex-none">
-          {site.hasWhatsapp && (
+          {site.whatsapp && (
             <WhatsAppLink
               text={common("waGeneral")}
               className="flex items-center gap-3.5 rounded-2xl bg-whatsapp p-5.5 text-white transition-colors hover:bg-[#12703c]"
@@ -70,28 +77,24 @@ export default async function ContactPage({ searchParams }: Props) {
           <div className={CARD}>
             <h2 className="text-[19px] font-semibold text-slate">{t("office")}</h2>
             <span>{brand("name")}</span>
-            <span className="text-muted-foreground">
-              {locale === "ar" ? site.addressAr : site.addressEn}
-            </span>
-            {site.phoneHref ? (
+            {address && <span className="text-muted-foreground">{address}</span>}
+            {site.phone && site.phoneHref && (
               <a href={site.phoneHref}>{t("phone", { phone: ltr(site.phone) })}</a>
-            ) : (
-              <span>{t("phone", { phone: ltr(site.phone) })}</span>
             )}
             {site.email && (
               <a href={`mailto:${site.email}`} className="text-green-700">
                 {t("email", { email: site.email })}
               </a>
             )}
-            <span className="text-muted-foreground">{t("hours", { hours: site.hours })}</span>
+            {hours && <span className="text-muted-foreground">{hours}</span>}
           </div>
-          <div className={CARD}>
-            <h2 className="text-[19px] font-semibold text-slate">{t("follow")}</h2>
-            <div className="grid grid-cols-2 gap-2">
-              {[...site.social, ...site.portals.slice(0, 2)].map(({ name, href }) =>
-                href ? (
+          {links.length > 0 && (
+            <div className={CARD}>
+              <h2 className="text-[19px] font-semibold text-slate">{t("follow")}</h2>
+              <div className="grid grid-cols-2 gap-2">
+                {links.map(({ name, href }) => (
                   <a
-                    key={name}
+                    key={href}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -99,14 +102,10 @@ export default async function ContactPage({ searchParams }: Props) {
                   >
                     {name}
                   </a>
-                ) : (
-                  <span key={name} className={cn(CELL, "text-muted-foreground")}>
-                    {name}
-                  </span>
-                ),
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </aside>
       </section>
 
