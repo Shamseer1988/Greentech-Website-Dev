@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/whatsapp-link";
 import { nameOf, specs } from "@/lib/format";
 import { site } from "@/lib/site";
-import type { homeTexts } from "@/lib/home-content";
+import type { HomeTexts } from "@/lib/home-content";
 import type { HomeContent, LocationOut, PropertyCard, PropertyTypeOut } from "@/lib/types";
 import { HeroBackground } from "./hero-background";
 import { HeroScene } from "./hero-scene";
@@ -16,7 +16,7 @@ type Props = {
   locations: LocationOut[];
   highlight: PropertyCard | undefined;
   content: HomeContent;
-  texts: ReturnType<typeof homeTexts>;
+  texts: HomeTexts;
   images: string[];
 };
 
@@ -154,7 +154,7 @@ export async function Hero({ types, locations, highlight, content, texts, images
                 </span>
               </div>
             )}
-            {texts.chipText && (
+            {texts.chip_text && (
               <div
                 className="absolute end-0 bottom-8 flex animate-float items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-ink shadow-[0_20px_50px_rgb(0_0_0/.3)] sm:bottom-17"
                 style={{ animationDelay: "1.8s" }}
@@ -163,8 +163,8 @@ export async function Hero({ types, locations, highlight, content, texts, images
                   <WhatsAppIcon />
                 </span>
                 <span className="flex flex-col">
-                  <span className="text-xs text-muted-foreground">{texts.chipLabel}</span>
-                  <span className="text-sm font-semibold sm:text-base">{texts.chipText}</span>
+                  <span className="text-xs text-muted-foreground">{texts.chip_label}</span>
+                  <span className="text-sm font-semibold sm:text-base">{texts.chip_text}</span>
                 </span>
               </div>
             )}

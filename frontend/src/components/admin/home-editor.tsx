@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Upload } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Upload } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
@@ -8,7 +8,7 @@ import { cn } from "cn";
 import { HeroBackground } from "@/components/home/hero-background";
 import { Button } from "@/components/ui/button";
 import { adminSend, adminUpload } from "@/lib/admin-client";
-import type { HeroImage, HomeContent } from "@/lib/types";
+import type { HeroImage, HomeContent, HomeSwitch, HomeTextKey, MenuItem } from "@/lib/types";
 import { CARD, Field, Message, SMALL_BUTTON } from "./ui";
 
 const MAX_PHOTOS = 8;
@@ -151,15 +151,7 @@ export function HeroPhotos({ initial }: { initial: HeroImage[] }) {
   );
 }
 
-type TextKey = {
-  [K in keyof HomeContent]: HomeContent[K] extends string ? K : never;
-}[keyof HomeContent] extends infer K
-  ? K extends `${infer Name}_en`
-    ? Name
-    : never
-  : never;
-
-const HERO_FIELDS: { name: TextKey; label: string; hint?: string }[] = [
+const HERO_FIELDS: { name: HomeTextKey; label: string; hint?: string }[] = [
   { name: "badge", label: "Small label at the top" },
   { name: "start", label: "Title: before the changing word" },
   { name: "end", label: "Title: second line" },
@@ -172,6 +164,74 @@ const SWITCHES = [
   ["show_scene", "Building drawing"],
   ["show_property", "Property box on the drawing"],
 ] as const;
+type SectionField = { name: HomeTextKey; label: string; max?: number; long?: boolean };
+const SECTIONS: { title: string; show: HomeSwitch; hint?: string; fields: SectionField[] }[] = [
+  {
+    title: "Moving strip",
+    show: "show_ticker",
+    hint: "Shows your locations and categories. No text to edit here.",
+    fields: [],
+  },
+  {
+    title: "Category cards",
+    show: "show_categories",
+    hint: "The cards are edited on the Categories page.",
+    fields: [
+      { name: "categories_eyebrow", label: "Small label" },
+      { name: "categories_title", label: "Title", max: 120 },
+    ],
+  },
+  {
+    title: "Featured slider",
+    show: "show_featured",
+    hint: "Shows the properties marked as featured.",
+    fields: [
+      { name: "featured_eyebrow", label: "Small label" },
+      { name: "featured_title", label: "Title", max: 120 },
+    ],
+  },
+  {
+    title: "Map of Qatar",
+    show: "show_map",
+    hint: "The areas are edited on the Locations page.",
+    fields: [
+      { name: "map_eyebrow", label: "Small label" },
+      { name: "map_title", label: "Title", max: 120 },
+    ],
+  },
+  {
+    title: "How it works",
+    show: "show_how",
+    fields: [
+      { name: "how_eyebrow", label: "Small label" },
+      { name: "how_title", label: "Title", max: 120 },
+      { name: "step1_title", label: "Step 1" },
+      { name: "step1_text", label: "Step 1 text", long: true },
+      { name: "step2_title", label: "Step 2" },
+      { name: "step2_text", label: "Step 2 text", long: true },
+      { name: "step3_title", label: "Step 3" },
+      { name: "step3_text", label: "Step 3 text", long: true },
+    ],
+  },
+  {
+    title: "Residential banner",
+    show: "show_soon",
+    hint: "Only shown while the Residential category is marked “Coming soon”.",
+    fields: [
+      { name: "soon_eyebrow", label: "Small label" },
+      { name: "soon_title", label: "Title", max: 120 },
+      { name: "soon_text", label: "Text", long: true },
+      { name: "soon_button", label: "Button" },
+    ],
+  },
+];
+const MENU_PLACES: Record<MenuItem["key"], string> = {
+  properties: "Properties page",
+  locations: "Locations page",
+  services: "Category cards on the home page",
+  how: "“How it works” on the home page",
+  contact: "Contact page",
+};
 const LANGUAGES = [
   ["en", "English"],
   ["ar", "Arabic"],
@@ -231,34 +291,70 @@ export function HomeForm({
 
   const language = (code: "en" | "ar") => ({ dir: code === "ar" ? "rtl" : "ltr", lang: code });
   const pair = (
-    name: TextKey,
+    name: HomeTextKey,
     label: string,
-    extra?: { hint?: string; required?: boolean; max?: number },
+    extra: { hint?: string; max?: number; long?: boolean; required?: boolean } = {},
   ) => (
     <div key={name} className="grid gap-4 md:grid-cols-2">
-      {LANGUAGES.map(([code, title]) => (
-        <Field
-          key={code}
-          label={`${label} (${title})`}
-          hint={extra?.hint}
-          required={extra?.required}
-        >
-          <input
-            {...language(code)}
-            name={`${name}_${code}`}
-            required={extra?.required}
-            maxLength={extra?.max ?? 80}
-            value={data[`${name}_${code}`]}
-            onChange={(event) => set(`${name}_${code}`, event.target.value)}
-            className="field"
-          />
-        </Field>
-      ))}
+      {LANGUAGES.map(([code, title]) => {
+        const key = `${name}_${code}` as const;
+        const props = {
+          ...language(code),
+          name: key,
+          required: extra.required,
+          maxLength: extra.max ?? (extra.long ? 400 : 80),
+          value: data[key],
+          className: "field",
+        };
+        return (
+          <Field
+            key={code}
+            label={`${label} (${title})`}
+            hint={extra.hint}
+            required={extra.required}
+          >
+            {extra.long ? (
+              <textarea {...props} rows={3} onChange={(event) => set(key, event.target.value)} />
+            ) : (
+              <input {...props} onChange={(event) => set(key, event.target.value)} />
+            )}
+          </Field>
+        );
+      })}
     </div>
   );
+  const box = (name: HomeSwitch, label: string) => (
+    <label key={name} className="flex min-h-11 items-center gap-2.5 text-sm font-medium">
+      <input
+        type="checkbox"
+        name={name}
+        checked={data[name]}
+        onChange={(event) => set(name, event.target.checked)}
+        className="size-5 accent-green-700"
+      />
+      {label}
+    </label>
+  );
+  const changeItem = (i: number, change: Partial<MenuItem>) =>
+    set(
+      "menu",
+      data.menu.map((item, n) => (n === i ? { ...item, ...change } : item)),
+    );
+  function moveItem(from: number, to: number) {
+    const menu = [...data.menu];
+    menu.splice(to, 0, ...menu.splice(from, 1));
+    set("menu", menu);
+  }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-5">
+    <form
+      onSubmit={submit}
+      // A closed box opens when something inside it must be filled in.
+      onInvalidCapture={(event) =>
+        (event.target as HTMLElement).closest("details")?.setAttribute("open", "")
+      }
+      className="flex flex-col gap-5"
+    >
       <section className={cn(CARD, "flex flex-col gap-4")}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-slate">Preview</h2>
@@ -338,44 +434,89 @@ export function HomeForm({
           ))}
         </div>
         {HERO_FIELDS.slice(2, 3).map((f) => pair(f.name, f.label, f))}
-        <div className="grid gap-4 md:grid-cols-2">
-          {LANGUAGES.map(([code, title]) => (
-            <Field key={code} label={`Text (${title})`}>
-              <textarea
-                {...language(code)}
-                name={`intro_${code}`}
-                rows={3}
-                maxLength={400}
-                value={data[`intro_${code}`]}
-                onChange={(event) => set(`intro_${code}`, event.target.value)}
-                className="field"
-              />
-            </Field>
-          ))}
-        </div>
+        {pair("intro", "Text", { long: true })}
         {HERO_FIELDS.slice(3).map((f) => pair(f.name, f.label, f))}
         <fieldset className="flex flex-wrap gap-x-6">
           <legend className="text-[13px] font-semibold text-muted-foreground">Show</legend>
-          {SWITCHES.map(([name, label]) => (
-            <label key={name} className="flex min-h-11 items-center gap-2.5 text-sm font-medium">
-              <input
-                type="checkbox"
-                name={name}
-                checked={data[name]}
-                onChange={(event) => set(name, event.target.checked)}
-                className="size-5 accent-green-700"
-              />
-              {label}
-            </label>
-          ))}
+          {SWITCHES.map(([name, label]) => box(name, label))}
         </fieldset>
       </section>
 
-      <section className={cn(CARD, "flex flex-col gap-4")}>
-        <h2 className="text-lg font-semibold text-slate">Title above the category cards</h2>
-        {pair("categories_eyebrow", "Small label")}
-        {pair("categories_title", "Title", { required: true, max: 120 })}
-      </section>
+      {SECTIONS.map((section) => (
+        <details key={section.show} className={CARD}>
+          <summary className="cursor-pointer text-lg font-semibold text-slate">
+            {section.title}
+            {!data[section.show] && (
+              <span className="text-sm font-normal text-muted-foreground"> · hidden</span>
+            )}
+          </summary>
+          <div className="mt-4 flex flex-col gap-4">
+            {section.hint && <p className="text-sm text-muted-foreground">{section.hint}</p>}
+            {box(section.show, "Show this section")}
+            {section.fields.map((field) =>
+              pair(field.name, field.label, {
+                ...field,
+                required: field.name === "categories_title",
+              }),
+            )}
+          </div>
+        </details>
+      ))}
+
+      <details className={CARD}>
+        <summary className="cursor-pointer text-lg font-semibold text-slate">Main menu</summary>
+        <ul className="mt-4 flex flex-col gap-3">
+          {data.menu.map((item, i) => (
+            <li
+              key={item.key}
+              data-menu={item.key}
+              className="grid items-end gap-3 rounded-xl border border-line p-3 md:grid-cols-[1fr_1fr_auto]"
+            >
+              {LANGUAGES.map(([code, title]) => (
+                <Field key={code} label={`${MENU_PLACES[item.key]} (${title})`} required>
+                  <input
+                    {...language(code)}
+                    required
+                    maxLength={30}
+                    value={item[`label_${code}`]}
+                    onChange={(event) => changeItem(i, { [`label_${code}`]: event.target.value })}
+                    className="field"
+                  />
+                </Field>
+              ))}
+              <div className="flex flex-wrap items-center gap-2">
+                <label className="flex min-h-11 items-center gap-2 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={item.show}
+                    onChange={(event) => changeItem(i, { show: event.target.checked })}
+                    className="size-5 accent-green-700"
+                  />
+                  Show
+                </label>
+                <button
+                  type="button"
+                  aria-label={`Move ${item.label_en} up`}
+                  disabled={i === 0}
+                  onClick={() => moveItem(i, i - 1)}
+                  className={SMALL_BUTTON}
+                >
+                  <ArrowUp className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Move ${item.label_en} down`}
+                  disabled={i === data.menu.length - 1}
+                  onClick={() => moveItem(i, i + 1)}
+                  className={SMALL_BUTTON}
+                >
+                  <ArrowDown className="size-4" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </details>
 
       <div className={cn(CARD, "flex flex-col gap-4")}>
         <Message error={error} ok={ok} />
@@ -388,7 +529,11 @@ export function HomeForm({
               type="button"
               disabled={busy}
               onClick={() => {
-                if (window.confirm("Replace all your home page texts with the standard ones?")) {
+                if (
+                  window.confirm(
+                    "Replace all your home page texts and the menu with the standard ones?",
+                  )
+                ) {
                   void run(async () => {
                     await adminSend("DELETE", "/home");
                     window.location.reload();

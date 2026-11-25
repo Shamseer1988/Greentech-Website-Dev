@@ -16,7 +16,15 @@ import type { PropertyCard } from "@/lib/types";
 
 const SECONDS = 4.5;
 
-export function FeaturedSlider({ items }: { items: PropertyCard[] }) {
+export function FeaturedSlider({
+  items,
+  eyebrow,
+  title,
+}: {
+  items: PropertyCard[];
+  eyebrow: string;
+  title: string;
+}) {
   const t = useTranslations("home");
   const common = useTranslations("common");
   const locale = useLocale();
@@ -40,9 +48,9 @@ export function FeaturedSlider({ items }: { items: PropertyCard[] }) {
     <section className="container-page pb-20 lg:pb-28">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2.5">
-          <span className="eyebrow text-rose">{t("featuredEyebrow")}</span>
+          {eyebrow && <span className="eyebrow text-rose">{eyebrow}</span>}
           <h2 className="text-4xl font-bold tracking-tight text-slate lg:text-[44px]">
-            {t("featuredTitle")}
+            {title}
           </h2>
         </div>
         {items.length > 1 && (

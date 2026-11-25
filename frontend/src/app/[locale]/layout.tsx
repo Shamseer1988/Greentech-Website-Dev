@@ -10,6 +10,8 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { routing } from "@/i18n/routing";
+import { welcome } from "@/lib/assistant/answer";
+import { getHomeContent, menuLinks } from "@/lib/home-content";
 import { company } from "@/lib/schema-org";
 import { isLive } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -45,6 +47,8 @@ export default async function LocaleLayout({
   const t = await getTranslations({ locale, namespace: "nav" });
   const brand = await getTranslations({ locale, namespace: "brand" });
 
+  const [{ content }, chat] = await Promise.all([getHomeContent(), welcome(locale)]);
+
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className={fontVariables}>
       <body>
@@ -57,12 +61,14 @@ export default async function LocaleLayout({
             >
               {t("skip")}
             </a>
-            <SiteHeader />
+            <SiteHeader links={menuLinks(content, locale)} />
             <main id="main">
               <ErrorBoundary>{children}</ErrorBoundary>
             </main>
             <SiteFooter />
-            <ContactBar />
+            <ContactBar
+              chat={chat.enabled ? { text: chat.text, suggestions: chat.suggestions } : null}
+            />
             <Analytics />
           </MotionProvider>
         </NextIntlClientProvider>

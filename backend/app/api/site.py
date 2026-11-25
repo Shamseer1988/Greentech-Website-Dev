@@ -1,4 +1,4 @@
-"""The home page: public content, and the admin page that edits it."""
+"""The home page and the chat assistant: public content, and the admin pages that edit it."""
 
 import uuid
 from typing import Annotated
@@ -12,7 +12,7 @@ from app.core.security import require_admin
 from app.models import HeroImage, SiteSetting
 from app.schemas.common import Id
 from app.schemas.public import media_url
-from app.schemas.site import HeroImageOut, HeroOrder, HomeContent, HomeOut
+from app.schemas.site import ChatContent, HeroImageOut, HeroOrder, HomeContent, HomeOut
 from app.services.media import HERO_SIDE, read_photo
 from app.services.storage import Storage, delete_file, get_storage
 
@@ -107,3 +107,24 @@ def delete_image(image_id: Id, db: Db, storage: Files) -> list[HeroImageOut]:
     db.commit()
     delete_file(storage, key)
     return images(db)
+
+
+CHAT_KEY = "chat"
+
+
+@router.get("/chat")
+def chat(db: Db) -> ChatContent:
+    saved = db.get(SiteSetting, CHAT_KEY)
+    return ChatContent.model_validate(saved.value) if saved else ChatContent()
+
+
+@admin.get("/chat")
+def admin_chat(db: Db) -> ChatContent:
+    return chat(db)
+
+
+@admin.put("/chat")
+def save_chat(data: ChatContent, db: Db) -> ChatContent:
+    db.merge(SiteSetting(key=CHAT_KEY, value=data.model_dump()))
+    db.commit()
+    return data

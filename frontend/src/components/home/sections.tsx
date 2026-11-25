@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 import { Link } from "@/i18n/navigation";
 import { nameOf, num } from "@/lib/format";
+import type { HomeTexts } from "@/lib/home-content";
 import type { LocationOut, PropertyTypeOut } from "@/lib/types";
 
 export async function Ticker({
@@ -167,26 +168,27 @@ export async function Categories({
   );
 }
 
-export async function ResidentialCta() {
-  const t = await getTranslations("home");
+export async function ResidentialCta({ texts }: { texts: HomeTexts }) {
   const common = await getTranslations("common");
   return (
     <section className="container-page pb-20">
       <Reveal>
         <div className="grid-bg relative flex flex-wrap items-center justify-between gap-8 overflow-hidden rounded-[32px] bg-green-700 px-7 py-12 text-white lg:px-12 lg:py-16">
           <div className="flex min-w-0 flex-[1_1_300px] flex-col gap-3">
-            <span className="eyebrow text-white">{t("soonEyebrow")}</span>
+            {texts.soon_eyebrow && (
+              <span className="eyebrow text-white">{texts.soon_eyebrow}</span>
+            )}
             <h2 className="text-4xl leading-[1.05] font-bold tracking-tight lg:text-[44px]">
-              {t("soonTitle")}
+              {texts.soon_title}
             </h2>
-            <p className="text-lg text-white">{t("soonText")}</p>
+            <p className="text-lg text-white">{texts.soon_text}</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/contact?for=residential"
               className={buttonVariants({ variant: "mint", size: "lg" })}
             >
-              {t("register")}
+              {texts.soon_button}
             </Link>
             <WhatsAppLink
               text={common("waGeneral")}

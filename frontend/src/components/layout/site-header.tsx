@@ -9,15 +9,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { LanguageSwitch } from "./language-switch";
 
-const LINKS = [
-  { href: "/properties", key: "properties" },
-  { href: "/locations", key: "locations" },
-  { href: "/#services", key: "services" },
-  { href: "/#how", key: "how" },
-  { href: "/contact", key: "contact" },
-] as const;
+export type MenuLink = { key: string; href: string; label: string };
 
-export function SiteHeader() {
+export function SiteHeader({ links }: { links: MenuLink[] }) {
   const t = useTranslations("nav");
   const brand = useTranslations("brand");
   const locale = useLocale();
@@ -63,7 +57,7 @@ export function SiteHeader() {
             dark ? "border-white/12 bg-white/6 backdrop-blur-md" : "border-transparent",
           )}
         >
-          {LINKS.map(({ href, key }) => (
+          {links.map(({ href, key, label }) => (
             <Link
               key={key}
               href={href}
@@ -76,7 +70,7 @@ export function SiteHeader() {
                 !dark && isActive(href) && "bg-tint text-green-700",
               )}
             >
-              {t(key)}
+              {label}
             </Link>
           ))}
         </div>
@@ -115,14 +109,14 @@ export function SiteHeader() {
           id="mobile-menu"
           className="absolute inset-x-4 top-full flex flex-col rounded-2xl border border-line bg-white p-3 text-ink shadow-2xl lg:hidden"
         >
-          {LINKS.map(({ href, key }) => (
+          {links.map(({ href, key, label }) => (
             <Link
               key={key}
               href={href}
               onClick={() => setOpen(false)}
               className="rounded-lg px-4 py-3.5 font-medium hover:bg-tint"
             >
-              {t(key)}
+              {label}
             </Link>
           ))}
           <Link

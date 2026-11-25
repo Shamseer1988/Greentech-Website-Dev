@@ -32,9 +32,13 @@ function spot(location: LocationOut): [number, number] {
 export function QatarMap({
   locations,
   residentialSoon,
+  eyebrow,
+  title,
 }: {
   locations: LocationOut[];
   residentialSoon: boolean;
+  eyebrow: string;
+  title: string;
 }) {
   const t = useTranslations("home");
   const common = useTranslations("common");
@@ -68,9 +72,9 @@ export function QatarMap({
     <section className="grid-bg bg-deep text-white">
       <div className="container-page flex flex-wrap items-center gap-14 py-20 lg:py-25">
         <div className="flex min-w-0 flex-[1_1_300px] flex-col gap-5 lg:flex-[1_1_420px]">
-          <span className="eyebrow text-mint">{t("mapEyebrow")}</span>
+          {eyebrow && <span className="eyebrow text-mint">{eyebrow}</span>}
           <h2 className="text-4xl leading-[1.05] font-bold tracking-tight lg:text-5xl">
-            {t("mapTitle")}
+            {title}
           </h2>
           <div
             aria-live="polite"

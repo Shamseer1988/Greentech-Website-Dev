@@ -13,7 +13,7 @@ export const nameOf = (ref: Ref, locale: string) =>
 export const titleOf = (p: PropertyCard, locale: string) =>
   (locale === "ar" && p.title_ar) || p.title_en;
 
-const AMENITIES_AR: Record<string, string> = {
+export const AMENITIES_AR: Record<string, string> = {
   "Central / split A/C": "تكييف مركزي / سبليت",
   "Common kitchen": "مطبخ مشترك",
   "Washrooms per floor": "دورات مياه في كل طابق",

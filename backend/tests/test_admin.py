@@ -407,6 +407,38 @@ def test_home_page(client, storage, admin, agent):
     assert home["content"] is None and len(home["images"]) == 7
 
 
+def test_home_sections_and_menu(client, admin):
+    url = "/api/admin/home"
+    body = {
+        "words_en": ["a"],
+        "words_ar": ["b"],
+        "categories_title_en": "T",
+        "categories_title_ar": "ع",
+    }
+    contact = {"key": "contact", "label_en": "Call us", "label_ar": "اتصل"}
+    assert client.put(url, json=body, headers=admin).json()["how_title_en"] is None
+    good = body | {"how_title_en": "Steps", "show_map": False, "menu": [contact]}
+    assert client.put(url, json=good, headers=admin).status_code == 200
+    saved = client.get("/api/home").json()["content"]
+    assert (saved["how_title_en"], saved["show_map"]) == ("Steps", False)
+    assert saved["menu"] == [contact | {"show": True}]
+    for menu in ([contact, contact], [contact | {"key": "evil"}], [contact | {"label_en": ""}]):
+        assert client.put(url, json=body | {"menu": menu}, headers=admin).status_code == 422
+
+
+def test_chat_settings(client, admin, agent):
+    url = "/api/admin/chat"
+    assert client.get("/api/chat").json()["enabled"] is True
+    answer = {"question_en": "Is there a commission?", "answer_en": "Please ask our team."}
+    body = {"enabled": False, "welcome_en": "Hi", "answers": [answer]}
+    assert client.put(url, json=body, headers=agent).status_code == 403
+    assert client.put(url, json=body, headers=admin).status_code == 200
+    saved = client.get("/api/chat").json()
+    assert (saved["enabled"], saved["answers"][0]["answer_ar"]) == (False, "")
+    bad = body | {"answers": [answer | {"answer_en": ""}]}
+    assert client.put(url, json=bad, headers=admin).status_code == 422
+
+
 # --- locations ------------------------------------------------------------
 
 

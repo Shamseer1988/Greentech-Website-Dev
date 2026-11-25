@@ -2,19 +2,22 @@
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { useEffect, useRef } from "react";
 import { cn } from "cn";
 
-const STEPS = [
-  { key: "1", style: "bg-green-700 text-white" },
-  { key: "2", style: "bg-rose text-white" },
-  { key: "3", style: "bg-mint text-deep" },
-] as const;
+const STYLES = ["bg-green-700 text-white", "bg-rose text-white", "bg-mint text-deep"];
 
 /** GSAP draws the line and brings in each step while scrolling. */
-export function HowItWorks() {
-  const t = useTranslations("home");
+export function HowItWorks({
+  eyebrow,
+  title,
+  steps,
+}: {
+  eyebrow: string;
+  title: string;
+  steps: { title: string; text: string }[];
+}) {
   const locale = useLocale();
   const root = useRef<HTMLElement>(null);
 
@@ -40,9 +43,9 @@ export function HowItWorks() {
   return (
     <section ref={root} id="how" className="container-page scroll-mt-6 py-20 lg:py-28">
       <div className="mb-14 flex flex-col items-center gap-2.5 text-center">
-        <span className="eyebrow text-rose">{t("howEyebrow")}</span>
+        {eyebrow && <span className="eyebrow text-rose">{eyebrow}</span>}
         <h2 className="text-4xl font-bold tracking-tight text-slate lg:text-[44px]">
-          {t("howTitle")}
+          {title}
         </h2>
       </div>
       <div className="relative">
@@ -69,19 +72,19 @@ export function HowItWorks() {
           </svg>
         </div>
         <ol className="relative grid gap-8 md:grid-cols-3">
-          {STEPS.map(({ key, style }) => (
-            <li key={key} className="how-step flex flex-col items-center gap-3.5 p-2 text-center">
+          {steps.map((step, i) => (
+            <li key={i} className="how-step flex flex-col items-center gap-3.5 p-2 text-center">
               <span
                 className={cn(
                   "flex size-18 items-center justify-center rounded-[22px] font-heading text-[28px] font-bold",
-                  style,
+                  STYLES[i],
                 )}
               >
-                {key}
+                {i + 1}
               </span>
-              <h3 className="text-[22px] font-semibold text-slate">{t(`steps.${key}.title`)}</h3>
+              <h3 className="text-[22px] font-semibold text-slate">{step.title}</h3>
               <p className="max-w-75 leading-relaxed text-muted-foreground">
-                {t(`steps.${key}.text`)}
+                {step.text}
               </p>
             </li>
           ))}

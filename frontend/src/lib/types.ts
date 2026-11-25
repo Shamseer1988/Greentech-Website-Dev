@@ -66,30 +66,50 @@ export type PropertyPage = {
 };
 
 // Mirrors backend/app/schemas/site.py
-export type HomeContent = {
-  badge_en: string;
-  badge_ar: string;
-  start_en: string;
-  start_ar: string;
-  words_en: string[];
-  words_ar: string[];
-  end_en: string;
-  end_ar: string;
-  intro_en: string;
-  intro_ar: string;
-  chip_label_en: string;
-  chip_label_ar: string;
-  chip_text_en: string;
-  chip_text_ar: string;
-  categories_eyebrow_en: string;
-  categories_eyebrow_ar: string;
-  categories_title_en: string;
-  categories_title_ar: string;
-  image_opacity: number;
-  show_search: boolean;
-  show_whatsapp: boolean;
-  show_scene: boolean;
-  show_property: boolean;
+export type MenuItem = {
+  key: "properties" | "locations" | "services" | "how" | "contact";
+  label_en: string;
+  label_ar: string;
+  show: boolean;
 };
+
+export type HomeTextKey =
+  | "badge"
+  | "start"
+  | "end"
+  | "intro"
+  | "chip_label"
+  | "chip_text"
+  | `${"categories" | "featured" | "map" | "how" | "soon"}_${"eyebrow" | "title"}`
+  | `step${1 | 2 | 3}_${"title" | "text"}`
+  | "soon_text"
+  | "soon_button";
+
+export type HomeSwitch =
+  `show_${"search" | "whatsapp" | "scene" | "property" | "ticker" | "categories" | "featured" | "map" | "how" | "soon"}`;
+
+export type HomeContent = Record<`${HomeTextKey}_${"en" | "ar"}`, string> &
+  Record<HomeSwitch, boolean> & {
+    words_en: string[];
+    words_ar: string[];
+    image_opacity: number;
+    menu: MenuItem[];
+  };
+/** What the office saved. Empty = the standard text. */
+export type SavedHome = { [K in keyof HomeContent]: HomeContent[K] | null };
 export type HeroImage = { id: number; url: string };
-export type HomeOut = { content: HomeContent | null; images: HeroImage[] };
+export type HomeOut = { content: SavedHome | null; images: HeroImage[] };
+
+export type ChatAnswer = {
+  question_en: string;
+  question_ar: string;
+  answer_en: string;
+  answer_ar: string;
+  keywords: string;
+};
+export type ChatContent = {
+  enabled: boolean;
+  welcome_en: string;
+  welcome_ar: string;
+  answers: ChatAnswer[];
+};
