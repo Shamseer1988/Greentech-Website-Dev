@@ -9,13 +9,14 @@ from app.models import (
     LookingFor,
     Property,
     PropertyStatus,
+    PropertyType,
     SocialNetwork,
     SocialPost,
     User,
     UserRole,
 )
 from app.schemas.common import MAX_INT, CleanStr, Input
-from app.schemas.public import LocationRef, MediaOut, TypeRef, card_fields
+from app.schemas.public import LocationRef, MediaOut, TypeImage, TypeRef, card_fields, media_url
 
 Positive = Annotated[int, Field(ge=0, le=MAX_INT)]
 Lat = Annotated[float, Field(ge=-90, le=90)]
@@ -206,8 +207,23 @@ class LocationFull(LocationIn):
     property_count: int
 
 
-class TypeFull(TypeRef):
+class TypeFull(TypeImage):
     id: int
+
+    @classmethod
+    def build(cls, kind: PropertyType) -> Self:
+        return cls(
+            id=kind.id,
+            slug=kind.slug,
+            name_en=kind.name_en,
+            name_ar=kind.name_ar,
+            image_url=kind.image_key and media_url(kind.image_key),
+            image_opacity=kind.image_opacity,
+        )
+
+
+class TypeImageEdit(Input):
+    image_opacity: Annotated[int, Field(ge=10, le=100)]
 
 
 # --- enquiries ------------------------------------------------------------

@@ -208,13 +208,13 @@ def test_demo_data(db, storage, tmp_path):
         (tmp_path / f"{name}.jpg").write_bytes(jpeg())
     (tmp_path / "tour-camp.mp4").write_bytes(b"\0\0\0\x18ftypisom" + b"0" * 50)
     first = demo.load(db, storage, tmp_path)
-    assert first == {"listings": 11, "photos and videos": 5, "enquiries": 5}
+    assert first == {"listings": 11, "photos and videos": 8, "enquiries": 5}
 
     # A file that arrives later is added once; nothing is doubled.
     (tmp_path / "tour-cafe.webm").write_bytes(b"\x1a\x45\xdf\xa3" + b"0" * 50)
     assert demo.load(db, storage, tmp_path)["photos and videos"] == 1
     assert set(demo.load(db, storage, tmp_path).values()) == {0}
-    assert len(storage.files) == 6
+    assert len(storage.files) == 9
 
     mine = db.scalar(select(Property).where(Property.code == "GT-LA-101"))
     mine.description_en = "A real property now"

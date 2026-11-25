@@ -12,6 +12,10 @@ class Schema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+def media_url(key: str) -> str:
+    return f"{settings.media_public_url.rstrip('/')}/{key}"
+
+
 class TypeRef(Schema):
     slug: str
     name_en: str
@@ -23,7 +27,12 @@ class LocationRef(TypeRef):
     lng: float
 
 
-class PropertyTypeOut(TypeRef):
+class TypeImage(TypeRef):
+    image_url: str | None
+    image_opacity: int
+
+
+class PropertyTypeOut(TypeImage):
     coming_soon: bool
     property_count: int
 
@@ -47,7 +56,7 @@ class MediaOut(BaseModel):
     def build(cls, media: PropertyMedia) -> "MediaOut":
         return cls(
             id=media.id,
-            url=f"{settings.media_public_url.rstrip('/')}/{media.object_key}",
+            url=media_url(media.object_key),
             kind=media.kind,
             width=media.width,
             height=media.height,

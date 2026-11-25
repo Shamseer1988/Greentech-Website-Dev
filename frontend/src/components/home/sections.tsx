@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "cn";
+import { CardPhoto } from "@/components/home/card-photo";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/whatsapp-link";
@@ -63,7 +64,7 @@ function Icon({ slug, className }: { slug: string; className: string }) {
 }
 
 const TILT =
-  "flex h-full flex-col justify-between rounded-3xl border transition duration-300 hover:-translate-y-2 hover:border-mint/60 hover:shadow-[0_28px_60px_rgb(4_29_21/.25)]";
+  "group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border transition duration-300 hover:-translate-y-2 hover:border-mint/60 hover:shadow-[0_28px_60px_rgb(4_29_21/.25)]";
 
 export async function Categories({ types }: { types: PropertyTypeOut[] }) {
   const t = await getTranslations("home");
@@ -88,14 +89,18 @@ export async function Categories({ types }: { types: PropertyTypeOut[] }) {
 
       <div className="grid gap-4.5 sm:grid-cols-2 lg:auto-rows-[220px] lg:grid-cols-3">
         {big && (
-          <Reveal className="min-h-80 sm:col-span-2 lg:col-span-1 lg:row-span-2">
+          <Reveal className="min-h-96 sm:col-span-2 lg:col-span-1 lg:row-span-2">
             <Link
               href={`/properties?type=${big.slug}`}
-              className={cn(TILT, "relative overflow-hidden border-green-700 bg-deep p-7 text-white")}
+              className={cn(TILT, "border-green-700 bg-deep p-7 text-white")}
             >
+              {big.image_url && <CardPhoto src={big.image_url} opacity={big.image_opacity} dark />}
               <span
                 aria-hidden="true"
-                className="absolute -end-15 -bottom-15 size-65 rounded-full bg-green-700 blur-2xl"
+                className={cn(
+                  "absolute -end-15 -bottom-15 size-65 rounded-full bg-green-700 blur-2xl",
+                  big.image_url && "opacity-60",
+                )}
               />
               <span className="relative flex size-14 items-center justify-center rounded-2xl bg-mint text-deep">
                 <Icon slug={big.slug} className="size-7" />
@@ -118,7 +123,8 @@ export async function Categories({ types }: { types: PropertyTypeOut[] }) {
               href={type.coming_soon ? "/contact?for=residential" : `/properties?type=${type.slug}`}
               className={cn(TILT, "border-line bg-white p-6")}
             >
-              <span className="flex items-start justify-between">
+              {type.image_url && <CardPhoto src={type.image_url} opacity={type.image_opacity} />}
+              <span className="relative flex items-start justify-between">
                 <span className="flex size-12.5 items-center justify-center rounded-xl bg-tint text-green-700">
                   <Icon slug={type.slug} className="size-6" />
                 </span>
@@ -133,7 +139,7 @@ export async function Categories({ types }: { types: PropertyTypeOut[] }) {
                     : common("units", { count: type.property_count, n: num(type.property_count) })}
                 </span>
               </span>
-              <span className="flex flex-col gap-1">
+              <span className="relative flex flex-col gap-1">
                 <span className="font-heading text-2xl font-semibold text-slate">
                   {nameOf(type, locale)}
                 </span>

@@ -29,7 +29,7 @@ from app.models import (
     PropertyType,
 )
 from app.scripts.seed import CAMP_AMENITIES, seed
-from app.services.media import PHOTO_SIDE, to_webp, video_type
+from app.services.media import CARD_SIDE, PHOTO_SIDE, to_webp, video_type
 from app.services.storage import Storage, get_storage
 
 MEDIA_DIR = ROOT_DIR / "demo-media"
@@ -177,6 +177,16 @@ ENQUIRIES = [
      "I have a camp in Umm Silal to list."),
 ]  # fmt: skip
 
+# Background photos of the cards on the home page.
+TYPE_PHOTOS = {
+    "labour-accommodation": "a151",
+    "warehouse": "a4",
+    "cafeteria": "a290",
+    "supermarket-shop": "a359",
+    "residential": "a115",
+}
+TYPE_FOLDER = "demo/types/"
+
 DEMO_CODES = {*MEDIA, *(item["code"] for item in LISTINGS)}
 
 
@@ -230,6 +240,19 @@ def add_media(db: Session, storage: Storage, prop: Property, paths: list[Path]) 
     return len(paths)
 
 
+def add_type_photos(db: Session, storage: Storage, folder: Path = MEDIA_DIR) -> int:
+    """Only for types without a photo, so your own photos are never replaced."""
+    added = 0
+    for kind in db.scalars(select(PropertyType).where(PropertyType.image_key.is_(None))):
+        for path in files_for(TYPE_PHOTOS.get(kind.slug, ""), folder):
+            with path.open("rb") as file:
+                kind.image_key = f"{TYPE_FOLDER}{uuid.uuid4().hex}.webp"
+                storage.save(kind.image_key, to_webp(file, CARD_SIDE).file, "image/webp")
+            added += 1
+    db.commit()
+    return added
+
+
 def load(db: Session, storage: Storage, folder: Path = MEDIA_DIR) -> dict[str, int]:
     seed(db, samples=True)
     types = {t.slug: t for t in db.scalars(select(PropertyType))}
@@ -279,6 +302,8 @@ def load(db: Session, storage: Storage, folder: Path = MEDIA_DIR) -> dict[str, i
         added["photos and videos"] += add_media(db, storage, prop, wanted)
         db.commit()
 
+    added["photos and videos"] += add_type_photos(db, storage, folder)
+
     if db.scalar(select(Enquiry.id).where(Enquiry.phone.startswith(FAKE_PHONE)).limit(1)) is None:
         for number, (company, code, wants, state, message) in enumerate(ENQUIRIES, 1):
             db.add(
@@ -309,6 +334,11 @@ def remove(db: Session, storage: Storage) -> dict[str, int]:
             keys += [m.object_key for m in prop.media]
             db.delete(prop)
             removed["listings"] += 1
+    for kind in db.scalars(
+        select(PropertyType).where(PropertyType.image_key.startswith(TYPE_FOLDER))
+    ):
+        keys.append(kind.image_key)
+        kind.image_key = None
     db.commit()
     for key in keys:
         storage.delete(key)

@@ -23,6 +23,9 @@ class MediaKind(StrEnum):
 
 class PropertyType(Base):
     __tablename__ = "property_types"
+    __table_args__ = (
+        CheckConstraint("image_opacity BETWEEN 10 AND 100", name="image_opacity_range"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     slug: Mapped[str] = mapped_column(String(60), unique=True)
@@ -30,6 +33,9 @@ class PropertyType(Base):
     name_ar: Mapped[str] = mapped_column(String(80))
     sort_order: Mapped[int] = mapped_column(default=0, server_default="0")
     coming_soon: Mapped[bool] = mapped_column(default=False, server_default=false())
+    # Background photo of the card on the home page.
+    image_key: Mapped[str | None] = mapped_column(String(255))
+    image_opacity: Mapped[int] = mapped_column(default=50, server_default="50")
 
 
 class Location(Base):

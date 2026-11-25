@@ -15,6 +15,7 @@ from app.schemas.public import (
     PropertyDetail,
     PropertyPage,
     PropertyTypeOut,
+    media_url,
 )
 from app.services import properties as service
 from app.services.share_image import cover_key, share_jpeg
@@ -133,6 +134,8 @@ def list_property_types(db: Db) -> list[PropertyTypeOut]:
             slug=t.slug,
             name_en=t.name_en,
             name_ar=t.name_ar,
+            image_url=t.image_key and media_url(t.image_key),
+            image_opacity=t.image_opacity,
             coming_soon=t.coming_soon,
             property_count=n,
         )

@@ -2,7 +2,8 @@
 export type Ref = { slug: string; name_en: string; name_ar: string };
 export type LocationRef = Ref & { lat: number; lng: number };
 
-export type PropertyTypeOut = Ref & { coming_soon: boolean; property_count: number };
+export type TypeImage = Ref & { image_url: string | null; image_opacity: number };
+export type PropertyTypeOut = TypeImage & { coming_soon: boolean; property_count: number };
 
 export type LocationOut = LocationRef & {
   description_en: string;

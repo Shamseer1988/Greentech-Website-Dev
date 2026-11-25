@@ -1,4 +1,5 @@
 import io
+import re
 from datetime import UTC, datetime, timedelta
 
 import jwt
@@ -75,8 +76,7 @@ def test_every_admin_route_needs_login(client):
             continue
         for method in methods:
             url = path
-            for name in ("property_id", "media_id", "enquiry_id", "location_id", "user_id"):
-                url = url.replace("{" + name + "}", "1")
+            url = re.sub(r"\{\w+_id\}", "1", url)
             assert client.request(method, url).status_code == 401, (method, url)
             checked += 1
     assert checked > 20
@@ -89,6 +89,9 @@ def test_agent_limits(client, agent):
         ("PUT", "/locations/1"),
         ("DELETE", "/locations/1"),
         ("POST", "/users"),
+        ("POST", "/property-types/1/image"),
+        ("PATCH", "/property-types/1/image"),
+        ("DELETE", "/property-types/1/image"),
         ("PATCH", "/users/1"),
         ("DELETE", "/enquiries/1"),
         ("GET", "/export/properties"),
@@ -279,6 +282,36 @@ def test_agents_see_own_and_free_enquiries(client, db, admin, agent):
         == 422
     )
     assert client.delete(f"{url}{free.id}", headers=admin).status_code == 204
+
+
+def test_type_image(client, storage, admin):
+    url = "/api/admin/property-types/2/image"
+
+    def public():
+        return client.get("/api/property-types").json()[1]
+
+    def send(content):
+        return client.post(url, files={"file": ("a.jpg", content)}, headers=admin)
+
+    assert (public()["image_url"], public()["image_opacity"]) == (None, 50)
+    assert send(picture()).status_code == 201
+    first = list(storage.files)
+    assert public()["image_url"].endswith(first[0])
+    assert send(b"not a picture").status_code == 422
+    assert list(storage.files) == first
+
+    # A new photo takes the place of the old file.
+    assert send(picture()).status_code == 201
+    assert len(storage.files) == 1 and list(storage.files) != first
+
+    assert client.patch(url, json={"image_opacity": 80}, headers=admin).status_code == 200
+    assert public()["image_opacity"] == 80
+    for bad in (9, 101, None):
+        assert client.patch(url, json={"image_opacity": bad}, headers=admin).status_code == 422
+    assert client.delete(url, headers=admin).json()["image_url"] is None
+    assert storage.files == {} and public()["image_url"] is None
+    missing = "/api/admin/property-types/99/image"
+    assert client.delete(missing, headers=admin).status_code == 404
 
 
 # --- locations ------------------------------------------------------------

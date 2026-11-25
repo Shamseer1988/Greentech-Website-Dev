@@ -49,7 +49,7 @@ def rows_query():
 @router.get("/property-types")
 def list_types(db: Db) -> list[TypeFull]:
     rows = db.scalars(select(PropertyType).order_by(PropertyType.sort_order, PropertyType.id))
-    return [TypeFull.model_validate(t) for t in rows]
+    return [TypeFull.build(t) for t in rows]
 
 
 @router.get("/properties")
