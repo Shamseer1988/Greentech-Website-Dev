@@ -71,7 +71,7 @@ function FooterColumn({ title, children }: { title: string; children: React.Reac
 function ExternalLinks({ links }: { links: { name: string; href: string }[] }) {
   return links.map(({ name, href }) => (
     <a
-      key={href}
+      key={`${name} ${href}`}
       href={href}
       target="_blank"
       rel="noopener noreferrer"

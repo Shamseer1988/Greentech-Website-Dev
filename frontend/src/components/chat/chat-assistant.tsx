@@ -256,7 +256,7 @@ export function ChatAssistant({
             {message.links && message.links.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {message.links.map((link) => (
-                  <ReplyLink key={link.href} link={link} onLeave={leave} />
+                  <ReplyLink key={`${link.label} ${link.href}`} link={link} onLeave={leave} />
                 ))}
               </div>
             )}

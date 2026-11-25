@@ -94,7 +94,7 @@ export default async function ContactPage({ searchParams }: Props) {
               <div className="grid grid-cols-2 gap-2">
                 {links.map(({ name, href }) => (
                   <a
-                    key={href}
+                    key={`${name} ${href}`}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
