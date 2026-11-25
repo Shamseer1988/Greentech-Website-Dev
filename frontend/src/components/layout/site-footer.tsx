@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getSite, getTypes } from "@/lib/api";
 import { ltr, nameOf } from "@/lib/format";
+import { OfficeCard } from "./office-card";
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
@@ -13,42 +14,45 @@ export async function SiteFooter() {
 
   return (
     <footer className="no-print bg-deepest pb-20 text-sm text-[#a9cfc0] md:pb-0">
-      <div className="container-page grid gap-8 pt-16 pb-8 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col gap-3">
-          <Image
-            src="/brand/greentech-logo-stacked-on-dark.svg"
-            alt={brand("name")}
-            width={508}
-            height={359}
-            unoptimized
-            className="-ms-3 h-auto w-55"
-          />
-          <span>
-            {t("place")}
-            {site.crNumber && ` · ${t("cr", { number: ltr(site.crNumber) })}`}
-          </span>
+      <div className="container-page flex flex-col gap-10 pt-16 pb-10 xl:flex-row xl:justify-between">
+        <div className="grid flex-1 gap-8 sm:grid-cols-2 lg:grid-cols-[auto_1fr_1fr_1fr] xl:grid-cols-[auto_1fr_1fr] xl:gap-10">
+          <div className="flex flex-col gap-3 sm:max-xl:row-span-2 lg:max-xl:row-span-1 xl:row-span-2">
+            <Image
+              src="/brand/greentech-logo-stacked-on-dark.svg"
+              alt={brand("name")}
+              width={508}
+              height={359}
+              unoptimized
+              className="-ms-3 h-auto w-55"
+            />
+            <span>
+              {t("place")}
+              {site.crNumber && ` · ${t("cr", { number: ltr(site.crNumber) })}`}
+            </span>
+          </div>
+          <FooterColumn title={t("rent")}>
+            {types.map((type) => (
+              <Link
+                key={type.slug}
+                href={`/properties?type=${type.slug}`}
+                className="py-1.5 hover:text-white"
+              >
+                {nameOf(type, locale)}
+              </Link>
+            ))}
+          </FooterColumn>
+          {site.social.length > 0 && (
+            <FooterColumn title={t("social")}>
+              <ExternalLinks links={site.social} />
+            </FooterColumn>
+          )}
+          {site.portals.length > 0 && (
+            <FooterColumn title={t("also")}>
+              <ExternalLinks links={site.portals} />
+            </FooterColumn>
+          )}
         </div>
-        <FooterColumn title={t("rent")}>
-          {types.map((type) => (
-            <Link
-              key={type.slug}
-              href={`/properties?type=${type.slug}`}
-              className="py-1.5 hover:text-white"
-            >
-              {nameOf(type, locale)}
-            </Link>
-          ))}
-        </FooterColumn>
-        {site.social.length > 0 && (
-          <FooterColumn title={t("social")}>
-            <ExternalLinks links={site.social} />
-          </FooterColumn>
-        )}
-        {site.portals.length > 0 && (
-          <FooterColumn title={t("also")}>
-            <ExternalLinks links={site.portals} />
-          </FooterColumn>
-        )}
+        <OfficeCard className="w-full xl:w-[620px] xl:flex-none" />
       </div>
       <div className="border-t border-[#0e3a2c]">
         <div className="container-page py-5 text-[13px]">
