@@ -1,0 +1,19 @@
+[Unit]
+Description=Green Tech backend (FastAPI)
+After=network-online.target postgresql.service
+Wants=network-online.target postgresql.service
+
+[Service]
+User=greentech
+Group=greentech
+WorkingDirectory=/opt/greentech/app/backend
+# One process only: the visitor limits are counted in memory.
+# Not reachable from the network: only the website on the same machine talks to it.
+ExecStart=/opt/greentech/app/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

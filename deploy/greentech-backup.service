@@ -1,0 +1,7 @@
+[Unit]
+Description=Green Tech database backup
+After=postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/greentech/app/deploy/backup.sh

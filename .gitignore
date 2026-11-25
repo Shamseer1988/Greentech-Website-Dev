@@ -29,3 +29,6 @@ Thumbs.db
 .vscode/
 .idea/
 .claude/settings.local.json
+
+# Notes with internal addresses (the repository is public)
+/docs/private/

@@ -48,11 +48,11 @@ Each phase ends with: summary of what was built, how to test it on this PC, and 
 - [x] Local chat assistant (no outside service)
 - [x] Viewing booking, favourites and compare, PDF brochure, reports, capacity calculator, blog
 
-## Phase 6 – Deploy to Proxmox
-- [ ] Production Dockerfiles (multi-stage), full `docker-compose.prod.yml`
-- [ ] VM/LXC on Proxmox, Cloudflare Tunnel for the domain + SSL
-- [ ] GitHub Actions: build + deploy
-- [ ] Nightly DB + MinIO backup to Synology NAS
+## Phase 6 – Deploy to Proxmox (greentechqa.com, no Docker)
+- [x] systemd services, update and backup scripts in `deploy/`
+- [ ] LXC containers (storage, greentech), edge nginx, Cloudflare Tunnel + SSL
+- [ ] Update with `deploy/update.sh`
+- [ ] External backup (later)
 
 ## Phase 7 – Residential module (future)
 - [ ] Flats/villas in Doha: bedrooms, bathrooms, furnished, family/bachelor, etc.

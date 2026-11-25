@@ -1,0 +1,9 @@
+[Unit]
+Description=Green Tech database backup every evening, before the Proxmox backup
+
+[Timer]
+OnCalendar=*-*-* 20:30
+Persistent=true
+
+[Install]
+WantedBy=timers.target

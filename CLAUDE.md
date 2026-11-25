@@ -6,7 +6,7 @@ Industrial Area, Umm Silal, Al Khor, Abu Nakhla and other areas. **Residential f
 
 - GitHub: https://github.com/Shamseer1988/Greentech-Website-Dev
 - Local dev folder: `C:\Apps\Greentech Website Dev` (Windows 11 PC)
-- Final hosting: Proxmox server (Docker Compose) behind Cloudflare Tunnel – same way as the Paris United Group site.
+- Final hosting: https://greentechqa.com – Proxmox LXC containers without Docker (systemd + PostgreSQL, see `deploy/`), shared S3 storage container, behind the edge nginx and Cloudflare Tunnel.
 
 ## How we work (IMPORTANT)
 - Work **phase by phase** (see `docs/PHASES.md`). Finish one phase, show me what was done and how to test it, then **wait for my "OK" before starting the next phase**.
